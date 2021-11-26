@@ -1,0 +1,11 @@
+
+
+<div class="container-fluid bg-secondary">
+    <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
+        <a class="btn btn-secondary" href="#" role="button">Publicaciones</a>
+        <a class="btn btn-secondary" href="#" role="button">Respuestas</a>
+        {% if session.level  %}
+        <a class="btn btn-secondary" href="{{url_for('Admin')}}" role="button">Administrador</a>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,44 @@
+
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% include 'botones-notificaciones.html'%}
+
+<body>
+    <
+    <div class="menu">
+        <div class="pregunta">
+            <h2>Seleccione el tipo de usuario a registrar</h2>
+        </div>
+        <div class="general baja" onclick="location.href= 'Alta_Admin'">
+            <div class="icono">
+                <i class="admin fas fa-user-shield"></i>
+                
+            </div>
+            <div class="descripcion">
+                <h3>Administrador</h3>
+            </div>                
+        </div>
+        <div class="general alta" onclick="location.href= 'Alta_Alum'">
+            <div class="icono">
+                <i class="admin fa fa-user-circle"></i>
+            </div>
+            <div>
+                <h3>Usuario</h3>
+            </div class="descripcion">
+        </div>
+    </div>
+</body>
+
+
+{% endblock %}
+
+    
+{% endblock %}

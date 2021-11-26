@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% include 'botones-notificaciones.html'%}
+
+
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <td>Matricula</td>
+                <td>Nombre</td>
+                <td>Apellidos</td>
+                <td>Carrera</td>
+                <td>Eliminar</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+                <tr>
+                    <td>{{usuario.0}}</td>
+                    <td>{{usuario.1}}</td>
+                    <td>{{usuario.2}}</td>
+                    <td>{{usuario.3}}</td>
+                    <td>
+                        <a id="boton_enviar" href="/deleteUser/{{usuario.0}}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+{% endblock %}
+
+    
+{% endblock %}

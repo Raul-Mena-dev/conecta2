@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{%with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+    
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<form action="/add_comentario" method="POST">
+
+    <h2> <input type="text" name="titulo" placeholder="Titulo"></h2>
+    <h3> <textarea name="texto" cols="30" rows="5" placeholder="Texto"></textarea></h3>
+    <button type="submit">
+        save
+    </button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <td>titulo </td>
+            <td>texto </td>
+            
+        </tr>
+    </thead>
+    <tbody>
+      {% for contact in comentario %}
+        <tr>
+          <td>{{ contact.1 }}</td>
+          <td>{{ contact.2 }}</td>
+          <td>
+              <a href="/edit/{{ contact.0 }}">Editar</a>
+              <a href="/borrar/{{ contact.0 }}">Borrar</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+
+</table>
+    
+
+{% endblock %}

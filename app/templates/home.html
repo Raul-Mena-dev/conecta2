@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% for carrera in carreras %}
+    <div class="postcuadros">
+        <h2>{{ carrera.1 }}</h2>
+        {% if carrera.2 == 1 %}
+            <div class="subtemas">
+                <a class="temas" href="/verpost/{{ carrera.0 }}/3">General</a>
+            </div>
+        {% else %}
+            {% for tema in temas %}
+                <div class="subtemas">
+                <a class="temas" href="/verpost/{{ carrera.0 }}/{{tema.0}}" id="{{tema.1}}">{{tema.1}}</a>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endfor %}
+
+ {% endblock %}
+ {% endblock %}

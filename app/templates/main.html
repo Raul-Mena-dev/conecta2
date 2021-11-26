@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{%with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+    
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="MostrarPost"  onclick="location.href='post'">
+  <p>crear post</p> 
+</div>
+
+      {% for contact in comentario %}
+
+      <div class="postcuadros">
+        <h2>{{ contact.1 }}</h2>
+        <a href="/mostrarpost/{{ contact.0 }}">comentario</a>
+        <a href="/edita/{{ contact.0 }}">Editar</a>
+        <a href="/delete/{{ contact.0 }}">Borrar</a>
+      </div>
+      {% endfor %}
+   
+
+
+    
+
+{% endblock %}

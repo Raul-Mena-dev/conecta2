@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+    <form action="/busquedabtn" method='POST'>
+        <select name="grado" id="grado">
+
+            <option value="0"> Seleccione el grado</option>
+            <!--opciones de tema por id -->
+            {% for grado in grados %}
+
+                <option value="{{grado.0}}">{{grado.1}} </option>
+            
+            {% endfor %}
+
+        </select>
+
+            <button type="submit">
+                save
+            </button>
+    </form>
+
+    
+    {% for contact in comentario  %}
+        <div class="postcuadros">
+            <h2>{{ contact.1 }}</h2>
+            <a href="/mostrarpost/{{ contact.0 }}">comentario</a>
+            <a href="/edit/{{ contact.0 }}">Editar</a>
+            <a href="/delete/{{ contact.0 }}">Borrar</a>
+        </div>  
+    {% endfor %}
+    
+
+    
+
+{% endblock %}

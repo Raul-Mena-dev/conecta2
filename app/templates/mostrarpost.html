@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+{% if messages %}
+{% for message in messages %}
+    
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+{% endfor %}
+{% endif %}
+
+
+      <div class="postcuadros">
+        <h2>{{ contenido['Titulo'] }}</h2>
+        <div>
+            {{contenido['Texto']}}
+        </div>
+        <a href="/mostrarpost/{{ contenido.0 }}">Ver posts</a>
+        <a href="/edita/{{ contenido.0 }}">Editar</a>
+        <a href="/delete/{{ contenido.0 }}">Borrar</a>
+        <a href="/reportado_post/{{ contenido.0 }}">Reportar</a>
+      </div>
+
+{% for comentario in comentarios %}
+
+      <div class="comentarios">
+        <h2>{{ comentario.1 }}</h2>
+        
+        <a href="/edit/{{ comentario.0 }}">Editar</a>
+        <a href="/borrar/{{ comentario.0 }}">Borrar</a>
+        <a href="/reportado_msj/{{ comentario.0 }}">Reportar</a>
+      </div>
+      
+        
+    
+{% endfor %}
+
+<form action="/add_comentario/{{contenido['ID_Post']}} " method="POST">
+     
+
+
+    <h2> <textarea  class="crearcomentario" name="texto" placeholder="comentario"></textarea> </h2>
+
+<div>
+
+    <button class="boton" type="submit">
+        publicar
+    </button>
+
+</div>
+    
+</form>
+
+
+{% endblock %}

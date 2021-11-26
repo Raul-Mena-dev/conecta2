@@ -1,0 +1,67 @@
+
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% include 'botones-notificaciones.html'%}
+
+<div class="container vh-100 bg-secondary  my-5">
+
+    <div class="row d-flex p-2  h-100">
+         <div class="col  justify-content-center">
+           
+               <div class="card   mx-auto mt-4" style="max-width: 18rem; max-height: 18rem;">
+                   <img class="card-img-top"  src="{{url_for('static', filename='img/'+account['FOTO'])}}" alt="perfil">   
+               </div>
+              
+                <div class=" mr-auto ml-auto border p-4 mt-4 ">
+                <form method="post" action="{{ url_for('upload') }}" enctype = "multipart/form-data" >
+                  <div class="form-group">
+                    <label><strong>Cambiar Foto</strong></label>
+                    <div class="custom-file">
+                      <input type="file"  class="custom-file-input form-control" name="file" id="customFile" required>
+                      <label class="custom-file-label" for="customFile">Selecciona foto</label>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    
+                    <input name="upload"  id="upload" class="btn btn-block btn-dark" class="btn btn-primary" type="submit" value="Subir" >
+                  </div>
+                  <div>{{msg}}</div>
+                </form>
+              </div>
+              
+              <script>
+              // Add the following code if you want the name of the file appear on select
+
+
+              $(".custom-file-input").on("change", function() {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+              });
+              </script>
+              
+           
+         </div>
+         <div class="col-8 mt-4 mr-4 mb-4 bg-white">
+          <ul>
+              <li>Nombre: {{account['NOMBRE']}}</li>
+              <li>Fecha de Nacimniento: {{account['FNAC']}}</li>
+              <li>Matricula: {{account['MATRICULA']}}</li>
+              <li>Tel de contacto: {{account['TELEFONO']}}</li>
+              
+          </ul>
+         </div>
+   </div> 
+</div>
+
+{% endblock %}
+
+    
+{% endblock %}

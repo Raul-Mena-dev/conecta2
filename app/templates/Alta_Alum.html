@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% include 'botones-notificaciones.html'%}
+
+
+<body>
+   
+    <div class="formularios">
+        <form action="/Registro_usuario" method="POST" class="formulario-registro" class="formulario-registro">
+        <div class="titulo">
+            <h3>Registro de usuario</h3>
+            <hr>
+            <br>
+        </div>
+        
+        <input type="text" name="matricula" placeholder="Matricula">
+        <input type="text" name="nombre" placeholder="Nombre">
+        <input type="text" name="apellidos" placeholder="Apellidos">
+        <input type="text" name="carrera" placeholder="Carrera">
+        <input type="password" name="password" placeholder="Contraseña">
+        <input type="password" name="password2" placeholder="Repita la contraseña">
+        <button type="submit" class="boton-registro">
+            Registrar
+        </button>
+        </form>
+    </div>
+</body>
+
+{% endblock %}
+
+    
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% include 'botones-notificaciones.html'%}
+    <table>
+        <thead>
+            <tr>
+                <td>Matricula</td>
+                <td>Fecha</td>
+                <td>Comentario</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mensaje in mensajes %}
+                <tr>
+                    <td>{{mensaje.8}}</td>
+                    <td>{{mensaje.2}}</td>
+                    <td>{{mensaje.4}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+{% endblock %}
+{% endblock %}

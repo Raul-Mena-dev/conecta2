@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% for tema in temas %}
+
+    <div class="postcuadros">
+        <h2>{{ tema.1 }}</h2>
+        <a href="/verpost/{{ tema.0 }}">Ver posts</a>
+    </div>
+{% endfor %}
+
+ {% endblock %}
+ {% endblock %}

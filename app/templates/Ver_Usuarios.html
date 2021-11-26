@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% include 'botones-notificaciones.html'%}
+
+
+<body>
+    <div class="busqueda">
+        <form action="{{url_for('buscar_usuarios')}}" method="post">
+            <div class="busqueda_usuario">
+                <p style="color: #fff;">Buscar usuario</p>
+                <input type="search" name="buscar">
+                <button type="submit" class="boton-buscar"> Buscar </button>
+            </div>
+        </form>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Matricula</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Fecha de nacimiento</th>
+                <th scope="col">Carrera</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if datos %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td>{{datos['MATRICULA']}}</td>
+                    <td>{{datos['NOMBRE']}}</td>
+                    <td>{{datos['FNAC']}}</td>
+                    <td>{{datos['CARRERA']}}</td>
+                </tr>
+            {% else %}
+                {% for usuario in usuarios %}
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>{{usuario.0}}</td>
+                        <td>{{usuario.1}}</td>
+                        <td>{{usuario.2}}</td>
+                        <td>{{usuario.3}}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</body>
+
+
+{% endblock %}
+
+    
+{% endblock %}

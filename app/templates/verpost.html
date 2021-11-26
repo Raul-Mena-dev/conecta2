@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% if session %}
+<div>
+    <button><a href="{{url_for('post')}}">Nueva Publicacion</a></button>
+</div>
+{% endif %}
+
+
+{% for post in posts %}
+
+    <div class="postcuadros">
+        <h2>{{ post.1 }}</h2>
+        <a href="/mostrarpost/{{ post.0 }}">Ver posts</a>
+        <a href="/edita/{{ post.0 }}">Editar</a>
+        <a href="/delete/{{ post.0 }}">Borrar</a>
+        <a href="/reportado_post/{{ post.0 }}">Reportar</a>
+    </div>
+{% endfor %}
+
+ {% endblock %}
+ {% endblock %}
