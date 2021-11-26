@@ -75,6 +75,7 @@ def profile():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM usuarios WHERE MATRICULA = %s', (session['id'],))
         account = cursor.fetchone()
+        session['account'] = account
         # Show the profile page with account info
         return render_template('datos.html', account=account)
     # User is not loggedin redirect to login page
@@ -198,6 +199,12 @@ def register():
         msg = 'Porfavor llena el formulario!'
     # Show registration form with message (if any)
     return render_template('registro.html', msg=msg)
+
+
+@app.route('/publicaciones')
+def publicaciones():
+    account=session['account']
+    return render_template('publicaciones.html', account=account)
 
 
 # @app.route('/mensajes')
