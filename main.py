@@ -10,6 +10,7 @@ import os
 import modelo
 import sys
 import pandas as pd
+from pprint import pprint
 
 #CONFIGURACIONES
 app = create_app()
@@ -101,40 +102,43 @@ def upload():
 #login
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-    # Output message if something goes wrong...
-    msg = ''
-    # Check if "username" and "password" POST requests exist (user submitted form)
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
-        # Create variables for easy access
-        username = request.form['username']
-        password = request.form['password']
-        # Check if account exists using MySQL
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM login WHERE USUARIO = %s AND CONTRA = %s', (username, password,))
-        # Fetch one record and return result
-        account = cursor.fetchone()
-        # If account exists in accounts table in out database
-        if  account['NIVEL'] == 0:
-            # Create session data, we can access this data in other routes
-            session['loggedin'] = True
-            session['id'] = account['ID_LOGIN']
-            session['username'] = account['USUARIO'].capitalize()
-            
-            # Redirect to home page
-            return redirect(url_for('profile'))
-        elif  account['NIVEL'] == 1:
-             # Create session data, we can access this data in other routes
-            session['loggedin'] = True
-            session['id'] = account['ID_LOGIN']
-            session['username'] = account['USUARIO'].capitalize()
-            session['level'] = account['NIVEL']
-            # Redirect to home page
-            return redirect(url_for('Admin'))
-        else:
-            # Account doesnt exist or username/password incorrect
-            msg = 'Usuario\Contraseña incorrecta!'
-    # Show the login form with message (if any)
-    return render_template('login.html', msg=msg)
+    if session:
+        return redirect(url_for('inicio'))
+    else:    
+        # Output message if something goes wrong...
+        msg = ''
+        # Check if "username" and "password" POST requests exist (user submitted form)
+        if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+            # Create variables for easy access
+            username = request.form['username']
+            password = request.form['password']
+            # Check if account exists using MySQL
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM login WHERE USUARIO = %s AND CONTRA = %s', (username, password,))
+            # Fetch one record and return result
+            account = cursor.fetchone()
+            # If account exists in accounts table in out database
+            if  account['NIVEL'] == 0:
+                # Create session data, we can access this data in other routes
+                session['loggedin'] = True
+                session['id'] = account['ID_LOGIN']
+                session['username'] = account['USUARIO'].capitalize()
+                
+                # Redirect to home page
+                return redirect(url_for('profile'))
+            elif  account['NIVEL'] == 1:
+                # Create session data, we can access this data in other routes
+                session['loggedin'] = True
+                session['id'] = account['ID_LOGIN']
+                session['username'] = account['USUARIO'].capitalize()
+                session['level'] = account['NIVEL']
+                # Redirect to home page
+                return redirect(url_for('Admin'))
+            else:
+                # Account doesnt exist or username/password incorrect
+                msg = 'Usuario\Contraseña incorrecta!'
+        # Show the login form with message (if any)
+        return render_template('login.html', msg=msg)
 
 
 #logout
@@ -204,7 +208,16 @@ def register():
 @app.route('/publicaciones')
 def publicaciones():
     account=session['account']
-    return render_template('publicaciones.html', account=account)
+    cur = mysql.connection.cursor()
+    mat = session['id']
+    cur.execute('SELECT * FROM post WHERE Matricula = %s ', (mat,))
+    posts = cur.fetchall()
+    context={
+      'posts':posts,
+      'account':account
+    }
+
+    return render_template('publicaciones.html', **context)
 
 
 # @app.route('/mensajes')
@@ -359,7 +372,7 @@ def add_post():
         estado=1
         grado=1
         cur = mysql.connection.cursor()
-        cur.execute('INSERT INTO post(Titulo,MeGusta,Texto,ID_Carrera,ID_Tema,ID_Estado,id_grado) VALUES (%s,%s,%s,%s,%s,%s,%s)',(titulo, like, texto, carrera,tema, estado, grado))
+        cur.execute('INSERT INTO post(Titulo,MeGusta,Texto,ID_Carrera,ID_Tema,ID_Estado,Matricula,id_grado) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)',(titulo, like, texto, carrera,tema, estado,matricula, grado))
         mysql.connection.commit()
         flash('Se ha agregado su post')
         return redirect(url_for('inicio'))    
@@ -368,11 +381,17 @@ def add_post():
 def add_comentario(id):
     if request.method == 'POST':
         texto=request.form['texto']
-        var = 0
-        cadena = texto.split(sep=', .')
+        cadena = texto.split()
         valor = modelo.prediccion_prob([texto])
         palabras = pd.read_csv('app/model/malas_palabras.csv', encoding = 'utf-8')
+        pal = palabras['MALA_PALABRA'].tolist()
+        
         if modelo.prediccion([texto]) == 1:
+            print(valor, file=sys.stderr)
+            print(cadena, file=sys.stdout)
+            print(pal, file=sys.stdout)
+            return redirect(url_for('mostrarpost',id=id))
+        elif any(item in cadena for item in pal):
             print(valor, file=sys.stderr)
             return redirect(url_for('mostrarpost',id=id))
         else:
@@ -381,6 +400,8 @@ def add_comentario(id):
             cur.execute('INSERT INTO comentarios(Texto,ID_Post,ID_Estado) VALUES (%s, %s, %s)',(texto, id, estado))
             mysql.connection.commit()
             print(valor, file=sys.stderr)
+            print(cadena, file=sys.stdout)
+            print(pal, file=sys.stdout)
             return redirect(url_for('mostrarpost',id=id))
 
 @app.route('/edit/<string:id>')

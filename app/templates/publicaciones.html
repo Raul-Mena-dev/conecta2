@@ -47,10 +47,13 @@
               </script>
               
            
-         </div>
-         <div class="col-8 mt-4 mr-4 mb-4 bg-white">
+        </div>
+        <div class="col-8 mt-4 mr-4 mb-4 bg-white">
+          {% for post in posts %}
+            <a class="btn btn-primary btn-lg btn-block my-2" href="/mostrarpost/{{ post.0 }}" role="button">{{post.1}}</a>
+          {% endfor %}
          
-         </div>
+        </div>
    </div> 
 </div>
 
