@@ -10,7 +10,8 @@
 <div class="container  bg-light p-3 mt-5 border rounded ">
     <button type="button" onclick="logSeleccion(0)" id="btn1" class="btn btn-primary" >Acceder</button>
     <button type="button"  onclick="logSeleccion(1)" id="btn2" class="btn btn-light" >Registrar</button>
-    <form id="acceso" class="acceso " onchange="validacionAcceso()">
+    <!-- Formulario acceso -->
+    <form id="acceso" class="acceso " onchange="validacionAcceso()" method="post" action="{{url_for('login')}}">
         <div class="form-group row">
           <label for="usuario" class="col-sm-2 col-form-label">Usuario</label>
           <div class="col-sm-10">
@@ -47,7 +48,7 @@
           </div>
         </div>
       </form>
-
+      <!-- Formulario registro -->
       <form id="registro" class="registro ocultar" onchange="validacionRegistro()">
         <div class="form-row">
           <div class="form-group col">

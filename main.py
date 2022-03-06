@@ -108,40 +108,16 @@ def login():
         # Output message if something goes wrong...
         msg = ''
         # Check if "username" and "password" POST requests exist (user submitted form)
-        if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+        if request.method == 'POST' and 'usuarioA' in request.form and 'passwordA' in request.form:
             # Create variables for easy access
-            username = request.form['username']
-            password = request.form['password']
+            username = request.form['usuarioA']
+            password = request.form['passwordA']
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM login WHERE USUARIO = %s AND CONTRA = %s', (username, password,))
+            cursor.execute('SELECT * FROM login_admin WHERE nombre_admin = %s AND password = %s', (username, password))
             # Fetch one record and return result
             account = cursor.fetchone()
-            if(account):
-                # If account exists in accounts table in out database
-                if  account['NIVEL'] == 0:
-                    # Create session data, we can access this data in other routes
-                    session['loggedin'] = True
-                    session['id'] = account['ID_LOGIN']
-                    session['username'] = account['USUARIO'].capitalize()
-                    
-                    # Redirect to home page
-                    return redirect(url_for('profile'))
-                elif  account['NIVEL'] == 1:
-                    # Create session data, we can access this data in other routes
-                    session['loggedin'] = True
-                    session['id'] = account['ID_LOGIN']
-                    session['username'] = account['USUARIO'].capitalize()
-                    session['level'] = account['NIVEL']
-                    # Redirect to home page
-                    return redirect(url_for('Admin'))
-                else:
-                    # Account doesnt exist or username/password incorrect
-                    msg = 'Usuario\Contraseña incorrecta!'
-            else:
-                msg = 'Usuario/Contraseña incorrecta'
-        # Show the login form with message (if any)
-        return render_template('login.html', msg=msg)
+        return redirect(url_for('inicio'))
 
 
 #logout
@@ -238,11 +214,11 @@ def publicaciones():
 #ADMINISTRADOR
 @app.route("/Admin")
 def Admin():
-    if 'loggedin' in session:
+    #if 'loggedin' in session:
         
-        return render_template('Admin.html')
+    return render_template('Admin.html')
     # User is not loggedin redirect to login page
-    return redirect(url_for('login'))
+    #return redirect(url_for('login'))
 
 
 #Pagina donde se elige que tipo de usuario se registrara
