@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,session,redirect, url_for,flash
+from flask import render_template,request,session,redirect, url_for,flash
 from app import create_app
 from flask_socketio import SocketIO, emit
 from flask_login import current_user, logout_user
@@ -16,13 +16,14 @@ from pprint import pprint
 app = create_app()
 app.config['SECRET_KEY'] = 'mysecret'
 socketio = SocketIO(app)
-mysql = MySQL(app)
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'conecta2'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
+
+mysql = MySQL(app)
 
 
 @socketio.on('disconnect')
@@ -35,14 +36,19 @@ def disconnect_user():
 #PRINCIPAL  
 @app.route('/')
 def inicio():
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM carrera')
-    carreras = cur.fetchall()
+    
+    universidades = ['Tlajomulco','Rio Nilo','Lazaro Cardenas', 'Campus','Americas', 'Zapopan', 'Pedro Moreno', 'Olimpica']
+    carreras = {}
+    carreras['Tlajomulco'] = ['Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
+    carreras['Rio Nilo'] = ['Derecho', 'Administracion', 'Negocios Internacionales','Mercadotecnia', 'Contaduria publica']
+    carreras['Lazaro Cardenas'] = ['Derecho', 'Carrera de abogado']
+    carreras['Campus'] = ['Nutricion', 'Cultura Fisica y deporte', 'Psicologia', 'Enfermeria','Quimico farmaceutico biologo','Cirujano Dentista', 'Negocios Internacionales','Administracion', 'Mercadotecnia', 'Contaduria publica','Gestion de recursos humanos']
+    carreras['Americas'] = ['Trabajo Social', 'Carrera de abogado', 'Derecho', 'Gastronimia', 'Diseño de modas', 'Diseño para la comunicacion grafica','Diseño de interiores','Arquitectura', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica' ]
+    carreras['Zapopan'] = ['Carrera de abogado', 'Derecho', 'Psicologia', 'Negocios Internacionales','Administracion', 'Mercadotecnia', 'Contaduria publica', 'Gestion recursos humanos']
+    carreras['Pedro Moreno'] = ['Trabajo social', 'Derecho', 'Gastronomia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
+    carreras['Olimpica'] = ['Comunicacion y Electronica', 'Industrial', 'Computacion', 'Civil']
 
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM tema')
-    temas = cur.fetchall()
-    return render_template('home.html',carreras = carreras, temas = temas)
+    return render_template('home.html', universidades = universidades, carreras = carreras)
 
 
 @app.route('/verpost/<carrera_id>/<tema_id>')
@@ -54,17 +60,11 @@ def grados(carrera_id,tema_id):
 
     return render_template('verpost.html',posts = posts)
 
-@app.route('/login')
-def principal():
-    if 'loggedin' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM usuarios WHERE MATRICULA = %s', (session['id'],))
-        account = cursor.fetchone()
-        if account['NIVEL'] == 1:
-            return redirect(url_for('Admin', account=account))
-        else:
-            return render_template('datos.html', account=account)
-    return render_template("login.html")
+@app.route('/login/')
+def selectores():
+    universidades = ['Tlajomulco','Rio Nilo','Lazaro Cardenas', 'Campus','Americas', 'Zapopan', 'Pedro Moreno', 'Olimpica']
+    
+    return render_template("login.html", universidades = universidades)
 
 
 #perfil
@@ -117,26 +117,29 @@ def login():
             cursor.execute('SELECT * FROM login WHERE USUARIO = %s AND CONTRA = %s', (username, password,))
             # Fetch one record and return result
             account = cursor.fetchone()
-            # If account exists in accounts table in out database
-            if  account['NIVEL'] == 0:
-                # Create session data, we can access this data in other routes
-                session['loggedin'] = True
-                session['id'] = account['ID_LOGIN']
-                session['username'] = account['USUARIO'].capitalize()
-                
-                # Redirect to home page
-                return redirect(url_for('profile'))
-            elif  account['NIVEL'] == 1:
-                # Create session data, we can access this data in other routes
-                session['loggedin'] = True
-                session['id'] = account['ID_LOGIN']
-                session['username'] = account['USUARIO'].capitalize()
-                session['level'] = account['NIVEL']
-                # Redirect to home page
-                return redirect(url_for('Admin'))
+            if(account):
+                # If account exists in accounts table in out database
+                if  account['NIVEL'] == 0:
+                    # Create session data, we can access this data in other routes
+                    session['loggedin'] = True
+                    session['id'] = account['ID_LOGIN']
+                    session['username'] = account['USUARIO'].capitalize()
+                    
+                    # Redirect to home page
+                    return redirect(url_for('profile'))
+                elif  account['NIVEL'] == 1:
+                    # Create session data, we can access this data in other routes
+                    session['loggedin'] = True
+                    session['id'] = account['ID_LOGIN']
+                    session['username'] = account['USUARIO'].capitalize()
+                    session['level'] = account['NIVEL']
+                    # Redirect to home page
+                    return redirect(url_for('Admin'))
+                else:
+                    # Account doesnt exist or username/password incorrect
+                    msg = 'Usuario\Contraseña incorrecta!'
             else:
-                # Account doesnt exist or username/password incorrect
-                msg = 'Usuario\Contraseña incorrecta!'
+                msg = 'Usuario/Contraseña incorrecta'
         # Show the login form with message (if any)
         return render_template('login.html', msg=msg)
 
@@ -144,14 +147,14 @@ def login():
 #logout
 @app.route('/login/logout')
 def logout():
-    # Remove session data, this will log the user out
-   session.pop('loggedin', None)
-   session.pop('id', None)
-   session.pop('username', None)
-   session.pop('level', None)
-   session.clear()
-   # Redirect to login page
-   return redirect(url_for('login'))
+# Remove session data, this will log the user out
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('username', None)
+    session.pop('level', None)
+    session.clear()
+    # Redirect to login page
+    return redirect(url_for('login'))
 
 
 
@@ -178,19 +181,19 @@ def register():
         account = cursor.fetchone()
         # If account exists show error and validation checks
         if account:
-             msg = 'Cuenta ya existe!'
+            msg = 'Cuenta ya existe!'
         elif not re.match('[^@]+[@alumnos.uteg.edu.mx]', str(email)):
-             msg = 'Correo invalido!'
+            msg = 'Correo invalido!'
         elif not re.match('[A-Za-z0-9]+', str(username)):
-             msg = 'El usuario no puede tener caracteres especiales!'
+            msg = 'El usuario no puede tener caracteres especiales!'
         elif not re.match('[A-Za-z\\s]+', str(name)):
-             msg = 'El nombre solo debe tener letras!'
+            msg = 'El nombre solo debe tener letras!'
         elif not re.match('[0-9]{10}', str(enrollment)):
-             msg = 'La matricula incorrecta!'
+            msg = 'La matricula incorrecta!'
         elif not re.match('[0-9]+', str(phone)):
-             msg = 'El telefono incorrecto!'
+            msg = 'El telefono incorrecto!'
         elif not username or not password or not email or not name or not enrollment or not birthday or not phone:
-             msg = 'Porfavor llena el formulario!'
+            msg = 'Porfavor llena el formulario!'
         else:
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
             cursor.execute('INSERT INTO usuarios(MATRICULA, NOMBRE, FNAC, TELEFONO) VALUES (%s, %s, %s, %s)', (enrollment, name, birthday, phone))
@@ -213,8 +216,8 @@ def publicaciones():
     cur.execute('SELECT * FROM post WHERE Matricula = %s ', (mat,))
     posts = cur.fetchall()
     context={
-      'posts':posts,
-      'account':account
+    'posts':posts,
+    'account':account
     }
 
     return render_template('publicaciones.html', **context)
@@ -406,65 +409,65 @@ def add_comentario(id):
 
 @app.route('/edit/<string:id>')
 def get_comentario(id):
-  cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-  cur.execute('SELECT * FROM comentarios WHERE ID_Comentario = {0} '.format(id))
-  data = cur.fetchone()
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT * FROM comentarios WHERE ID_Comentario = {0} '.format(id))
+    data = cur.fetchone()
 
-  return render_template('editar.html', contact = data )
+    return render_template('editar.html', contact = data )
 
 @app.route('/update', methods=['POST'])
 def editar_comentario2():
-  if request.method == 'POST':
-      id = request.form['ide']
-      texto = request.form['texto']
-      cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-      cur.execute('UPDATE comentarios SET Texto = %s WHERE ID_Comentario = %s ',(texto,id))
-      mysql.connection.commit()
-      flash('comentario editado con exito')
-      return redirect(url_for('inicio'))
+    if request.method == 'POST':
+        id = request.form['ide']
+        texto = request.form['texto']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('UPDATE comentarios SET Texto = %s WHERE ID_Comentario = %s ',(texto,id))
+        mysql.connection.commit()
+        flash('comentario editado con exito')
+        return redirect(url_for('inicio'))
 
 @app.route('/edita/<string:id>')
 def get_comentario2(id):
-  cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-  cur.execute('SELECT * FROM post WHERE ID_Post = {0} '.format(id))
-  data = cur.fetchone()
-  return render_template('editar2.html', contact = data )
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT * FROM post WHERE ID_Post = {0} '.format(id))
+    data = cur.fetchone()
+    return render_template('editar2.html', contact = data )
 
 @app.route('/update2', methods=['POST'])
 def editar_comentario():
-  if request.method == 'POST':
-      id = request.form['ide']
-      titulo = request.form['titulo']
-      texto = request.form['texto']
-      cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-      cur.execute('UPDATE post SET Titulo = %s, Texto = %s WHERE ID_Post = %s ',(titulo,texto,id))
-      mysql.connection.commit()
-      flash('POST editado con exito')
-      return redirect(url_for('inicio'))
+    if request.method == 'POST':
+        id = request.form['ide']
+        titulo = request.form['titulo']
+        texto = request.form['texto']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('UPDATE post SET Titulo = %s, Texto = %s WHERE ID_Post = %s ',(titulo,texto,id))
+        mysql.connection.commit()
+        flash('POST editado con exito')
+        return redirect(url_for('inicio'))
 
 @app.route('/borrar/<string:id>')
 def borrar_comentario(id):
-  cur = mysql.connection.cursor()
-  cur.execute('DELETE FROM comentarios WHERE ID_Comentario = {0} '.format(id))
-  mysql.connection.commit()
-  flash('comentario eliminado')
-  return redirect(url_for('inicio'))
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM comentarios WHERE ID_Comentario = {0} '.format(id))
+    mysql.connection.commit()
+    flash('comentario eliminado')
+    return redirect(url_for('inicio'))
 
 @app.route('/delete/<string:id>')
 def borrar_post(id):
-  cur = mysql.connection.cursor()
-  cur.execute('DELETE FROM post WHERE ID_Post = {0} '.format(id))
-  mysql.connection.commit()
-  flash('post eliminado')
-  return redirect(url_for('inicio'))  
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM post WHERE ID_Post = {0} '.format(id))
+    mysql.connection.commit()
+    flash('post eliminado')
+    return redirect(url_for('inicio'))  
 
 @app.route('/nosotros')
 def nosotros():
-  return render_template('nosotros.html')
+    return render_template('nosotros.html')
 
 @app.route('/credito')
 def creditos():
-  return render_template('creditos.html')
+    return render_template('creditos.html')
 
 @app.route('/busqueda')
 def busqueda():
@@ -477,30 +480,30 @@ def busqueda():
     data = cur.fetchall()
 
     context={
-      'grados':grados,
-      'comentario':data
+    'grados':grados,
+    'comentario':data
     }
     return render_template("buscar.html",**context)
 
 @app.route('/busquedabtn', methods=['POST'])
 def busquedabtn():
-  if request.method == 'POST':
-      grado = request.form['grado']
+    if request.method == 'POST':
+        grado = request.form['grado']
 
-      cur = mysql.connection.cursor()
-      cur.execute('SELECT * FROM post WHERE id_grado = %s', grado)
-      busqueda= cur.fetchall() 
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM post WHERE id_grado = %s', grado)
+        busqueda= cur.fetchall() 
 
-      cur = mysql.connection.cursor()
-      cur.execute('SELECT * FROM grados')
-      grados = cur.fetchall()
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM grados')
+        grados = cur.fetchall()
 
-      context={
-       'grados':grados,
-       'comentario':busqueda,
-      }
+        context={
+        'grados':grados,
+        'comentario':busqueda,
+        }
     
-      return render_template('buscar.html',**context)
+        return render_template('buscar.html',**context)
 
 @app.route('/busqueda2')
 def busqueda2():
@@ -513,30 +516,30 @@ def busqueda2():
     data = cur.fetchall()
 
     context={
-      'carreras':carreras,
-      'comentario':data
+    'carreras':carreras,
+    'comentario':data
     }
     return render_template("buscar2.html",**context)
 
 @app.route('/busquedabtn2', methods=['POST'])
 def busquedabtn2():
-  if request.method == 'POST':
-      carrera = request.form['carrera']
+    if request.method == 'POST':
+        carrera = request.form['carrera']
     
-      cur = mysql.connection.cursor()
-      cur.execute('SELECT * FROM post WHERE ID_Carrera = %s', carrera)
-      busqueda= cur.fetchall() 
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM post WHERE ID_Carrera = %s', carrera)
+        busqueda= cur.fetchall() 
 
-      cur = mysql.connection.cursor()
-      cur.execute('SELECT * FROM carrera')
-      carreras = cur.fetchall()
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM carrera')
+        carreras = cur.fetchall()
 
-      context={
-       'carreras':carreras,
-       'comentario':busqueda,
-      }
-    
-      return render_template('buscar2.html',**context)   
+        context={
+        'carreras':carreras,
+        'comentario':busqueda,
+        }
+        
+        return render_template('buscar2.html',**context)   
 
 @app.route('/reportado_post/<string:id>')
 def reportado_post(id):

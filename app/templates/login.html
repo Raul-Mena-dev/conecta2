@@ -7,27 +7,122 @@
 {% endblock %}
 
 {% block content %}
+<div class="container  bg-light p-3 mt-5 border rounded ">
+    <button type="button" onclick="logSeleccion(0)" id="btn1" class="btn btn-primary" >Acceder</button>
+    <button type="button"  onclick="logSeleccion(1)" id="btn2" class="btn btn-light" >Registrar</button>
+    <form id="acceso" class="acceso " onchange="validacionAcceso()">
+        <div class="form-group row">
+          <label for="usuario" class="col-sm-2 col-form-label">Usuario</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="usuarioA" minlength="6"   maxlength="10" placeholder="Usuario">
+            <small id="aerrorMsg1" class="form-text p-1 text-danger ocultar" >Solo se permiten letras</small>
+            <small id="aerrorMsg2" class="form-text p-1 text-danger ocultar" >6-10 caracteres</small>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="passwordA" class="col-sm-2 col-form-label">Contraseña</label>
+          <div class="col-sm-10">
+            <input type="password" class="form-control" id="passwordA" placeholder="Password" minlength="8"   maxlength="8" disabled>
+            <small id="aerrorMsg3" class="form-text p-1 text-danger ocultar" >Solo letras y/o numeros</small>
+            <small id="aerrorMsg4" class="form-text p-1 text-danger ocultar" >8 caracteres</small>
+          </div>
+        </div>
+        <fieldset class="form-group">
+          <div class="row">
+            <legend class="col-form-label col-sm-2 pt-0">Recuerdame </legend>
+            <div class="col-sm-10">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="recordar" id="recodar" value="1" >
+                <label class="form-check-label" for="gridRadios1">
+                  Recordar
+                </label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <button type="submit" id="acceder" class="btn btn-primary" disabled>Acceder</button>
+          </div>
+        </div>
+      </form>
 
-<div class="login">
-    <h1>Login</h1>
-    <div class="links">
-        <a href="{{ url_for('login') }}" class="active">Login</a>
-        <a href="{{ url_for('register') }}">Registrar</a>
-    </div>
-    <form action="{{ url_for('login') }}" method="post">
-        <label for="username">
-            <i class="fas fa-user"></i>
-        </label>
-        <input type="text" name="username" placeholder="Usuario" id="username" required>
-        <label for="password">
-            <i class="fas fa-lock"></i>
-        </label>
-        <input type="password" name="password" placeholder="Contraseña" id="password" required>
-        <div class="msg">{{ msg }}</div>
-        <input type="submit" value="Login">
-    </form>
+      <form id="registro" class="registro ocultar" onchange="validacionRegistro()">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="nombre">Nombre/s</label>
+            <input type="text" class="form-control" id="nombre" placeholder="Nombre">
+            <small id="errorMsg1" class="form-text p-1 text-danger ocultar" >Solo se permiten letras</small>
+          </div>
+          <div class="form-group col">
+            <label for="apellido1">Apellido 1</label>
+            <input type="text" class="form-control" id="apellido1" placeholder="Apellido 1" disabled>
+            <small id="errorMsg2" class="form-text p-1 text-danger ocultar" >Solo se permiten letras</small>
+          </div>
+          <div class="form-group col">
+            <label for="apellido2">Apellido 2</label>
+            <input type="text" class="form-control" id="apellido2" placeholder="Apellido 2" disabled>
+            <small id="errorMsg3" class="form-text p-1 text-danger ocultar" >Solo se permiten letras</small>
+          </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group col">
+            <label for="usuario">Usuario(6-10 letras)</label>
+            <input type="text" class="form-control" id="usuarioR" minlength="6"   maxlength="10" placeholder="Usuario" disabled>
+            <small id="errorMsg4" class="form-text p-1 text-danger ocultar" >Solo se permiten letras</small>
+            <small id="errorMsg9" class="form-text p-1 text-danger ocultar" >6-10 caracteres</small>
+            </div>
+            <div class="form-group col">
+            <label for="passwordR">Contraseña(8 letras y/o numeros)</label>
+            <input type="password" class="form-control" id="passwordR" minlength="8"   maxlength="8" placeholder="Contraseña" disabled>
+            <small id="errorMsg11" class="form-text p-1 text-danger ocultar" >Solo letras y/o numeros</small>
+            <small id="errorMsg10" class="form-text p-1 text-danger ocultar" >8 caracteres</small>
+            </div>
+            <div class="form-group col">
+              <label for="Correo">Correo</label>
+              <input type="email" class="form-control" id="email" placeholder="Correo" disabled>
+              <small id="errorMsg12" class="form-text p-1 text-danger ocultar" >Usa un correo valido</small>
+              </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="matricula">Matricula</label>
+            <input type="text" class="form-control" id="matricula" minlength="9"  maxlength="11" placeholder="0000000000" disabled>
+            <small id="errorMsg5" class="form-text p-1 text-danger ocultar" >Solo numeros</small>
+            <small id="errorMsg13" class="form-text p-1 text-danger ocultar" >9-11 digitos</small>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="telefono">Telefono(10 digitos)</label>
+                <input type="text" class="form-control" id="telefono" minlength="10"   maxlength="10" placeholder="0000000000" disabled>
+                <small id="errorMsg6" class="form-text p-1 text-danger ocultar" >Solo numeros</small>
+                <small id="errorMsg14" class="form-text p-1 text-danger ocultar" >formato de 10 numeros</small>
+          </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="campus">Campus</label>
+                <select name="campus" id="campus" onchange="selCarreras()" class="form-control" disabled>
+                    <option value="">--Seleccionar--</option>
+                    {% for universidad in universidades %}
+                    <option value="{{universidad}}">{{universidad}}</option>
+                    {% endfor %}
+                </select>
+                <small id="errorMsg7" class="form-text p-1 text-danger ocultar" >Selecciona uno</small>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="carrera">Carrera</label>
+                <select name="carreras" id="carreras"  class="form-control carreras" disabled>
+                    <option value="0">--Seleccionar--</option>
+                </select>
+                <small id="errorMsg8" class="form-text p-1 text-danger ocultar" >Selecciona uno</small>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary " id="registrar" disabled>Registrar</button>
+      </form>
 </div>
-
-
+    
 {% endblock %}
 {% endblock %}

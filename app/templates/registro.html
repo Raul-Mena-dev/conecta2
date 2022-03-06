@@ -17,31 +17,31 @@
     </div>
     <form action="{{ url_for('register') }}" method="post" autocomplete="off">
         <label for="enrollment">
-            <i class="fas fa-ellipsis-h"></i>
+            <i class="fas fa-ellipsis-h pt-3"></i>
         </label>
         <input type="text" name="enrollment" placeholder="Matricula" id="enrollment" required>
         <label for="username">
-            <i class="fas fa-user"></i>
+            <i class="fas fa-user pt-3"></i>
         </label>
         <input type="text" name="username" placeholder="Usuario" id="username" required>
         <label for="password">
-            <i class="fas fa-lock"></i>
+            <i class="fas fa-lock pt-3"></i>
         </label>
         <input type="password" name="password" placeholder="Contraseña" id="password" required>
         <label for="name">
-            <i class="fas fa-font"></i>
+            <i class="fas fa-font pt-3"></i>
         </label>
         <input type="text" name="name" placeholder="Nombre" id="name" required>
         <label for="birthday">
-            <i class="far fa-calendar-alt"></i>
+            <i class="far fa-calendar-alt pt-3"></i>
         </label>
         <input type="date" name="birthday" placeholder="Fecha de nacimiento" id="birthday" required>
         <label for="phone">
-            <i class="fas fa-phone"></i>
+            <i class="fas fa-phone pt-3"></i>
         </label>
         <input type="text" name="phone" placeholder="Telefono" id="phone" required>
         <label for="email">
-            <i class="fas fa-envelope"></i>
+            <i class="fas fa-envelope pt-3"></i>
         </label>
         <input type="email" name="email" placeholder="Email" id="email" required>
         <div class="msg">{{ msg }}</div>
