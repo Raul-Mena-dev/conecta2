@@ -60,11 +60,6 @@ def grados(carrera_id,tema_id):
 
     return render_template('verpost.html',posts = posts)
 
-@app.route('/login/')
-def selectores():
-    universidades = ['Tlajomulco','Rio Nilo','Lazaro Cardenas', 'Campus','Americas', 'Zapopan', 'Pedro Moreno', 'Olimpica']
-    
-    return render_template("login.html", universidades = universidades)
 
 
 #perfil
@@ -108,15 +103,20 @@ def login():
         # Output message if something goes wrong...
         msg = ''
         # Check if "username" and "password" POST requests exist (user submitted form)
-        if request.method == 'POST' and 'usuarioA' in request.form and 'passwordA' in request.form:
+        if request.method == 'POST' and 'matricula' in request.form and 'passwordA' in request.form:
             # Create variables for easy access
-            username = request.form['usuarioA']
+            matricula = request.form['matricula']
             password = request.form['passwordA']
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM login_admin WHERE nombre_admin = %s AND password = %s', (username, password))
-            # Fetch one record and return result
-            account = cursor.fetchone()
+            try:
+                cursor.execute('SELECT * FROM login WHERE matricula = %s AND pass = %s', (matricula, password))
+                # Fetch one record and return result
+                account = cursor.fetchone()
+                session['id']= account['matricula']
+                session['usuario']= account['usuario']
+            except Exception as e:
+                return "Error: " + str(e) 
         return redirect(url_for('inicio'))
 
 
