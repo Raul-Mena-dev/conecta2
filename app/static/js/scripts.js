@@ -266,83 +266,42 @@ function validacionRegistro(){
     vNum =  /^[0-9]{10}$/
     vMatricula = /^[0-9]{9,11}$/
     //elementos a revisar
-    nombre = document.getElementById("nombre").value;
-    apellido1 = document.getElementById("apellido1").value;
-    apellido2 = document.getElementById("apellido2").value;
     usuario = document.getElementById("usuarioR").value;
     password = document.getElementById("passwordR").value;
-    email = document.getElementById("email").value;
     matricula = document.getElementById("matricula").value;
-    telefono = document.getElementById("telefono").value;
-    campus = document.getElementById("campus").value;
-    carrera = document.getElementById("carreras").value;
     
     error=0;
 
     //Validaciones
 
-    /**Nombre validacion campo vacio y validacion regex */
-    if(nombre.length > 0){//si el campo no esta vacio
-        if(vNom.test(nombre) == false){//si la validacion falla:
-            n = document.getElementById("nombre") //elemento al que seleccionamos  para añadir la clase error
-            n.classList.add("error")// se añade la clase error
-            document.getElementById("apellido1").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg1").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
-            error=1// bandera para los errores
-        }else{//si la validacion acierta: 
-            n = document.getElementById("nombre")//elemento al que seleccionamos para remover la clase error
-            n.classList.remove("error")//se remueve la clase error
-            document.getElementById("apellido1").removeAttribute("disabled")// se remueve el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg1").classList.add("ocultar")// se añade la clase ocultar para queel div error se muestre
-            error=0//bandera para los errores
-        }
-        
-    }else{
-        document.getElementById("apellido1").setAttribute("disabled", "")//si el elemento a validar esta vacio se deshabilita el siguiente
-        error=1;//bandera para los errores
-    }
-    /**Apellido1 validacion campo vacio y validacion regex */
-    if(apellido1.length > 0 && nombre.length > 0 && error == 0){//si los campos no estan vacios
-        if(vNom.test(apellido1) == false){//si la validacion falla:
-            n = document.getElementById("apellido1") //elemento al que seleccionamos  para añadir la clase error
-            n.classList.add("error")// se añade la clase error
-            document.getElementById("apellido2").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg2").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
-            error=1;// bandera para los errores
-            
-        }else{
-            n = document.getElementById("apellido1")//elemento al que seleccionamos para remover la clase error
-            n.classList.remove("error")//se remueve la clase error
-            document.getElementById("apellido2").removeAttribute("disabled")// se remueve el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg2").classList.add("ocultar")// se añade la clase ocultar para queel div error se muestre
-            error=0;// bandera para los errores
-        }
-    }else{
-        document.getElementById("apellido2").setAttribute("disabled", "")//si el elemento a validar esta vacio se deshabilita el siguiente
-        error=1;// bandera para los errores
-    }
-    /**Apellido2 validacion campo vacio y validacion regex */
-    if(apellido2.length > 0 && nombre.length > 0 && apellido1.length > 0 && error == 0){//si los campos no estan vacios
-        if(vNom.test(apellido2) == false){//si la validacion falla:
-            n = document.getElementById("apellido2")//elemento al que seleccionamos  para añadir la clase error
+    /**Matricula validacion campo vacio y validacion regex */
+    if(matricula.length > 0 ){//si los campos no estan vacios
+        if(vMatricula.test(matricula) == false){//si la validacion falla:
+            n = document.getElementById("matricula")//elemento al que seleccionamos  para añadir la clase error
             n.classList.add("error")// se añade la clase error
             document.getElementById("usuarioR").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg3").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
+            document.getElementById("errorMsg5").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
             error=1;// bandera para los errores
-            
+        }else if(matricula.length < 9 || matricula.length > 11 ){// se revisa si la cantidad es diferente y se muestra el error si sobran o faltan caracteres
+            n = document.getElementById("matricula")//elemento al que seleccionamos  para añadir la clase error
+            n.classList.add("error")// se añade la clase error
+            document.getElementById("usuarioR").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
+            document.getElementById("errorMsg13").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
+            error=1;// bandera para los errores
         }else{
-            n = document.getElementById("apellido2")//elemento al que seleccionamos para remover la clase error
+            n = document.getElementById("matricula")//elemento al que seleccionamos para remover la clase error
             n.classList.remove("error")//se remueve la clase error
             document.getElementById("usuarioR").removeAttribute("disabled")// se remueve el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg3").classList.add("ocultar")// se añade la clase ocultar para queel div error se muestre
+            document.getElementById("errorMsg5").classList.add("ocultar")// se añade la clase ocultar para que el div error se muestre
+            document.getElementById("errorMsg13").classList.add("ocultar")// se añade la clase ocultar para que el segundo div error  se muestre
             error=0;// bandera para los errores
         }
     }else{
-        document.getElementById("usuarioR").setAttribute("disabled", "")//si el elemento a validar esta vacio se deshabilita el siguiente
+        document.getElementById("usuarioR").setAttribute("disabled", "")//si el elemento a validar esta vacio se deshabilita el siguiente elemento
         error=1;// bandera para los errores
     }
     /**Usuario validacion campo vacio y validacion regex */
-    if(usuario.length > 0 && apellido1.length > 0 && apellido2.length > 0 && nombre.length > 0 && error == 0){//si los campos no estan vacios
+    if(usuario.length > 0 && matricula.length > 0  && error == 0){//si los campos no estan vacios
         if(vUser.test(usuario) == false){//si la validacion falla:
             n = document.getElementById("usuarioR")//elemento al que seleccionamos  para añadir la clase error
             n.classList.add("error")// se añade la clase error
@@ -368,123 +327,29 @@ function validacionRegistro(){
         error=1;// bandera para los errores
     }
     /**Contraseña validacion campo vacio y validacion regex */
-    if(password.length > 0 && usuario.length > 0 && apellido1.length > 0 && apellido2.length > 0 && nombre.length > 0 && error == 0){//si los campos no estan vacios
+    if(matricula.length > 0 && usuario.length > 0 && password.length > 0 && error == 0){//si los campos no estan vacios
         if(vPass.test(password) == false){//si la validacion falla:
             n = document.getElementById("passwordR")//elemento al que seleccionamos  para añadir la clase error
             n.classList.add("error")// se añade la clase error
-            document.getElementById("email").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
+            document.getElementById("registrar").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
             document.getElementById("errorMsg11").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
             error=1;// bandera para los errores
         }else if(password.length != 8){// se revisa si la cantidad es diferente y se muestra el error si sobran o faltan caracteres
             n = document.getElementById("passwordR")//elemento al que seleccionamos  para añadir la clase error
             n.classList.add("error")// se añade la clase error
-            document.getElementById("email").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
+            document.getElementById("registrar").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
             document.getElementById("errorMsg10").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
             error=1;// bandera para los errores
         }else{
             n = document.getElementById("passwordR")//elemento al que seleccionamos para remover la clase error
             n.classList.remove("error")//se remueve la clase error
-            document.getElementById("email").removeAttribute("disabled")// se remueve el atributo disabled al elemento siguiente
+            document.getElementById("registrar").removeAttribute("disabled")// se remueve el atributo disabled al elemento siguiente
             document.getElementById("errorMsg11").classList.add("ocultar")// se añade la clase ocultar para que el div error se muestre
             document.getElementById("errorMsg10").classList.add("ocultar")// se añade la clase ocultar para que el segundo div error  se muestre
             error=0;// bandera para los errores
         }
     }else{
-        document.getElementById("email").setAttribute("disabled", "")//si el elemento a validar esta vacio se deshabilita el siguiente elemento
+        document.getElementById("registrar").setAttribute("disabled", "")//si el elemento a validar esta vacio se deshabilita el siguiente elemento
         error=1;// bandera para los errores
     }
-    /**email validacion campo vacio y validacion regex */
-    if(email.length > 0 && password.length > 0 && usuario.length > 0 && apellido1.length > 0 && apellido2.length > 0 && nombre.length > 0 && error == 0){//si los campos no estan vacios
-        if(vEmail.test(email) == false){//si la validacion falla:
-            n = document.getElementById("email")//elemento al que seleccionamos  para añadir la clase error
-            n.classList.add("error")// se añade la clase error
-            document.getElementById("matricula").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg12").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
-            error=1;// bandera para los errores
-        }else{
-            n = document.getElementById("email")//elemento al que seleccionamos para remover la clase error
-            n.classList.remove("error")//se remueve la clase error
-            document.getElementById("matricula").removeAttribute("disabled")// se remueve el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg12").classList.add("ocultar")// se añade la clase ocultar para que el div error se muestre
-            error=0;// bandera para los errores
-        }
-    }else{
-        document.getElementById("matricula").setAttribute("disabled", "")//si el elemento a validar esta vacio se deshabilita el siguiente elemento
-        error=1;// bandera para los errores
-    }
-    /**matricula validacion campo vacio y validacion regex */
-    if(matricula.length > 0 && email.length > 0 && usuario.length > 0 && apellido1.length > 0 && apellido2.length > 0 && nombre.length > 0 && error == 0){//si los campos no estan vacios
-        if(vMatricula.test(matricula) == false){//si la validacion falla:
-            n = document.getElementById("matricula")//elemento al que seleccionamos  para añadir la clase error
-            n.classList.add("error")// se añade la clase error
-            document.getElementById("telefono").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg5").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
-            error=1;// bandera para los errores
-        }else if(matricula.length < 9 || matricula.length > 11 ){// se revisa si la cantidad es diferente y se muestra el error si sobran o faltan caracteres
-            n = document.getElementById("matricula")//elemento al que seleccionamos  para añadir la clase error
-            n.classList.add("error")// se añade la clase error
-            document.getElementById("telefono").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg13").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
-            error=1;// bandera para los errores
-        }else{
-            n = document.getElementById("matricula")//elemento al que seleccionamos para remover la clase error
-            n.classList.remove("error")//se remueve la clase error
-            document.getElementById("telefono").removeAttribute("disabled")// se remueve el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg5").classList.add("ocultar")// se añade la clase ocultar para que el div error se muestre
-            document.getElementById("errorMsg13").classList.add("ocultar")// se añade la clase ocultar para que el segundo div error  se muestre
-            error=0;// bandera para los errores
-        }
-    }else{
-        document.getElementById("telefono").setAttribute("disabled", "")//si el elemento a validar esta vacio se deshabilita el siguiente elemento
-        error=1;// bandera para los errores
-    }
-
-    /**telefono validacion campo vacio y validacion regex */
-    if(telefono.length > 0 && matricula.length > 0 && email.length > 0 && usuario.length > 0 && apellido1.length > 0 && apellido2.length > 0 && nombre.length > 0 && error == 0){//si los campos no estan vacios
-        if(vNum.test(telefono) == false){//si la validacion falla:
-            n = document.getElementById("campus")//elemento al que seleccionamos  para añadir la clase error
-            n.classList.add("error")// se añade la clase error
-            document.getElementById("campus").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg6").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
-            error=1;// bandera para los errores
-        }else if(password.length != 8){// se revisa si la cantidad es diferente y se muestra el error si sobran o faltan caracteres
-            n = document.getElementById("campus")//elemento al que seleccionamos  para añadir la clase error
-            n.classList.add("error")// se añade la clase error
-            document.getElementById("campus").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg14").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
-            error=1;// bandera para los errores
-        }else{
-            n = document.getElementById("campus")//elemento al que seleccionamos para remover la clase error
-            n.classList.remove("error")//se remueve la clase error
-            document.getElementById("campus").removeAttribute("disabled")// se remueve el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg6").classList.add("ocultar")// se añade la clase ocultar para que el div error se muestre
-            document.getElementById("errorMsg14").classList.add("ocultar")// se añade la clase ocultar para que el segundo div error  se muestre
-            error=0;// bandera para los errores
-        }
-    }else{
-        document.getElementById("campus").setAttribute("disabled", "")//si el elemento a validar esta vacio se deshabilita el siguiente elemento
-        error=1;// bandera para los errores
-    }
-    /* campus validacion campo vacio */
-    if(campus.length > 0 && matricula.length > 0 && email.length > 0 && usuario.length > 0 && apellido1.length > 0 && apellido2.length > 0 && nombre.length > 0 && error == 0){//si los campos no estan vacios
-            n = document.getElementById("carreras")//elemento al que seleccionamos para remover la clase error
-            n.classList.remove("error")//se remueve la clase error
-            document.getElementById("carreras").removeAttribute("disabled")// se remueve el atributo disabled al elemento siguiente
-            document.getElementById("errorMsg7").classList.add("ocultar")// se añade la clase ocultar para que el div error se muestre
-            error=0;// bandera para los errores
-    }else{
-        document.getElementById("carreras").setAttribute("disabled", "")//si el elemento a validar esta vacio se deshabilita el siguiente elemento
-        error=1;// bandera para los errores
-    }
-    /* carrera validacion campo vacio */
-    if(campus.length > 0 && telefono.length > 0 && matricula.length > 0 && email.length > 0 && usuario.length > 0 && apellido1.length > 0 && apellido2.length > 0 && nombre.length > 0 && error == 0){//si los campos no estan vacios
-        n = document.getElementById("registrar")//elemento al que seleccionamos para remover la clase error
-        n.classList.remove("error")//se remueve la clase error
-        document.getElementById("registrar").removeAttribute("disabled")// se remueve el atributo disabled al elemento siguiente
-        document.getElementById("errorMsg8").classList.add("ocultar")// se añade la clase ocultar para que el div error se muestre
-        error=0;// bandera para los errores
-}else{
-    document.getElementById("registrar").setAttribute("disabled", "")//si el elemento a validar esta vacio se deshabilita el siguiente elemento
-    error=1;// bandera para los errores
-}
 }
