@@ -13,11 +13,11 @@
     <!-- Formulario acceso -->
     <form id="acceso" class="acceso " onchange="validacionAcceso()" method="post" action="{{url_for('login')}}">
         <div class="form-group row">
-          <label for="usuario" class="col-sm-2 col-form-label">Usuario</label>
+          <label for="matricula" class="col-sm-2 col-form-label">Matricula</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="usuarioA" minlength="6"   maxlength="10" placeholder="Usuario">
-            <small id="aerrorMsg1" class="form-text p-1 text-danger ocultar" >Solo se permiten letras</small>
-            <small id="aerrorMsg2" class="form-text p-1 text-danger ocultar" >6-10 caracteres</small>
+            <input type="text" class="form-control" id="matricula" minlength="9"   maxlength="11" placeholder="matricula">
+            <small id="aerrorMsg1" class="form-text p-1 text-danger ocultar" >Solo se permiten Numeros</small>
+            <small id="aerrorMsg2" class="form-text p-1 text-danger ocultar" >9-11 caracteres</small>
           </div>
         </div>
         <div class="form-group row">
@@ -53,17 +53,16 @@
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="matricula">Matricula</label>
-            <input type="text" class="form-control" id="matricula" minlength="9"  maxlength="11" placeholder="0000000000" >
+            <input type="text" class="form-control" id="matriculaR" minlength="9"  maxlength="11" placeholder="0000000000" >
             <small id="errorMsg5" class="form-text p-1 text-danger ocultar" >Solo numeros</small>
             <small id="errorMsg13" class="form-text p-1 text-danger ocultar" >9-11 digitos</small>
           </div>
         </div>
         <div class="form-row">
             <div class="form-group col">
-            <label for="usuario">Usuario(6-10 letras)</label>
-            <input type="text" class="form-control" id="usuarioR" minlength="6"   maxlength="10" placeholder="Usuario" disabled>
-            <small id="errorMsg4" class="form-text p-1 text-danger ocultar" >Solo se permiten letras</small>
-            <small id="errorMsg9" class="form-text p-1 text-danger ocultar" >6-10 caracteres</small>
+            <label for="email">Email(institucional)</label>
+            <input type="email" class="form-control" id="email" placeholder="email" disabled>
+            <small id="errorMsg4" class="form-text p-1 text-danger ocultar" >Solo correo institucional</small>
             </div>
             <div class="form-group col">
             <label for="passwordR">Contraseña(8 letras y/o numeros)</label>
