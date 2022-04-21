@@ -19,7 +19,7 @@ socketio = SocketIO(app)
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'conecta2'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
@@ -49,17 +49,6 @@ def inicio():
     carreras['Olimpica'] = ['Comunicacion y Electronica', 'Industrial', 'Computacion', 'Civil']
 
     return render_template('home.html', universidades = universidades, carreras = carreras)
-
-
-@app.route('/verpost/<carrera_id>/<tema_id>')
-def grados(carrera_id,tema_id):
-    estado = 1
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM post WHERE ID_Carrera = %s AND ID_Tema = %s AND ID_Estado = %s', (carrera_id,tema_id,estado))
-    posts = cur.fetchall()
-
-    return render_template('verpost.html',posts = posts)
-
 
 
 #perfil
@@ -312,210 +301,69 @@ def buscar_usuarios():
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cur.execute('SELECT * FROM usuarios WHERE NOMBRE  = %s OR MATRICULA = %s', (dato,dato))
         datos = cur.fetchone()
-        print (datos)
     return render_template('Ver_usuarios.html',datos = datos)
 
-@app.route('/post')
-def post():
+#Seccion de post  
+
+#****** NUEVO ******
+@app.route("/obtenerID/<string:plantel>/<string:carrera>")
+def obtenerID(plantel,carrera):
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM carrera')
-    carreras = cur.fetchall()
+    cur.execute('SELECT id_plantel FROM planteles WHERE plantel = %s',(plantel,))
+    id_plantel = cur.fetchone()
 
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM tema')
-    grados = cur.fetchall()
+    cur.execute('SELECT id_carrera FROM carrera WHERE carrera = %s',(carrera,))
+    id_carrera = cur.fetchone()
+    
+    return redirect(url_for('listar',id_plantel = id_plantel, id_carrera = id_carrera))
 
-    return render_template('post.html',carreras=carreras , grados=grados)
 
-@app.route('/mostrarpost/<string:id>')
+
+
+#Se muestra la lista de post
+@app.route("/listar/<string:id_plantel>/<string:id_carrera>")
+def listar(id_plantel,id_carrera):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT post.id_post, post.titulo, post.fecha, login.usuario FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY fecha DESC', (id_plantel,id_carrera))
+    posts = cur.fetchall()
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT planteles.plantel, carrera.carrera FROM planteles INNER JOIN carrera ON planteles.id_plantel = carrera.id_plantel WHERE carrera.id_plantel = %s AND carrera.id_carrera = %s', (id_plantel,id_carrera))
+    centroUni = cur.fetchall()
+
+    return render_template('verpost.html',posts = posts, centroUni = centroUni)
+
+@app.route("/mostrarpost/<string:id>")
 def mostrarpost(id):
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM comentarios WHERE ID_Post = {0}'.format(id))
-    comentarios = cur.fetchall()
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s', (id,))
+    post = cur.fetchone()
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT * FROM post WHERE ID_Post = {0}'.format(id))
-    contenido = cur.fetchone()
+    cur.execute('SELECT respuestas.id_respuesta, respuestas.contenido, respuestas.fecha, login.usuario FROM respuestas INNER JOIN usuarios ON respuestas.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s ORDER BY fecha DESC', (id,))
+    respuestas = cur.fetchall()
+    return render_template('mostrarpost.html', post = post, respuestas = respuestas)
 
-    return render_template('mostrarpost.html',comentarios=comentarios , contenido=contenido)
-
-@app.route('/add_post' , methods=['POST'])
-def add_post():
+@app.route("/add_post/<string:id_carrera>/<string:id_plantel>/<string:matricula>",  methods=['POST'])
+def add_post(id_carrera, id_plantel, matricula):
     if request.method == 'POST':
-        titulo=request.form['titulo']
-        texto=request.form['texto']
-        carrera=request.form['carrera']
-        tema=request.form['grado']
-        matricula=session['id']
-        like=0
-        estado=1
-        grado=1
-        cur = mysql.connection.cursor()
-        cur.execute('INSERT INTO post(Titulo,MeGusta,Texto,ID_Carrera,ID_Tema,ID_Estado,Matricula,id_grado) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)',(titulo, like, texto, carrera,tema, estado,matricula, grado))
-        mysql.connection.commit()
-        flash('Se ha agregado su post')
-        return redirect(url_for('inicio'))    
-
-@app.route('/add_comentario/<string:id>' , methods=['POST'])
-def add_comentario(id):
-    if request.method == 'POST':
-        texto=request.form['texto']
-        cadena = texto.split()
-        valor = modelo.prediccion_prob([texto])
-        palabras = pd.read_csv('app/model/malas_palabras.csv', encoding = 'utf-8')
-        pal = palabras['MALA_PALABRA'].tolist()
-        
-        if modelo.prediccion([texto]) == 1:
-            print(valor, file=sys.stderr)
-            print(cadena, file=sys.stdout)
-            print(pal, file=sys.stdout)
-            return redirect(url_for('mostrarpost',id=id))
-        elif any(item in cadena for item in pal):
-            print(valor, file=sys.stderr)
-            return redirect(url_for('mostrarpost',id=id))
-        else:
-            estado=1
-            cur = mysql.connection.cursor()
-            cur.execute('INSERT INTO comentarios(Texto,ID_Post,ID_Estado) VALUES (%s, %s, %s)',(texto, id, estado))
-            mysql.connection.commit()
-            print(valor, file=sys.stderr)
-            print(cadena, file=sys.stdout)
-            print(pal, file=sys.stdout)
-            return redirect(url_for('mostrarpost',id=id))
-
-@app.route('/edit/<string:id>')
-def get_comentario(id):
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT * FROM comentarios WHERE ID_Comentario = {0} '.format(id))
-    data = cur.fetchone()
-
-    return render_template('editar.html', contact = data )
-
-@app.route('/update', methods=['POST'])
-def editar_comentario2():
-    if request.method == 'POST':
-        id = request.form['ide']
-        texto = request.form['texto']
-        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('UPDATE comentarios SET Texto = %s WHERE ID_Comentario = %s ',(texto,id))
-        mysql.connection.commit()
-        flash('comentario editado con exito')
-        return redirect(url_for('inicio'))
-
-@app.route('/edita/<string:id>')
-def get_comentario2(id):
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT * FROM post WHERE ID_Post = {0} '.format(id))
-    data = cur.fetchone()
-    return render_template('editar2.html', contact = data )
-
-@app.route('/update2', methods=['POST'])
-def editar_comentario():
-    if request.method == 'POST':
-        id = request.form['ide']
+        #Linea de matricula a borrar, ajusta cuando exista sesion
         titulo = request.form['titulo']
-        texto = request.form['texto']
+        contenido = request.form['contenido']
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('UPDATE post SET Titulo = %s, Texto = %s WHERE ID_Post = %s ',(titulo,texto,id))
+        cur.execute('INSERT INTO post(titulo, contenido, matricula, id_plantel, id_carrera) VALUES(%s, %s, %s, %s, %s)', (titulo, contenido, matricula, id_plantel, id_carrera))
         mysql.connection.commit()
-        flash('POST editado con exito')
-        return redirect(url_for('inicio'))
+        return redirect(url_for('post'))
 
-@app.route('/borrar/<string:id>')
-def borrar_comentario(id):
-    cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM comentarios WHERE ID_Comentario = {0} '.format(id))
-    mysql.connection.commit()
-    flash('comentario eliminado')
-    return redirect(url_for('inicio'))
-
-@app.route('/delete/<string:id>')
-def borrar_post(id):
-    cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM post WHERE ID_Post = {0} '.format(id))
-    mysql.connection.commit()
-    flash('post eliminado')
-    return redirect(url_for('inicio'))  
-
-@app.route('/nosotros')
-def nosotros():
-    return render_template('nosotros.html')
-
-@app.route('/credito')
-def creditos():
-    return render_template('creditos.html')
-
-@app.route('/busqueda')
-def busqueda():
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM grados')
-    grados = cur.fetchall()
-
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM post')
-    data = cur.fetchall()
-
-    context={
-    'grados':grados,
-    'comentario':data
-    }
-    return render_template("buscar.html",**context)
-
-@app.route('/busquedabtn', methods=['POST'])
-def busquedabtn():
+@app.route("/add_comentario/<string:id>/<string:matricula>",  methods=['POST'])
+def add_comentario(id, matricula):
     if request.method == 'POST':
-        grado = request.form['grado']
-
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM post WHERE id_grado = %s', grado)
-        busqueda= cur.fetchall() 
-
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM grados')
-        grados = cur.fetchall()
-
-        context={
-        'grados':grados,
-        'comentario':busqueda,
-        }
-    
-        return render_template('buscar.html',**context)
-
-@app.route('/busqueda2')
-def busqueda2():
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM carrera')
-    carreras = cur.fetchall()
-
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM post')
-    data = cur.fetchall()
-
-    context={
-    'carreras':carreras,
-    'comentario':data
-    }
-    return render_template("buscar2.html",**context)
-
-@app.route('/busquedabtn2', methods=['POST'])
-def busquedabtn2():
-    if request.method == 'POST':
-        carrera = request.form['carrera']
-    
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM post WHERE ID_Carrera = %s', carrera)
-        busqueda= cur.fetchall() 
-
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM carrera')
-        carreras = cur.fetchall()
-
-        context={
-        'carreras':carreras,
-        'comentario':busqueda,
-        }
-        
-        return render_template('buscar2.html',**context)   
+        contenido = request.form['texto']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('INSERT INTO respuestas(contenido, matricula, id_post) VALUES(%s, %s, %s)', (contenido, matricula, id))
+        mysql.connection.commit()
+        return redirect(url_for('mostrarpost',id = id))
 
 @app.route('/reportado_post/<string:id>')
 def reportado_post(id):

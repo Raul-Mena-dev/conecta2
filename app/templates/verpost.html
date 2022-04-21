@@ -16,16 +16,82 @@
 {% endif %}
 
 
-{% for post in posts %}
+<div class="contenido-post">
 
-    <div class="postcuadros">
-        <h2>{{ post.1 }}</h2>
-        <a href="/mostrarpost/{{ post.0 }}">Ver posts</a>
-        <a href="/edita/{{ post.0 }}">Editar</a>
-        <a href="/delete/{{ post.0 }}">Borrar</a>
-        <a href="/reportado_post/{{ post.0 }}">Reportar</a>
+    <!-- Barra lateral -->
+    <aside>
+        <!-- Crear un nuevo post -->
+        <div class="crear-post">
+            <form action="/add_post/{{54}}/{{8}}/{{'006180060'}} " method="POST">
+            
+                <p>Crear una nueva publicacion</p>
+                <div class="titulo-new-post">
+                    <input type="text" placeholder="Titulo" name="titulo" autocomplete="off">
+                </div>
+                <div class="contenido-new-post">
+                    <textarea name="contenido" placeholder="Contenido del tema"></textarea>    
+                </div>
+                {% if session %}
+                    <div class="boton-publicar-post">
+                        <button class="boton-post" type="submit">Publicar</button>
+                    </div>
+                {% endif %}
+            </form>
+            {% if not session %}
+                <div class="apartado-crear-post">
+                    <div class="no-registrado-post">
+                        <h4>Inica sesion para publicar</h4>
+                        <div class="botones-no-sesion-post">
+                            <div class="ir-login-post" onclick="location.href= '/'"> Iniciar sesion </div>
+                            <div class="ir-registrar-post" onclick="location.href= '/'"> Registrarse </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </aside>
+
+    <!-- Muestra la lista de posts -->
+    <div class="lista-post">
+        <div class="titulo-lista-post">
+            {% for centro in centroUni %}
+                <h2> Plantel {{centro.plantel}}: {{centro.carrera}}</h2>
+            {% endfor %}
     </div>
-{% endfor %}
+        {% for post in posts %}
+            <div class="postcuadros">
+                <div class="titulo">
+                    <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
+                </div>
+                <div class="caja">
+                    {% if session %} 
+                    <div class="botones-post">
+                        <div class="estilo-boton"><a href="/edita/['id_post']">Editar</a></div>
+                        <div class="estilo-boton"><a href="/delete/['id_post']">Borrar</a></div>
+                        <div class="estilo-boton"><a href="/reportado_post/['id_post']">Reportar</a></div>
+                    </div>
+                    <div class="nombre-usuario">
+                        usuario: {{ post.usuario }}
+                    </div>
+                    {% endif %}    
+                    {% if not session %}
+                    <div class="datos-publicacion-respuesta">
+                        <div class="fecha-publicacion">
+                            <p>Publicado: {{ post['fecha']}}</p> 
+                        </div>
+                    </div>
+                    <div class="datos-publicacion-respuesta">
+                        <div class="publicado-por">
+                          <p>usuario: {{post['usuario']}}</p> 
+                        </div>
+                    </div>
+                    {% endif %}    
+                </div>  
+            </div>
+        {% endfor %}
+    </div>
+    
+</div>
 
  {% endblock %}
  {% endblock %}

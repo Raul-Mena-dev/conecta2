@@ -28,6 +28,7 @@
                 <th scope="col">Matricula</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Fecha de nacimiento</th>
+                <th scope="col">Correo</th>
                 <th scope="col">Carrera</th>
             </tr>
         </thead>
@@ -38,6 +39,7 @@
                     <td>{{datos['MATRICULA']}}</td>
                     <td>{{datos['NOMBRE']}}</td>
                     <td>{{datos['FNAC']}}</td>
+                    <td>{{datos['CORREO']}}</td>
                     <td>{{datos['CARRERA']}}</td>
                 </tr>
             {% else %}
@@ -46,8 +48,8 @@
                         <th scope="row">1</th>
                         <td>{{usuario.0}}</td>
                         <td>{{usuario.1}}</td>
-                        <td>{{usuario.2}}</td>
-                        <td>{{usuario.3}}</td>
+                        <td>{{usuario.4}}</td>
+                        <td>{{usuario.5}}</td>
                     </tr>
                 {% endfor %}
             {% endif %}
