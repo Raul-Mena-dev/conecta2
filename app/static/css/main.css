@@ -390,6 +390,24 @@ tr,td,thead,tbody{
     color: #fff;
 }
 
+.lista-post{
+    width: 60%;
+}
+
+.noContenido{
+    margin: 8px;
+	padding: 4px; 
+	width: 60%; 
+    min-height: 100px;
+	height: auto; 
+	color: #fff; 
+	margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+}
+
 .postcuadros{
 	margin: 8px;
 	padding: 4px; 

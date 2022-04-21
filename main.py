@@ -1,3 +1,4 @@
+from pickle import TRUE
 from flask import render_template,request,session,redirect, url_for,flash
 from app import create_app
 from flask_socketio import SocketIO, emit
@@ -313,7 +314,7 @@ def obtenerID(plantel,carrera):
     id_plantel = cur.fetchone()
 
     cur = mysql.connection.cursor()
-    cur.execute('SELECT id_carrera FROM carrera WHERE carrera = %s',(carrera,))
+    cur.execute('SELECT id_carrera FROM carrera WHERE carrera = %s AND id_plantel = %s',(carrera,id_plantel))
     id_carrera = cur.fetchone()
     
     return redirect(url_for('listar',id_plantel = id_plantel, id_carrera = id_carrera))
@@ -324,6 +325,9 @@ def obtenerID(plantel,carrera):
 #Se muestra la lista de post
 @app.route("/listar/<string:id_plantel>/<string:id_carrera>")
 def listar(id_plantel,id_carrera):
+
+    mostrar = True
+
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute('SELECT post.id_post, post.titulo, post.fecha, login.usuario FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY fecha DESC', (id_plantel,id_carrera))
     posts = cur.fetchall()
@@ -332,7 +336,12 @@ def listar(id_plantel,id_carrera):
     cur.execute('SELECT planteles.plantel, carrera.carrera FROM planteles INNER JOIN carrera ON planteles.id_plantel = carrera.id_plantel WHERE carrera.id_plantel = %s AND carrera.id_carrera = %s', (id_plantel,id_carrera))
     centroUni = cur.fetchall()
 
-    return render_template('verpost.html',posts = posts, centroUni = centroUni)
+    if posts == ():
+        mostrar = False
+
+
+    print()
+    return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera)
 
 @app.route("/mostrarpost/<string:id>")
 def mostrarpost(id):
@@ -354,7 +363,7 @@ def add_post(id_carrera, id_plantel, matricula):
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cur.execute('INSERT INTO post(titulo, contenido, matricula, id_plantel, id_carrera) VALUES(%s, %s, %s, %s, %s)', (titulo, contenido, matricula, id_plantel, id_carrera))
         mysql.connection.commit()
-        return redirect(url_for('post'))
+        return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
 
 @app.route("/add_comentario/<string:id>/<string:matricula>",  methods=['POST'])
 def add_comentario(id, matricula):
