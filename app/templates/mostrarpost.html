@@ -17,12 +17,17 @@
 
 <!-- Muestra la informacion del post -->
 <div class="viendo-post">
-  
+
   <div class="contenido-ver">
     <h2>{{ post['titulo'] }}</h2>
     <hr>
-    <div class="texto-post">
-      {{post['contenido']}}
+    <div class="contenido-publicacion">
+      <div class="texto-post">
+        {{post['contenido']}}
+      </div>
+      <div class="reportar">
+        <abbr title="Reportar"><a href="/reportar_publi/{{post['id_post']}}"><i class="fa-solid fa-circle-exclamation"></i></a></abbr>
+      </div>
     </div>
     <div class="datos-publicacion">
       <div class="fecha-publicacion">
@@ -73,25 +78,32 @@
 
 <div class="estilo-comentarios">
   {% for respuesta in respuestas %}
-    <div class="comentarios">
-      <div class="contenido-respuesta">
-        <p>{{ respuesta['contenido'] }}</p>
-      </div>
-      <div class="datos-publicacion-respuesta">
-        <div class="fecha-publicacion">
-          <p>Publicado: {{ respuesta['fecha']}}</p> 
+    {% if respuesta['id_estado'] == 1%}
+      <div class="comentarios">
+        <div class="contenido-mensaje">
+          <div class="contenido-respuesta">
+            <p>{{ respuesta['contenido'] }}</p>
+          </div>
+          <div class="reportar">
+            <abbr title="Reportar"><a href="/reportar_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}"><i class="fa-solid fa-circle-exclamation"></i></a></abbr>
+          </div>
         </div>
-        <div class="publicado-por">
-          <p>usuario: {{respuesta['usuario']}}</p> 
+        <div class="datos-publicacion-respuesta">
+          <div class="fecha-publicacion">
+            <p>Publicado: {{ respuesta['fecha']}}</p> 
+          </div>
+          <div class="publicado-por">
+            <p>usuario: {{respuesta['usuario']}}</p> 
+          </div>
         </div>
+        
+        <!--<div class="botones-post">
+          <div class="estilo-boton"> <a href="/edit/{{ respuesta['id_respuesta']}}">Editar</a> </div>
+          <div class="estilo-boton"> <a href="/borrar/{{ respuesta['id_respuesta'] }}">Borrar</a> </div>
+          <div class="estilo-boton"> <a href="/reportado_msj/{{ respuesta['id_respuesta'] }}">Reportar</a> </div>
+        </div>-->
       </div>
-      
-      <!--<div class="botones-post">
-        <div class="estilo-boton"> <a href="/edit/{{ respuesta['id_respuesta']}}">Editar</a> </div>
-        <div class="estilo-boton"> <a href="/borrar/{{ respuesta['id_respuesta'] }}">Borrar</a> </div>
-        <div class="estilo-boton"> <a href="/reportado_msj/{{ respuesta['id_respuesta'] }}">Reportar</a> </div>
-      </div>-->
-    </div>
+    {% endif %}
   {% endfor %}
 </div>
 <footer class="finalizar-pagina"></footer>

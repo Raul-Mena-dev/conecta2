@@ -650,6 +650,45 @@ tr,td,thead,tbody{
 
 .contenido-ver h2{
     text-align: center;
+    margin-top: 15px;
+}
+
+.contenido-publicacion{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    margin: auto;
+}
+
+.reportar, .reportar a{
+    color: red;
+    opacity: 0.8;
+    text-decoration: none;
+}
+
+abbr[title] {
+    border-bottom: none !important;
+    cursor: pointer !important;
+  }
+
+.reportar abbr:hover, .reportar a:hover{
+    cursor: pointer;
+    color: red;
+    opacity: 0.95;
+}
+
+.reportar:hover{
+    cursor: pointer;
+    opacity: 0.95;
+}
+
+.contenido-mensaje{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    margin: auto;
 }
 
 .texto-post{

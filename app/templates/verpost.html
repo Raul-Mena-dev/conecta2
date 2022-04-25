@@ -60,35 +60,37 @@
         </div>
         {% if mostrar %}
             {% for post in posts %}
-                <div class="postcuadros">
-                    <div class="titulo">
-                        <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
+                {% if post['id_estado'] == 1%}
+                    <div class="postcuadros">
+                        <div class="titulo">
+                            <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
+                        </div>
+                        <div class="caja">
+                            {% if session %} 
+                            <div class="botones-post">
+                                <div class="estilo-boton"><a href="/edita/['id_post']">Editar</a></div>
+                                <div class="estilo-boton"><a href="/delete/['id_post']">Borrar</a></div>
+                                <div class="estilo-boton"><a href="/reportado_post/['id_post']">Reportar</a></div>
+                            </div>
+                            <div class="nombre-usuario">
+                                usuario: {{ post.usuario }}
+                            </div>
+                            {% endif %}    
+                            {% if not session %}
+                            <div class="datos-publicacion-respuesta">
+                                <div class="fecha-publicacion">
+                                    <p>Publicado: {{ post['fecha']}}</p> 
+                                </div>
+                            </div>
+                            <div class="datos-publicacion-respuesta">
+                                <div class="publicado-por">
+                                <p>usuario: {{post['usuario']}}</p> 
+                                </div>
+                            </div>
+                            {% endif %}    
+                        </div>  
                     </div>
-                    <div class="caja">
-                        {% if session %} 
-                        <div class="botones-post">
-                            <div class="estilo-boton"><a href="/edita/['id_post']">Editar</a></div>
-                            <div class="estilo-boton"><a href="/delete/['id_post']">Borrar</a></div>
-                            <div class="estilo-boton"><a href="/reportado_post/['id_post']">Reportar</a></div>
-                        </div>
-                        <div class="nombre-usuario">
-                            usuario: {{ post.usuario }}
-                        </div>
-                        {% endif %}    
-                        {% if not session %}
-                        <div class="datos-publicacion-respuesta">
-                            <div class="fecha-publicacion">
-                                <p>Publicado: {{ post['fecha']}}</p> 
-                            </div>
-                        </div>
-                        <div class="datos-publicacion-respuesta">
-                            <div class="publicado-por">
-                            <p>usuario: {{post['usuario']}}</p> 
-                            </div>
-                        </div>
-                        {% endif %}    
-                    </div>  
-                </div>
+                {% endif %}
             {% endfor %}
         {% else %}
             <div class="noContenido">
