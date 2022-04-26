@@ -404,3 +404,47 @@ def reportar_msj(id_pub,id_msj):
     except Exception as e:
         print("Error"+ str(e))
         return redirect(url_for('mostrarpost',id=id_pub))
+
+@app.route('/actualiza_publi/<string:id>')
+def actualizar_publi(id):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s', (id,))
+    post = cur.fetchone()
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT respuestas.id_respuesta, respuestas.contenido, respuestas.fecha, respuestas.id_estado, login.usuario FROM respuestas INNER JOIN usuarios ON respuestas.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s ORDER BY fecha DESC', (id,))
+    respuestas = cur.fetchall()
+    return render_template('actualiza_publi.html', post = post, respuestas = respuestas)
+
+
+@app.route('/actualizacion/<string:id>', methods = ['POST'])
+def actualizacion(id):
+    if request.method == 'POST':
+        titulo = request.form['titulo']
+        contenido = request.form['texto']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('UPDATE post SET titulo = %s, contenido = %s WHERE id_post = %s',(titulo,contenido,id,))
+        mysql.connection.commit()
+        return redirect(url_for('mostrarpost',id=id))
+
+@app.route('/actualiza_msj/<string:id_post>/<string:id_msj>')
+def actualiza_msj(id_post,id_msj):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s', (id_post,))
+    post = cur.fetchone()
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT respuestas.id_respuesta, respuestas.contenido, respuestas.fecha, respuestas.id_estado, login.usuario FROM respuestas INNER JOIN usuarios ON respuestas.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s ORDER BY fecha DESC', (id_post,))
+    respuestas = cur.fetchall()
+
+    return render_template('actualiza_coment.html', post = post, respuestas = respuestas, id_validar = id_msj)
+
+@app.route('/actualizacion_msj/<string:id_post>/<string:id_msj>', methods = ['POST'])
+def actualziacion_msj(id_post,id_msj):
+    if request.method == 'POST':
+        print(id_msj)
+        contenido = request.form['texto']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('UPDATE respuestas SET contenido = %s WHERE id_respuesta = %s',(contenido,id_msj,))
+        mysql.connection.commit()
+        return redirect(url_for('mostrarpost',id=id_post))

@@ -26,10 +26,10 @@
             
                 <p>Crear una nueva publicacion</p>
                 <div class="titulo-new-post">
-                    <input type="text" placeholder="Titulo" name="titulo" autocomplete="off">
+                    <input type="text" placeholder="Titulo" name="titulo" autocomplete="off" required>
                 </div>
                 <div class="contenido-new-post">
-                    <textarea name="contenido" placeholder="Contenido del tema"></textarea>    
+                    <textarea name="contenido" placeholder="Contenido del tema" autocomplete="off" required></textarea>    
                 </div>
                 {% if session %}
                     <div class="boton-publicar-post">
