@@ -40,14 +40,14 @@ def inicio():
     
     universidades = ['Tlajomulco','Rio Nilo','Lazaro Cardenas', 'Campus','Americas', 'Zapopan', 'Pedro Moreno', 'Olimpica']
     carreras = {}
-    carreras['Tlajomulco'] = ['Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
-    carreras['Rio Nilo'] = ['Derecho', 'Administracion', 'Negocios Internacionales','Mercadotecnia', 'Contaduria publica']
-    carreras['Lazaro Cardenas'] = ['Derecho', 'Carrera de abogado']
-    carreras['Campus'] = ['Nutricion', 'Cultura Fisica y deporte', 'Psicologia', 'Enfermeria','Quimico farmaceutico biologo','Cirujano Dentista', 'Negocios Internacionales','Administracion', 'Mercadotecnia', 'Contaduria publica','Gestion de recursos humanos']
-    carreras['Americas'] = ['Trabajo Social', 'Carrera de abogado', 'Derecho', 'Gastronimia', 'Diseño de modas', 'Diseño para la comunicacion grafica','Diseño de interiores','Arquitectura', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica' ]
-    carreras['Zapopan'] = ['Carrera de abogado', 'Derecho', 'Psicologia', 'Negocios Internacionales','Administracion', 'Mercadotecnia', 'Contaduria publica', 'Gestion recursos humanos']
-    carreras['Pedro Moreno'] = ['Trabajo social', 'Derecho', 'Gastronomia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
-    carreras['Olimpica'] = ['Comunicacion y Electronica', 'Industrial', 'Computacion', 'Civil']
+    carreras['Tlajomulco'] = ['Bachillerato','Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
+    carreras['Rio Nilo'] = ['Bachillerato','Derecho', 'Administracion', 'Negocios Internacionales','Mercadotecnia', 'Contaduria publica']
+    carreras['Lazaro Cardenas'] = ['Bachillerato','Derecho', 'Carrera de abogado']
+    carreras['Campus'] = ['Bachillerato','Nutricion', 'Cultura Fisica y deporte', 'Psicologia', 'Enfermeria','Quimico farmaceutico biologo','Cirujano Dentista', 'Negocios Internacionales','Administracion', 'Mercadotecnia', 'Contaduria publica','Gestion de recursos humanos']
+    carreras['Americas'] = ['Bachillerato','Trabajo Social', 'Carrera de abogado', 'Derecho', 'Gastronimia', 'Diseño de modas', 'Diseño para la comunicacion grafica','Diseño de interiores','Arquitectura', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica' ]
+    carreras['Zapopan'] = ['Bachillerato','Carrera de abogado', 'Derecho', 'Psicologia', 'Negocios Internacionales','Administracion', 'Mercadotecnia', 'Contaduria publica', 'Gestion recursos humanos']
+    carreras['Pedro Moreno'] = ['Bachillerato','Trabajo social', 'Derecho', 'Gastronomia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
+    carreras['Olimpica'] = ['Bachillerato','Comunicacion y Electronica', 'Industrial', 'Computacion', 'Civil']
 
     return render_template('home.html', universidades = universidades, carreras = carreras)
 
@@ -85,11 +85,11 @@ def upload():
 
 
 #login
-@app.route('/login/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if session:
         return redirect(url_for('inicio'))
-    else:    
+    else: 
         # Output message if something goes wrong...
         msg = ''
         # Check if "username" and "password" POST requests exist (user submitted form)
@@ -105,9 +105,10 @@ def login():
                 account = cursor.fetchone()
                 session['id']= account['matricula']
                 session['usuario']= account['usuario']
+                return redirect(url_for('inicio'))   
             except Exception as e:
                 return "Error: " + str(e) 
-        return redirect(url_for('inicio'))
+        return render_template('login.html')   
 
 
 #logout
