@@ -1,3 +1,4 @@
+from pickle import TRUE
 from flask import render_template,request,session,redirect, url_for,flash
 from app import create_app
 from flask_socketio import SocketIO, emit
@@ -314,27 +315,32 @@ def obtenerID(plantel,carrera):
     id_plantel = cur.fetchone()
 
     cur = mysql.connection.cursor()
-    cur.execute('SELECT id_carrera FROM carrera WHERE carrera = %s',(carrera,))
+    cur.execute('SELECT id_carrera FROM carrera WHERE carrera = %s AND id_plantel = %s',(carrera,id_plantel))
     id_carrera = cur.fetchone()
     
     return redirect(url_for('listar',id_plantel = id_plantel, id_carrera = id_carrera))
 
-
-
-
 #Se muestra la lista de post
 @app.route("/listar/<string:id_plantel>/<string:id_carrera>")
 def listar(id_plantel,id_carrera):
+
+    mostrar = True
+
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT post.id_post, post.titulo, post.fecha, login.usuario FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY fecha DESC', (id_plantel,id_carrera))
+    cur.execute('SELECT post.id_post, post.titulo, post.fecha, post.id_estado, login.usuario FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY fecha DESC', (id_plantel,id_carrera))
     posts = cur.fetchall()
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute('SELECT planteles.plantel, carrera.carrera FROM planteles INNER JOIN carrera ON planteles.id_plantel = carrera.id_plantel WHERE carrera.id_plantel = %s AND carrera.id_carrera = %s', (id_plantel,id_carrera))
     centroUni = cur.fetchall()
 
-    return render_template('verpost.html',posts = posts, centroUni = centroUni)
+    if posts == ():
+        mostrar = False
 
+
+    return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera)
+
+#Se accede a un post para ver el contenido
 @app.route("/mostrarpost/<string:id>")
 def mostrarpost(id):
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -342,10 +348,11 @@ def mostrarpost(id):
     post = cur.fetchone()
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT respuestas.id_respuesta, respuestas.contenido, respuestas.fecha, login.usuario FROM respuestas INNER JOIN usuarios ON respuestas.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s ORDER BY fecha DESC', (id,))
+    cur.execute('SELECT respuestas.id_respuesta, respuestas.contenido, respuestas.fecha, respuestas.id_estado, login.usuario FROM respuestas INNER JOIN usuarios ON respuestas.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s ORDER BY fecha DESC', (id,))
     respuestas = cur.fetchall()
     return render_template('mostrarpost.html', post = post, respuestas = respuestas)
 
+#Se agrega una nueva publicacion
 @app.route("/add_post/<string:id_carrera>/<string:id_plantel>/<string:matricula>",  methods=['POST'])
 def add_post(id_carrera, id_plantel, matricula):
     if request.method == 'POST':
@@ -355,9 +362,10 @@ def add_post(id_carrera, id_plantel, matricula):
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cur.execute('INSERT INTO post(titulo, contenido, matricula, id_plantel, id_carrera) VALUES(%s, %s, %s, %s, %s)', (titulo, contenido, matricula, id_plantel, id_carrera))
         mysql.connection.commit()
-        return redirect(url_for('post'))
+        return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
 
-@app.route("/add_comentario/<string:id>/<string:matricula>",  methods=['POST'])
+#Se agrega una respuesta a la publicacion
+@app.route("/add_comentario//<string:matricula>",  methods=['POST'])
 def add_comentario(id, matricula):
     if request.method == 'POST':
         contenido = request.form['texto']
@@ -366,18 +374,78 @@ def add_comentario(id, matricula):
         mysql.connection.commit()
         return redirect(url_for('mostrarpost',id = id))
 
-@app.route('/reportado_post/<string:id>')
-def reportado_post(id):
+#Se toman acciones al reportar una publicacion
+@app.route('/reportar_publi/<string:id>')
+def reportar_publi(id):
     estado = 2
-    cur = mysql.connection.cursor()
-    cur.execute('UPDATE post SET ID_Estado = %s WHERE ID_Post = %s',(estado,id))
-    mysql.connection.commit()
-    return redirect(url_for('inicio'))     
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT id_carrera FROM post WHERE id_post = %s',(id,))
+        id_carrera = cur.fetchone()
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT id_plantel FROM post WHERE id_post = %s',(id,))
+        id_plantel = cur.fetchone()
+        cur = mysql.connection.cursor()
+        cur.execute('UPDATE post SET id_estado = %s WHERE id_post = %s',(estado,id))
+        mysql.connection.commit()
+        return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera)) 
+    except Exception as e:
+        print("Error"+ str(e)) 
+        return redirect(url_for('mostrarpost',id=id)) 
 
-@app.route('/reportado_msj/<string:id>')
-def reportado_msj(id):
+#Se toman acciones al reportar una respuesta
+@app.route('/reportar_msj/<string:id_pub>/<string:id_msj>')
+def reportar_msj(id_pub,id_msj):
     estado = 2
-    cur = mysql.connection.cursor()
-    cur.execute('UPDATE comentarios SET ID_Estado = %s WHERE ID_Post = %s ',(estado,id))
-    mysql.connection.commit()
-    return redirect(url_for('inicio'))
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute('UPDATE respuestas SET id_estado = %s WHERE id_respuesta = %s',(estado,id_msj))
+        mysql.connection.commit()
+        return redirect(url_for('mostrarpost',id=id_pub))
+    except Exception as e:
+        print("Error"+ str(e))
+        return redirect(url_for('mostrarpost',id=id_pub))
+
+@app.route('/actualiza_publi/<string:id>')
+def actualizar_publi(id):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s', (id,))
+    post = cur.fetchone()
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT respuestas.id_respuesta, respuestas.contenido, respuestas.fecha, respuestas.id_estado, login.usuario FROM respuestas INNER JOIN usuarios ON respuestas.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s ORDER BY fecha DESC', (id,))
+    respuestas = cur.fetchall()
+    return render_template('actualiza_publi.html', post = post, respuestas = respuestas)
+
+
+@app.route('/actualizacion/<string:id>', methods = ['POST'])
+def actualizacion(id):
+    if request.method == 'POST':
+        titulo = request.form['titulo']
+        contenido = request.form['texto']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('UPDATE post SET titulo = %s, contenido = %s WHERE id_post = %s',(titulo,contenido,id,))
+        mysql.connection.commit()
+        return redirect(url_for('mostrarpost',id=id))
+
+@app.route('/actualiza_msj/<string:id_post>/<string:id_msj>')
+def actualiza_msj(id_post,id_msj):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s', (id_post,))
+    post = cur.fetchone()
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT respuestas.id_respuesta, respuestas.contenido, respuestas.fecha, respuestas.id_estado, login.usuario FROM respuestas INNER JOIN usuarios ON respuestas.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s ORDER BY fecha DESC', (id_post,))
+    respuestas = cur.fetchall()
+
+    return render_template('actualiza_coment.html', post = post, respuestas = respuestas, id_validar = id_msj)
+
+@app.route('/actualizacion_msj/<string:id_post>/<string:id_msj>', methods = ['POST'])
+def actualziacion_msj(id_post,id_msj):
+    if request.method == 'POST':
+        print(id_msj)
+        contenido = request.form['texto']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('UPDATE respuestas SET contenido = %s WHERE id_respuesta = %s',(contenido,id_msj,))
+        mysql.connection.commit()
+        return redirect(url_for('mostrarpost',id=id_post))

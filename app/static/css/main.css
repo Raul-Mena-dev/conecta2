@@ -390,6 +390,24 @@ tr,td,thead,tbody{
     color: #fff;
 }
 
+.lista-post{
+    width: 60%;
+}
+
+.noContenido{
+    margin: 8px;
+	padding: 4px; 
+	width: 60%; 
+    min-height: 100px;
+	height: auto; 
+	color: #fff; 
+	margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+}
+
 .postcuadros{
 	margin: 8px;
 	padding: 4px; 
@@ -632,6 +650,149 @@ tr,td,thead,tbody{
 
 .contenido-ver h2{
     text-align: center;
+    margin-top: 15px;
+}
+
+.contenido-publicacion{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    margin: auto;
+}
+
+.botones-control{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.editar a{
+    color: #c3c3c3;
+    opacity: 0.9;
+}
+
+.editar a:hover{
+    color: #f2f2f2;
+    opacity: 1;
+}
+
+.titulo-post-editar{
+    margin-top: 15px;
+    font-size: 28px;
+}
+
+.editar-datos-post input[type="text"], .editar-datos-post textarea{
+    margin: auto;
+    background: #343a40;
+    border: solid 2px transparent;
+    color: #fff;
+}
+
+.contenido-publicacion-edit textarea{
+    font-size: 18px;
+}
+
+.guardar-edit{
+    margin: auto;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.guardar-edit button{
+    color: #fff;
+    background: #1c79c0;
+    opacity:0.9;
+    border-radius: 8px;
+    width: 10%;
+    border: none;
+}
+
+.guardar-edit button:hover{
+    color: #fff;
+    background: #0389ff;
+    opacity: 1;
+}
+
+.titulo-post-editar{
+    text-align: center;
+}
+
+.editar-datos-post textarea{
+    width: 90%;
+    min-height: 80px; 
+    max-height: 300px;
+}
+
+.editar-datos-post input[type="text"]:focus, .editar-datos-post textarea:focus{
+    margin: auto;
+    background: #343a40;
+    border: solid 2px #fff;
+}
+
+.contenido-publicacion-edit{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    margin: auto;
+    text-align: center;
+}
+
+.contenido-publicacion-edit input[type="textarea"]{
+    width: 80%;
+}
+
+.reportar, .reportar a{
+    color: red;
+    opacity: 0.8;
+    text-decoration: none;
+}
+
+.reportar-com, .reportar-com a{
+    color: red;
+    opacity: 0.85;
+    text-decoration: none;
+}
+
+.reportar-com abbr:hover, .reportar-com a:hover{
+    cursor: pointer;
+    color: red;
+    opacity: 1;
+}
+
+.editar-com a{
+    color: #434343;
+    opacity: 0.9;
+}
+
+.editar-com a:hover{
+    color: #000;
+    opacity: 1;
+}
+
+abbr[title] {
+    border-bottom: none !important;
+    cursor: pointer !important;
+  }
+
+.reportar abbr:hover, .reportar a:hover{
+    cursor: pointer;
+    color: red;
+    opacity: 0.95;
+}
+
+.reportar:hover{
+    cursor: pointer;
+    opacity: 0.95;
+}
+
+.contenido-mensaje{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    margin: auto;
 }
 
 .texto-post{
@@ -810,4 +971,44 @@ tr,td,thead,tbody{
 
 .finalizar-pagina{
     height: 100px;
+}
+
+.contenido-mensaje form{
+    width: 90%;
+}
+
+.contenido-respuesta{
+    width: 90%;
+    height: 40px;
+}
+
+.contenido-respuesta input[type="text"]{
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #f2f2f2;
+}
+
+.guardar-edit-com{
+    margin: auto;
+    text-align: center;
+    margin-bottom: 15px;
+    width: 90%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.guardar-edit-com button{
+    color: #fff;
+    background: #1c79c0;
+    opacity:0.9;
+    border-radius: 8px;
+    width: 20%;
+    border: none;
+}
+
+.guardar-edit-com button:hover{
+    color: #fff;
+    background: #0389ff;
+    opacity: 1;
 }

@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+{% if messages %}
+{% for message in messages %}
+    
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+{% endfor %}
+{% endif %}
+
+<!-- Muestra la informacion del post -->
+<div class="viendo-post">
+
+    <div class="contenido-ver">
+      <h2>{{ post['titulo'] }}</h2>
+      <hr>
+      <div class="contenido-publicacion">
+        <div class="texto-post">
+          {{post['contenido']}}
+        </div>
+      </div>
+      <div class="datos-publicacion">
+        <div class="fecha-publicacion">
+          <p>Publicado: {{ post['fecha']}}</p> 
+        </div>
+        <div class="publicado-por">
+          <p>Usuario: {{post['usuario']}}</p> 
+        </div>
+      </div>
+      <hr class="finaliza-post">
+    </div>
+  
+  </div>
+
+<!-- Crear comentario -->
+<form action="/add_comentario/{{post['id_post']}}/{{'006180060'}} " method="POST">
+  <div class="apartado-comentar">  
+    <div class="escribe-comentario">
+      <textarea  class="crearcomentario" name="texto" placeholder="comentario"></textarea>
+    </div>
+    {% if session %}
+    <div class="boton-publicar-respuesta">
+      <button class="boton-respuestas" type="submit">Publicar</button>
+    </div>
+    {% endif %}
+  </div>
+</form>
+{% if not session %}
+  <div class="apartado-comentar">
+    <div class="no-registrado">
+      <h4>Inica sesion para comentar</h4>
+      <div class="botones-no-sesion">
+        <div class="ir-login" onclick="location.href= '/'"> Iniciar sesion </div>
+        <div class="ir-registrar" onclick="location.href= '/'"> Registrarse </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+
+<br>
+
+<!-- Mostrar comentarios -->
+<div class="encabezado-comentarios">
+  <h2>Comentarios</h2>
+</div>
+<br>
+
+<div class="estilo-comentarios">
+  {% for respuesta in respuestas %}
+    {% if respuesta['id_estado'] == 1%}
+    <!-- Aqui va el mensaje a modificar -->
+      {% if respuesta['id_respuesta']|string() == id_validar|string() %}
+        <div class="comentarios">
+            <form action="/actualizacion_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}" method="post">
+                <div class="contenido-mensaje">
+                        <div class="contenido-respuesta">
+                            <input type="text" value="{{respuesta['contenido']}}" name="texto" required autocomplete="off">
+                        </div>    
+                </div>
+                <div class="guardar-edit-com">
+                    <button type="submit">Guardar</button>
+                </div>
+                <div class="datos-publicacion-respuesta">
+                    <div class="fecha-publicacion">
+                        <p>Publicado: {{ respuesta['fecha']}}</p> 
+                    </div>
+                    <div class="publicado-por">
+                        <p>usuario: {{respuesta['usuario']}}</p> 
+                    </div>
+                </div>  
+            </form> 
+        </div>
+      {% else %}
+        <div class="comentarios">
+            <div class="contenido-mensaje">
+                <div class="contenido-respuesta">
+                    <p>{{ respuesta['contenido'] }}</p>
+                </div>
+                <div class="reportar">
+                    <abbr title="Reportar"><a href="/reportar_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}"><i class="fa-solid fa-circle-exclamation"></i></a></abbr>
+                </div>
+            </div>
+            <div class="datos-publicacion-respuesta">
+                <div class="fecha-publicacion">
+                    <p>Publicado: {{ respuesta['fecha']}}</p> 
+                </div>
+                <div class="publicado-por">
+                    <p>usuario: {{respuesta['usuario']}}</p> 
+                </div>
+            </div>
+        </div>
+      {% endif %}
+        
+        <!--<div class="botones-post">
+          <div class="estilo-boton"> <a href="/edit/{{ respuesta['id_respuesta']}}">Editar</a> </div>
+          <div class="estilo-boton"> <a href="/borrar/{{ respuesta['id_respuesta'] }}">Borrar</a> </div>
+          <div class="estilo-boton"> <a href="/reportado_msj/{{ respuesta['id_respuesta'] }}">Reportar</a> </div>
+        </div>-->
+    
+    {% endif %}
+  {% endfor %}
+</div>
+<footer class="finalizar-pagina"></footer>
+{% endblock %}

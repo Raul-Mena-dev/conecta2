@@ -19,29 +19,23 @@
 <div class="viendo-post">
 
   <div class="contenido-ver">
-    <h2>{{ post['titulo'] }}</h2>
-    <hr>
-    <div class="contenido-publicacion">
-      <div class="texto-post">
-        {{post['contenido']}}
-      </div>
-      <div class="botones-control">
-        <div class="reportar">
-          <abbr title="Reportar"><a href="/reportar_publi/{{post['id_post']}}"><i class="fa-solid fa-circle-exclamation"></i></a></abbr>
+    <form action="/actualizacion/{{post['id_post']}}" method="post">
+        <div class="editar-datos-post">
+            <div class="titulo-post-editar">
+                <h2><input type="text" value="{{ post['titulo'] }}" name="titulo" autocomplete="off" Required ></h2>
+            </div>
+            <hr>
+            <div class="contenido-publicacion-edit">
+                <div class="texto-post">
+                    <textarea name="texto" autocomplete="off" Required> {{post['contenido']}} </textarea>
+                </div>
+            </div>
+            <div class="guardar-edit">
+                <button type="submit">Guardar</button>
+            </div>
         </div>
-        <div class="editar">
-          <abbr title="Editar"><a href="/actualiza_publi/{{post['id_post']}}"><i class="fa-solid fa-pen-to-square"></i></abbr></a>
-        </div>
-      </div>
-    </div>
-    <div class="datos-publicacion">
-      <div class="fecha-publicacion">
-        <p>Publicado: {{ post['fecha']}}</p> 
-      </div>
-      <div class="publicado-por">
-        <p>Usuario: {{post['usuario']}}</p> 
-      </div>
-    </div>
+    </form>
+    
     <hr class="finaliza-post">
   </div>
 
@@ -51,7 +45,7 @@
 <form action="/add_comentario/{{post['id_post']}}/{{'006180060'}} " method="POST">
   <div class="apartado-comentar">  
     <div class="escribe-comentario">
-      <textarea  class="crearcomentario" name="texto" placeholder="comentario" autocomplete="off" required></textarea>
+      <textarea  class="crearcomentario" name="texto" placeholder="comentario"></textarea>
     </div>
     {% if session %}
     <div class="boton-publicar-respuesta">
@@ -89,13 +83,8 @@
           <div class="contenido-respuesta">
             <p>{{ respuesta['contenido'] }}</p>
           </div>
-          <div class="botones-control">
-            <div class="reportar-com">
-              <abbr title="Reportar"><a href="/reportar_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}"><i class="fa-solid fa-circle-exclamation"></i></a></abbr>
-            </div>
-            <div class="editar-com">
-              <abbr title="Editar"><a href="/actualiza_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}"><i class="fa-solid fa-pen-to-square"></i></abbr></a>
-            </div>
+          <div class="reportar">
+            <abbr title="Reportar"><a href="/reportar_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}"><i class="fa-solid fa-circle-exclamation"></i></a></abbr>
           </div>
         </div>
         <div class="datos-publicacion-respuesta">
