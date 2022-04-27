@@ -20,7 +20,7 @@ socketio = SocketIO(app)
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'conecta2'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
@@ -107,8 +107,11 @@ def login():
                 session['usuario']= account['usuario']
                 return redirect(url_for('inicio'))   
             except Exception as e:
-                return "Error: " + str(e) 
-        return render_template('login.html')   
+                return "Error: " + str(e)
+        else: 
+            return render_template('login.html')
+
+
 
 
 #logout
@@ -125,54 +128,49 @@ def logout():
 
 
 
-# http://localhost:5000/pythinlogin/register - this will be the registration page, we need to use both GET and POST requests
-@app.route('/login/register', methods=['GET', 'POST'])
-def register():
+@app.route('/login/registrar', methods=['POST'])
+def registrar():
     # Output message if something goes wrong...
-    msg = ''
+    msg = None
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form and 'enrollment' in request.form and 'name' in request.form and 'birthday' in request.form and 'phone' in request.form:
+    if request.method == 'POST' and 'matriculaR' in request.form and 'email' in request.form and 'passwordR' in request.form:
         # Create variables for easy access
-        username = request.form['username'].lower()
-        password = request.form['password'].lower()
-        email = request.form['email'].lower()
-        name = request.form['name'].lower()
-        enrollment = request.form['enrollment']
-        birthday = request.form['birthday']
-        phone = request.form['phone']
-
-
-        # Check if account exists using MySQL
+        passwordR = request.form['passwordR']
+        email = request.form['email']
+        matriculaR = request.form['matriculaR']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM usuarios WHERE MATRICULA = %s', (enrollment,))
-        account = cursor.fetchone()
-        # If account exists show error and validation checks
-        if account:
+        cursor.execute('SELECT * FROM login WHERE matricula = %s', (matriculaR,))
+        cuenta = cursor.fetchone()
+        if cuenta:
             msg = 'Cuenta ya existe!'
-        elif not re.match('[^@]+[@alumnos.uteg.edu.mx]', str(email)):
-            msg = 'Correo invalido!'
-        elif not re.match('[A-Za-z0-9]+', str(username)):
-            msg = 'El usuario no puede tener caracteres especiales!'
-        elif not re.match('[A-Za-z\\s]+', str(name)):
-            msg = 'El nombre solo debe tener letras!'
-        elif not re.match('[0-9]{10}', str(enrollment)):
-            msg = 'La matricula incorrecta!'
-        elif not re.match('[0-9]+', str(phone)):
-            msg = 'El telefono incorrecto!'
-        elif not username or not password or not email or not name or not enrollment or not birthday or not phone:
-            msg = 'Porfavor llena el formulario!'
+            return render_template('login.html', msg=msg)
         else:
-            # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            cursor.execute('INSERT INTO usuarios(MATRICULA, NOMBRE, FNAC, TELEFONO) VALUES (%s, %s, %s, %s)', (enrollment, name, birthday, phone))
-            mysql.connection.commit()
-            cursor.execute('INSERT INTO login(ID_LOGIN, USUARIO, CONTRA, CORREO) VALUES (%s, %s, %s, %s)', (enrollment, username, password, email))
-            mysql.connection.commit()
-            msg = 'Te has registrado satisfactoriamente!'
+            cursor.execute('SELECT matricula,pass FROM usuarios WHERE matricula = %s', (matriculaR,))
+            usuario = cursor.fetchone()
+            if not usuario:
+                msg = 'usuario no esta en la base de datos'
+                return render_template('login.html', msg=msg)
+            elif not re.match('[^@]+[@alumnos.uteg.edu.mx]', str(email)):
+                msg = 'Correo invalido!'
+                return render_template('login.html', msg=msg)
+            elif not re.match('[0-9]{9,11}', str(matriculaR)):
+                msg = 'La matricula incorrecta!'
+                return render_template('login.html', msg=msg)
+            elif not passwordR or not email or not matriculaR:
+                msg = 'Porfavor llena el formulario!'
+                return render_template('login.html', msg=msg)
+            else:
+                # Account doesnt exists and the form data is valid, now insert new account into accounts table
+                cursor.execute('INSERT INTO login(matricula,pass) VALUES (%s, %s)', (matriculaR, usuario['pass'],))
+                mysql.connection.commit()
+                flash('Te has registrado satisfactoriamente')
+                return redirect(url_for('inicio'))
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         msg = 'Porfavor llena el formulario!'
-    # Show registration form with message (if any)
-    return render_template('registro.html', msg=msg)
+        return render_template('login.html', msg=msg)
+    # Show registration form with message (if any)  
+    
 
 
 @app.route('/publicaciones')

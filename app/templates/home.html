@@ -1,5 +1,14 @@
 {% extends 'base.html' %}
 
+{% with mensajes = get_flashed_messages() %}
+    {% if mensajes %}
+        <ul class=flashes>
+        {% for mensaje in mensajes %}
+        <li>{{ mensaje }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
 
 {% block body %}
 
