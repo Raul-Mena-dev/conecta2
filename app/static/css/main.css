@@ -793,6 +793,7 @@ abbr[title] {
     flex-direction: row;
     justify-content:space-between;
     margin: auto;
+    height: auto;
 }
 
 .texto-post{
@@ -937,18 +938,16 @@ abbr[title] {
     margin: auto;
     padding: 4px;
 	width: 80%; 
-    min-height: 90px;
+    min-height: auto;
 	height: auto; 
 	background:#f2f2f2;
 	color: #000; 
 	border-radius: 10px;
 	border: solid 2px #fff;
 	margin-top: 8px;
-    overflow: visible;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: space-between;
 }
 
 .datos-publicacion-respuesta{
@@ -958,7 +957,8 @@ abbr[title] {
     justify-content: space-between;
     align-items: flex-end;
     align-content: flex-end;
-    height:20px;
+    min-height:20px;
+    height: 80%;
 }
 
 .publicado-por, .fecha-publicacion{
@@ -979,7 +979,6 @@ abbr[title] {
 
 .contenido-respuesta{
     width: 90%;
-    height: 40px;
 }
 
 .contenido-respuesta input[type="text"]{
