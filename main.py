@@ -20,7 +20,7 @@ socketio = SocketIO(app)
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_PASSWORD'] = 'Smersyc1+'
 app.config['MYSQL_DB'] = 'conecta2'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
@@ -161,7 +161,8 @@ def registrar():
                 return render_template('login.html', msg=msg)
             else:
                 # Account doesnt exists and the form data is valid, now insert new account into accounts table
-                cursor.execute('INSERT INTO login(matricula,pass) VALUES (%s, %s)', (matriculaR, usuario['pass'],))
+                nombreUsuario = usuario['nombre'] +' '+ usuario['apellido1']
+                cursor.execute('INSERT INTO login(matricula,pass,usuario) VALUES (%s, %s, %s)', (matriculaR, usuario['pass'],nombreUsuario))
                 mysql.connection.commit()
                 flash('Te has registrado satisfactoriamente')
                 session['id'] = usuario['matricula']
@@ -337,6 +338,7 @@ def listar(id_plantel,id_carrera):
 
     if posts == ():
         mostrar = False
+
 
 
     return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera)
