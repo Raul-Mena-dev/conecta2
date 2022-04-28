@@ -100,14 +100,16 @@ def login():
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             try:
-                cursor.execute('SELECT * FROM login WHERE matricula = %s AND pass = %s', (matricula, password))
+                cursor.execute('SELECT a.nombre, a.apellido1, a.matricula FROM usuarios as a INNER JOIN login as b ON a.matricula = b.matricula WHERE b.matricula = %s AND b.pass = %s;', (matricula, password,))
                 # Fetch one record and return result
-                account = cursor.fetchone()
-                session['id']= account['matricula']
-                session['usuario']= account['usuario']
+                usuario = cursor.fetchone()
+                session['id'] = usuario['matricula']
+                nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
+                session['usuario']= nombreUsuario
                 return redirect(url_for('inicio'))   
             except Exception as e:
-                return "Error: " + str(e)
+                msg = "Error: " + str(e)
+                return render_template('login.html', msg = msg)
         else: 
             return render_template('login.html')
 
@@ -118,10 +120,8 @@ def login():
 @app.route('/login/logout')
 def logout():
 # Remove session data, this will log the user out
-    session.pop('loggedin', None)
     session.pop('id', None)
-    session.pop('username', None)
-    session.pop('level', None)
+    session.pop('usuario', None)
     session.clear()
     # Redirect to login page
     return redirect(url_for('login'))
@@ -145,7 +145,7 @@ def registrar():
             msg = 'Cuenta ya existe!'
             return render_template('login.html', msg=msg)
         else:
-            cursor.execute('SELECT matricula,pass FROM usuarios WHERE matricula = %s', (matriculaR,))
+            cursor.execute('SELECT * FROM usuarios WHERE matricula = %s AND pass = %s', (matriculaR,passwordR,))
             usuario = cursor.fetchone()
             if not usuario:
                 msg = 'usuario no esta en la base de datos'
@@ -164,6 +164,9 @@ def registrar():
                 cursor.execute('INSERT INTO login(matricula,pass) VALUES (%s, %s)', (matriculaR, usuario['pass'],))
                 mysql.connection.commit()
                 flash('Te has registrado satisfactoriamente')
+                session['id'] = usuario['matricula']
+                nombreUsuario = usuario['nombre'] +' '+ usuario['apellido1']
+                session['usuario']= nombreUsuario
                 return redirect(url_for('inicio'))
     elif request.method == 'POST':
         # Form is empty... (no POST data)

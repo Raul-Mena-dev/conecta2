@@ -326,7 +326,7 @@ function validacionRegistro(){
             document.getElementById("registrar").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
             document.getElementById("errorMsg11").classList.remove("ocultar")// se remueve la clase ocultar para que el div error se muestre
             error=1;// bandera para los errores
-        }else if(password.length != 8){// se revisa si la cantidad es diferente y se muestra el error si sobran o faltan caracteres
+        }else if(password.length < 8 || password.length > 20 ){// se revisa si la cantidad es diferente y se muestra el error si sobran o faltan caracteres
             n = document.getElementById("passwordR")//elemento al que seleccionamos  para añadir la clase error
             n.classList.add("error")// se añade la clase error
             document.getElementById("registrar").setAttribute("disabled", "")// se añade el atributo disabled al elemento siguiente
