@@ -384,10 +384,15 @@ tr,td,thead,tbody{
 /* Estilos para html: verpost */
 .titulo-lista-post{
     width: 70%;
-    margin: auto;
     margin-top: 20px;
     margin-bottom: 20px;
     color: #fff;
+    text-align: center;
+}
+
+.titulo-lista-post h2{
+    font-size: 28px;
+    width: 80%;
 }
 
 .lista-post{
@@ -426,6 +431,7 @@ tr,td,thead,tbody{
 
 .titulo{
 	height: 80%;
+    margin-bottom: 20px;
 }
 
 .titulo a{
@@ -1010,4 +1016,169 @@ abbr[title] {
     color: #fff;
     background: #0389ff;
     opacity: 1;
+}
+
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 1770px){
+    .ir-login-post, .ir-registrar-post{
+        font-size: 16px;
+        width: 48%;
+    }
+
+    .ir-login, .ir-registrar{
+        font-size: 16px;
+        width: 48%;
+    }
+
+} 
+
+@media (max-width: 1325px){
+    .botones-no-sesion-post{
+        flex-direction: column;
+    }
+
+    .ir-login-post, .ir-registrar-post{
+        margin: auto;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .no-registrado-post h4{
+        font-size: 20px;
+    }
+
+    .contenido-post aside{
+        width: 30%;
+    }
+
+    .lista-post{
+        width: 50%;
+    }
+
+    .titulo-lista-post{
+        width: 90%;
+    }
+
+    .postcuadros{
+        width: 90%;
+    }
+
+    .no-registrado{
+        width: 60%;
+    }
+    
+    .ir-login, .ir-registrar{
+        width: 40%;
+    }
+
+    .boton-respuestas{
+        width: 15%;
+    }
+} 
+
+@media (max-width: 1060px){
+    .no-registrado{
+        width: 70%;
+    }
+
+    .ir-login, .ir-registrar{
+        font-size: 14px;
+    }
+    
+    .estilo-comentarios{
+        width: 80%;
+    }
+
+    .contenido-ver h2{
+        font-size: 22px;
+    }
+
+    .texto-post{
+        font-size: 12px;
+    }
+
+    .boton-respuestas{
+        width: 20%;
+    }
+}
+
+@media (max-width: 900px){
+    .ir-login-post, .ir-registrar-post{
+        width: 60%;
+    }
+
+    .ir-login, .ir-registrar{
+        width: 40%;
+    }
+
+    .contenido-ver{
+        width: 80%;
+    }
+
+    .estilo-comentarios{
+        width: 95%;
+    }
+
+    .contenido-respuesta p{
+        font-size: 14px;
+    }
+
+    .datos-publicacion-respuesta .fecha-publicacion p,.datos-publicacion-respuesta .publicado-por p{
+        font-size: 11px;
+    }
+
+    .apartado-comentar{
+        width: 80%;
+    }
+
+    .no-registrado-post{
+        width: 100%;
+    }
+
+    .postcuadros .titulo a{
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 660px){
+    .ir-login, .ir-registrar{
+        width: 35%;
+    }
+
+    .no-registrado{
+        width: 95%;
+    }
+
+    .contenido-ver{
+        width: 95%;
+    }
+
+    .boton-respuestas{
+        width: 25%;
+        font-size: 14px;
+    }
+
+    .boton-post{
+        width: 80%;
+    }
+
+    .botones-no-sesion-post{
+        width: 100%;
+    }
+}
+
+@media (max-width: 534px){
+    .ir-login, .ir-registrar{
+        width: 40%;
+    }
+
+    .ir-login-post, .ir-registrar-post{
+        width: 80%;
+    }
+
+    .apartado-comentar{
+        width: 100%;
+    }
 }
