@@ -6,12 +6,9 @@
   {% include 'navbar.html' %}
 {% endblock %}
 
-{% if msg %}
-<p class=error><strong>Error:</strong> {{ msg }}
-{% endif %}
 
 {% block content %}
-<div class="container  bg-light p-3 mt-5  border rounded ">
+<div class="container bg-light p-3 mt-5  border rounded ">
     <button type="button" onclick="logSeleccion(0)" id="btn1" class="btn btn-primary mb-4" >Acceder</button>
     <button type="button"  onclick="logSeleccion(1)" id="btn2" class="btn btn-light mb-4" >Registrar</button>
     <!-- Formulario acceso -->

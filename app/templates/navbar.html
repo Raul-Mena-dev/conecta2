@@ -13,6 +13,9 @@
       <a class="nav-item nav-link font-weight-bold text-light" href="#">Nosotros</a>
       <a class="nav-item nav-link font-weight-bold text-light" href="{{url_for('logout')}}">Logout</a>
       <a class="nav-item nav-link font-weight-bold text-light" href="{{url_for('profile')}}">{{session['usuario']}}</a>
+      {% if session.level  %}
+      <a class="nav-item nav-link font-weight-bold text-light" href="{{url_for('Admin')}}">Administrador</a>
+      {% endif %}
     </div>
   </div>
   

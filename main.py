@@ -56,16 +56,35 @@ def inicio():
 @app.route('/perfil')
 def profile():
     # Check if user is loggedin
-    if 'loggedin' in session:
+    if 'id' in session:
         # We need all the account info for the user so we can display it on the profile page
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM usuarios WHERE MATRICULA = %s', (session['id'],))
+        cursor.execute('SELECT a.nombre, a.apellido1, a.apellido2, a.fnac, a.matricula, a.correo, a.foto, b.plantel, c.carrera FROM usuarios as a INNER JOIN planteles as b ON a.id_plantel INNER JOIN carrera as c ON a.id_plantel WHERE a.matricula = %s AND a.id_plantel = b.id_plantel AND a.id_carrera = c.id_carrera', (session['id'],))
         account = cursor.fetchone()
         session['account'] = account
         # Show the profile page with account info
         return render_template('datos.html', account=account)
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
+
+
+@app.route('/cambioContraseña')
+def contra():
+    msg = ''
+    if request.method == 'POST' and 'actual' in request.form and 'nueva' in request.form and 'repetir' in request.form:
+
+        actual = request.form['actual']
+        nueva = request.form['nueva']
+        try:
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('UPDATE usuarios SET pass = %s WHERE usuarios.matricula = %s AND usuarios.pass = %s' ,(nueva, session['id'], actual,))
+            msg = 'Cambio exitoso'
+            return redirect(url_for('profile', msg = msg))
+        except Exception as e:
+            msg = "Error: " + str(e)
+            return redirect(url_for('profile', msg = msg))
+
+    return render_template('contra.html')
 
 
 #upload

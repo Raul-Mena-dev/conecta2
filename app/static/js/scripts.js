@@ -345,3 +345,125 @@ function validacionRegistro(){
         error=1;// bandera para los errores
     }
 }
+
+
+
+function contraValidacion(){
+    password=document.getElementById("actual").value
+    nueva = document.getElementById("nueva").value
+    repetir = document.getElementById("repetir").value
+    
+    vPass = /^[a-zA-Z0-9]+$/
+
+    //Validacion de contraseña actual
+    if(password.length > 0){
+
+        if(vPass.test(password) == false){
+            document.getElementById("actual").classList.add("error")
+            document.getElementById("nueva").setAttribute("disabled","")
+            document.getElementById("errorMsg1").classList.remove("ocultar")
+            document.getElementById("errorMsg2").classList.add("ocultar")
+            error = 1;
+        }else if(password.length < 8 || password.length > 20){
+            document.getElementById("actual").classList.add("error")
+            document.getElementById("nueva").setAttribute("disabled","")
+            document.getElementById("errorMsg2").classList.remove("ocultar")
+            document.getElementById("errorMsg1").classList.add("ocultar")
+            error = 1;
+        
+        }else{
+            document.getElementById("actual").classList.remove("error")
+            document.getElementById("nueva").removeAttribute("disabled","")
+            document.getElementById("errorMsg1").classList.add("ocultar")
+            document.getElementById("errorMsg2").classList.add("ocultar")
+            error = 0;
+        }
+
+
+    }else{
+        document.getElementById("nueva").setAttribute("disabled","")
+        error = 1;
+    }
+
+    //Validacion de contraseña nueva
+    if(password.length > 0 && nueva.length > 0 && error == 0){
+
+        if(vPass.test(nueva) == false){
+            document.getElementById("nueva").classList.add("error")
+            document.getElementById("repetir").setAttribute("disabled","")
+            document.getElementById("errorMsg3").classList.remove("ocultar")
+            document.getElementById("errorMsg4").classList.add("ocultar")
+            document.getElementById("errorMsg8").classList.add("ocultar")
+            error = 1;
+        }else if(nueva.length < 8 || nueva.length > 20){
+            document.getElementById("nueva").classList.add("error")
+            document.getElementById("repetir").setAttribute("disabled","")
+            document.getElementById("errorMsg4").classList.remove("ocultar")
+            document.getElementById("errorMsg3").classList.add("ocultar")
+            document.getElementById("errorMsg8").classList.add("ocultar")
+            error = 1;
+        
+        }else if(nueva == password){
+            document.getElementById("nueva").classList.add("error")
+            document.getElementById("repetir").setAttribute("disabled","")
+            document.getElementById("errorMsg4").classList.add("ocultar")
+            document.getElementById("errorMsg3").classList.add("ocultar")
+            document.getElementById("errorMsg8").classList.remove("ocultar")
+            error = 1;
+        }else{
+            document.getElementById("nueva").classList.remove("error")
+            document.getElementById("repetir").removeAttribute("disabled","")
+            document.getElementById("errorMsg3").classList.add("ocultar")
+            document.getElementById("errorMsg4").classList.add("ocultar")
+            document.getElementById("errorMsg8").classList.add("ocultar")
+            error = 0;
+        }
+
+
+    }else{
+        document.getElementById("repetir").setAttribute("disabled","")
+        error = 1;
+    }
+
+    //Validacion contraseña repetida
+    if(repetir.length > 0 && password.length > 0 && nueva.length > 0 && error == 0){
+
+        if(vPass.test(repetir) == false){
+            document.getElementById("repetir").classList.add("error")
+            document.getElementById("cambiar").setAttribute("disabled","")
+            document.getElementById("errorMsg5").classList.remove("ocultar")
+            document.getElementById("errorMsg6").classList.add("ocultar")
+            document.getElementById("errorMsg7").classList.add("ocultar")
+            error = 1;
+        }else if(repetir.length < 8 || repetir.length > 20){
+            document.getElementById("repetir").classList.add("error")
+            document.getElementById("cambiar").setAttribute("disabled","")
+            document.getElementById("errorMsg6").classList.remove("ocultar")
+            document.getElementById("errorMsg5").classList.add("ocultar")
+            document.getElementById("errorMsg7").classList.add("ocultar")
+            error = 1;
+        
+        }else if(nueva != repetir){
+            document.getElementById("repetir").classList.add("error")
+            document.getElementById("cambiar").setAttribute("disabled","")
+            document.getElementById("errorMsg6").classList.add("ocultar")
+            document.getElementById("errorMsg5").classList.add("ocultar")
+            document.getElementById("errorMsg7").classList.remove("ocultar")
+            error = 1;
+        }else{
+            document.getElementById("repetir").classList.remove("error")
+            document.getElementById("cambiar").removeAttribute("disabled","")
+            document.getElementById("errorMsg5").classList.add("ocultar")
+            document.getElementById("errorMsg6").classList.add("ocultar")
+            document.getElementById("errorMsg7").classList.add("ocultar")
+            error = 0;
+        }
+
+
+    }else{
+        document.getElementById("cambiar").setAttribute("disabled","")
+        error = 1;
+    }
+
+
+}

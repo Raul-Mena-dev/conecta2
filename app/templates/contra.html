@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% include 'botones-notificaciones.html'%}
+
+    <div class="container w-50 bg-light p-3 mt-5  border rounded ">
+        <h1>Cambiar contraseña</h1>
+        <form action="{{url_for('contra')}}" method="post" onchange="contraValidacion()" >
+            <div class="form-group row">
+                <label for="actual" class="col-sm-2 col-form-label">Contraseña actual</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="password" id="actual" name="actual" placeholder="Contraseña actual">
+                    <small id="errorMsg1" class="form-text p-1 text-danger ocultar" >Solo letras y/o numeros</small>
+                    <small id="errorMsg2" class="form-text p-1 text-danger ocultar" >8 a 20 caracteres</small>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="nueva" class="col-sm-2 col-form-label">Contraseña nueva</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="password" id="nueva" name="nueva" placeholder="Contraseña nueva" disabled>
+                    <small id="errorMsg3" class="form-text p-1 text-danger ocultar" >Solo letras y/o numeros</small>
+                    <small id="errorMsg4" class="form-text p-1 text-danger ocultar" >8 a 20 caracteres</small> 
+                    <small id="errorMsg8" class="form-text p-1 text-danger ocultar" >Contraseña actual y nueva iguales</small> 
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="repetir" class="col-sm-2 col-form-label">Repite la contraseña nueva</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="password" id="repetir" name="repetir" placeholder="Repite la contraseña nueva" disabled>
+                    <small id="errorMsg5" class="form-text p-1 text-danger ocultar" >Solo letras y/o numeros</small>
+                    <small id="errorMsg6" class="form-text p-1 text-danger ocultar" >8 a 20 caracteres</small>
+                    <small id="errorMsg7" class="form-text p-1 text-danger ocultar" >Contraseñas diferentes</small>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                  <button type="submit" id="cambiar" class="btn btn-primary" disabled>Cambiar</button>
+                </div>
+                {% if msg %}
+                  <p class=error><strong>Error:</strong> {{ msg }}
+                {% endif %}
+              </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+    
+{% endblock %}
