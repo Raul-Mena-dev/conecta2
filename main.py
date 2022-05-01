@@ -21,7 +21,7 @@ socketio = SocketIO(app)
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'conecta2'
+app.config['MYSQL_DB'] = 'conectados'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
@@ -68,7 +68,7 @@ def profile():
     return redirect(url_for('login'))
 
 
-@app.route('/cambioContraseña')
+@app.route('/cambioContraseña', methods=['GET', 'POST'])
 def contra():
     msg = ''
     if request.method == 'POST' and 'actual' in request.form and 'nueva' in request.form and 'repetir' in request.form:
@@ -78,6 +78,7 @@ def contra():
         try:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('UPDATE usuarios SET pass = %s WHERE usuarios.matricula = %s AND usuarios.pass = %s' ,(nueva, session['id'], actual,))
+            mysql.connection.commit()
             msg = 'Cambio exitoso'
             return redirect(url_for('profile', msg = msg))
         except Exception as e:
