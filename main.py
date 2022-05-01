@@ -1,43 +1,30 @@
-from pickle import TRUE
+
 from flask import render_template,request,session,redirect, url_for,flash
 from app import create_app
-from flask_socketio import SocketIO, emit
-from flask_login import current_user, logout_user
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
 from werkzeug.utils import secure_filename
 import os
-import modelo
-import sys
-import pandas as pd
-from pprint import pprint
 
 #CONFIGURACIONES
 app = create_app()
 app.config['SECRET_KEY'] = 'mysecret'
-socketio = SocketIO(app)
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'conectados'
-app.config['UPLOAD_FOLDER'] ='app\static\img'
+app.config['MYSQL_HOST'] = 'RaulMena.mysql.pythonanywhere-services.com'
+app.config['MYSQL_USER'] = 'RaulMena'
+app.config['MYSQL_PASSWORD'] = 'Smersyc1+'
+app.config['MYSQL_DB'] = 'RaulMena$conecta2'
+app.config['UPLOAD_FOLDER'] ='/home/RaulMena/conecta2/app/static/img'
 
 mysql = MySQL(app)
 
 
-@socketio.on('disconnect')
-def disconnect_user():
-    logout_user()
-    session.pop('loggedin', None)
-    session.pop('id', None)
-    session.pop('username', None)
-    
-#PRINCIPAL  
+
+#PRINCIPAL
 @app.route('/')
 def inicio():
-    
+
     universidades = ['Tlajomulco','Rio Nilo','Lazaro Cardenas', 'Campus','Americas', 'Zapopan', 'Pedro Moreno', 'Olimpica']
     carreras = {}
     carreras['Tlajomulco'] = ['Bachillerato','Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
@@ -111,7 +98,7 @@ def upload():
 def login():
     if session:
         return redirect(url_for('inicio'))
-    else: 
+    else:
         # Output message if something goes wrong...
         msg = ''
         # Check if "username" and "password" POST requests exist (user submitted form)
@@ -128,11 +115,11 @@ def login():
                 session['id'] = usuario['matricula']
                 nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
                 session['usuario']= nombreUsuario
-                return redirect(url_for('inicio'))   
+                return redirect(url_for('inicio'))
             except Exception as e:
                 msg = "Error: " + str(e)
                 return render_template('login.html', msg = msg)
-        else: 
+        else:
             return render_template('login.html')
 
 
@@ -195,8 +182,8 @@ def registrar():
         # Form is empty... (no POST data)
         msg = 'Porfavor llena el formulario!'
         return render_template('login.html', msg=msg)
-    # Show registration form with message (if any)  
-    
+    # Show registration form with message (if any)
+
 
 
 @app.route('/publicaciones')
@@ -230,7 +217,7 @@ def publicaciones():
 @app.route("/Admin")
 def Admin():
     #if 'loggedin' in session:
-        
+
     return render_template('Admin.html')
     # User is not loggedin redirect to login page
     #return redirect(url_for('login'))
@@ -291,7 +278,7 @@ def baja_alum():
         return render_template('Baja_Alum.html',usuarios = usuarios, )
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
-    
+
 #Se manda la instruccion de eliminar al usuario a la bd
 @app.route("/deleteUser/<string:id>")
 def deleteUser(id):
@@ -329,7 +316,7 @@ def buscar_usuarios():
         datos = cur.fetchone()
     return render_template('Ver_usuarios.html',datos = datos)
 
-#Seccion de post  
+#Seccion de post
 
 #****** NUEVO ******
 @app.route("/obtenerID/<string:plantel>/<string:carrera>")
@@ -341,13 +328,18 @@ def obtenerID(plantel,carrera):
     cur = mysql.connection.cursor()
     cur.execute('SELECT id_carrera FROM carrera WHERE carrera = %s AND id_plantel = %s',(carrera,id_plantel))
     id_carrera = cur.fetchone()
-    
-    return redirect(url_for('listar',id_plantel = id_plantel, id_carrera = id_carrera))
+
+    session['id_plantel'] = id_plantel
+    session['id_carrera'] = id_carrera
+
+    return redirect(url_for('listar'))
 
 #Se muestra la lista de post
-@app.route("/listar/<string:id_plantel>/<string:id_carrera>")
-def listar(id_plantel,id_carrera):
+@app.route("/listar")
+def listar():
 
+    id_plantel = session['id_plantel']
+    id_carrera = session['id_carrera']
     mostrar = True
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -378,8 +370,13 @@ def mostrarpost(id):
     return render_template('mostrarpost.html', post = post, respuestas = respuestas)
 
 #Se agrega una nueva publicacion
-@app.route("/add_post/<string:id_carrera>/<string:id_plantel>/<string:matricula>",  methods=['POST'])
-def add_post(id_carrera, id_plantel, matricula):
+@app.route("/add_post",  methods=['POST'])
+def add_post():
+
+    id_plantel = session['id_plantel']
+    id_carrera = session['id_carrera']
+    matricula = session['id']
+
     if request.method == 'POST':
         estado = 1
         titulo = request.form['titulo']
@@ -414,10 +411,10 @@ def reportar_publi(id):
         cur = mysql.connection.cursor()
         cur.execute('UPDATE post SET id_estado = %s WHERE id_post = %s',(estado,id))
         mysql.connection.commit()
-        return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera)) 
+        return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
     except Exception as e:
-        print("Error"+ str(e)) 
-        return redirect(url_for('mostrarpost',id=id)) 
+        print("Error"+ str(e))
+        return redirect(url_for('mostrarpost',id=id))
 
 #Se toman acciones al reportar una respuesta
 @app.route('/reportar_msj/<string:id_pub>/<string:id_msj>')
@@ -475,3 +472,4 @@ def actualziacion_msj(id_post,id_msj):
         cur.execute('UPDATE respuestas SET contenido = %s WHERE id_respuesta = %s',(contenido,id_msj,))
         mysql.connection.commit()
         return redirect(url_for('mostrarpost',id=id_post))
+
