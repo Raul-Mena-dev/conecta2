@@ -50,7 +50,7 @@
 </div>
 
 <!-- Crear comentario -->
-<form action="/add_comentario/{{post['id_post']}}/{{'006180060'}} " method="POST">
+<form action="/add_comentario/{{post['id_post']}}/{{session['id']}} " method="POST">
   <div class="apartado-comentar">  
     <div class="escribe-comentario">
       <textarea  class="crearcomentario" name="texto" placeholder="comentario" autocomplete="off" required></textarea>

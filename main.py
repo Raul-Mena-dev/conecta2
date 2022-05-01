@@ -380,21 +380,22 @@ def mostrarpost(id):
 @app.route("/add_post/<string:id_carrera>/<string:id_plantel>/<string:matricula>",  methods=['POST'])
 def add_post(id_carrera, id_plantel, matricula):
     if request.method == 'POST':
-        #Linea de matricula a borrar, ajusta cuando exista sesion
+        estado = 1
         titulo = request.form['titulo']
         contenido = request.form['contenido']
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('INSERT INTO post(titulo, contenido, matricula, id_plantel, id_carrera) VALUES(%s, %s, %s, %s, %s)', (titulo, contenido, matricula, id_plantel, id_carrera))
+        cur.execute('INSERT INTO post(titulo, contenido, matricula, id_plantel, id_carrera, id_estado) VALUES(%s, %s, %s, %s, %s, %s)', (titulo, contenido, matricula, id_plantel, id_carrera, estado))
         mysql.connection.commit()
         return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
 
 #Se agrega una respuesta a la publicacion
-@app.route("/add_comentario//<string:matricula>",  methods=['POST'])
+@app.route("/add_comentario/<string:id>/<string:matricula>",  methods=['POST'])
 def add_comentario(id, matricula):
     if request.method == 'POST':
+        estado = 1
         contenido = request.form['texto']
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('INSERT INTO respuestas(contenido, matricula, id_post) VALUES(%s, %s, %s)', (contenido, matricula, id))
+        cur.execute('INSERT INTO respuestas(contenido, matricula, id_post, id_estado) VALUES(%s, %s, %s, %s)', (contenido, matricula, id, estado,))
         mysql.connection.commit()
         return redirect(url_for('mostrarpost',id = id))
 
