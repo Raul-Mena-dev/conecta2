@@ -29,9 +29,11 @@
         <div class="reportar">
           <abbr title="Reportar"><a href="/reportar_publi/{{post['id_post']}}"><i class="fa-solid fa-circle-exclamation"></i></a></abbr>
         </div>
-        <div class="editar">
-          <abbr title="Editar"><a href="/actualiza_publi/{{post['id_post']}}"><i class="fa-solid fa-pen-to-square"></i></abbr></a>
-        </div>
+        {% if post['matricula'] == session['id'] %}
+          <div class="editar">
+            <abbr title="Editar"><a href="/actualiza_publi/{{post['id_post']}}"><i class="fa-solid fa-pen-to-square"></i></abbr></a>
+          </div>
+        {% endif %}
       </div>
     </div>
     <div class="datos-publicacion">
@@ -93,9 +95,11 @@
             <div class="reportar-com">
               <abbr title="Reportar"><a href="/reportar_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}"><i class="fa-solid fa-circle-exclamation"></i></a></abbr>
             </div>
-            <div class="editar-com">
-              <abbr title="Editar"><a href="/actualiza_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}"><i class="fa-solid fa-pen-to-square"></i></abbr></a>
-            </div>
+            {% if respuesta['matricula'] == session['id'] %}
+              <div class="editar-com">
+                <abbr title="Editar"><a href="/actualiza_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}"><i class="fa-solid fa-pen-to-square"></i></abbr></a>
+              </div>
+             {% endif %} 
           </div>
         </div>
         <div class="datos-publicacion-respuesta">
