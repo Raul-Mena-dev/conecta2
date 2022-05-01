@@ -115,6 +115,7 @@ def login():
                 session['id'] = usuario['matricula']
                 nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
                 session['usuario']= nombreUsuario
+                session['nivel'] = usuario['id_nivel_estudio']
                 return redirect(url_for('inicio'))
             except Exception as e:
                 msg = "Error: " + str(e)
@@ -177,6 +178,7 @@ def registrar():
                 session['id'] = usuario['matricula']
                 nombreUsuario = usuario['nombre'] +' '+ usuario['apellido1']
                 session['usuario']= nombreUsuario
+                session['nivel'] = usuario['id_nivel_estudio']
                 return redirect(url_for('inicio'))
     elif request.method == 'POST':
         # Form is empty... (no POST data)
@@ -361,7 +363,7 @@ def listar():
 @app.route("/mostrarpost/<string:id>")
 def mostrarpost(id):
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT post.matricula, post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s', (id,))
+    cur.execute('SELECT post.matricula, post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario, carrera.carrera FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula INNER JOIN carrera ON post.id_carrera = carrera.id_carrera WHERE id_post = %s', (id,))
     post = cur.fetchone()
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)

@@ -30,9 +30,13 @@
                     <textarea name="contenido" placeholder="Contenido del tema" autocomplete="off" required></textarea>
                 </div>
                 {% if session %}
-                    <div class="boton-publicar-post">
-                        <button class="boton-post" type="submit">Publicar</button>
-                    </div>
+                    {% for centro in centroUni %}
+                        {% if ((session['nivel'] != 1 and centro['carrera'] == "Bachillerato") or (session['nivel'] != 2 and centro['carrera'] != "Bachillerato")) %}
+                            <div class="boton-publicar-post">
+                                <button class="boton-post" type="submit">Publicar</button>
+                            </div>
+                        {% endif %}
+                    {% endfor %} 
                 {% endif %}
             </form>
             {% if not session %}

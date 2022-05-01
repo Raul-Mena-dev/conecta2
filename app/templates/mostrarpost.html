@@ -56,9 +56,11 @@
       <textarea  class="crearcomentario" name="texto" placeholder="comentario" autocomplete="off" required></textarea>
     </div>
     {% if session %}
-    <div class="boton-publicar-respuesta">
-      <button class="boton-respuestas" type="submit">Publicar</button>
-    </div>
+      {% if ((session['nivel'] != 1 and post['carrera'] == "Bachillerato") or (session['nivel'] != 2 and post['carrera'] != "Bachillerato")) %}
+          <div class="boton-publicar-respuesta">
+            <button class="boton-respuestas" type="submit">Publicar</button>
+          </div>
+        {% endif %}
     {% endif %}
   </div>
 </form>
