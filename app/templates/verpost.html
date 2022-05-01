@@ -9,11 +9,9 @@
 
 {% block content %}
 
-{% if session %}
-<div>
-    <button><a href="{{url_for('post')}}">Nueva Publicacion</a></button>
-</div>
-{% endif %}
+
+
+
 
 
 <div class="contenido-post">
@@ -42,7 +40,7 @@
                     <div class="no-registrado-post">
                         <h4>Inica sesion para publicar</h4>
                         <div class="botones-no-sesion-post">
-                            <div class="ir-login-post" onclick="location.href= '/'"> Iniciar sesion </div>
+                            <div class="ir-login-post" onclick="location.href= '/login'"> Iniciar sesion </div>
                             <div class="ir-registrar-post" onclick="location.href= '/'"> Registrarse </div>
                         </div>
                     </div>
@@ -68,9 +66,7 @@
                         <div class="caja">
                             {% if session %} 
                             <div class="botones-post">
-                                <div class="estilo-boton"><a href="/edita/['id_post']">Editar</a></div>
-                                <div class="estilo-boton"><a href="/delete/['id_post']">Borrar</a></div>
-                                <div class="estilo-boton"><a href="/reportado_post/['id_post']">Reportar</a></div>
+                                
                             </div>
                             <div class="nombre-usuario">
                                 usuario: {{ post.usuario }}
