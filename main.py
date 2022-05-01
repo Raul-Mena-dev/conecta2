@@ -20,7 +20,7 @@ socketio = SocketIO(app)
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'conecta2'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
@@ -90,6 +90,7 @@ def contra():
 #upload
 @app.route('/', methods=['GET', 'POST'])
 def upload():
+    msgU = ''
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('sin archivo')
@@ -98,8 +99,9 @@ def upload():
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
         filename = secure_filename(f.filename)
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('UPDATE usuarios SET FOTO = %s WHERE usuarios.MATRICULA = %s', (filename, session['id']))
+        cursor.execute('UPDATE usuarios SET foto = %s WHERE usuarios.matricula = %s', (filename, session['id']))
         mysql.connection.commit()
+        return redirect(url_for('profile', msgU = msgU))
     return redirect(url_for('profile'))
 
 

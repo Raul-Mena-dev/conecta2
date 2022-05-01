@@ -17,7 +17,7 @@
          <div class="col  justify-content-center">
            
                <div class="card  mx-auto mt-4" style="max-width: 18rem; max-height: 18rem;">
-                   <img class="card-img-top"  src="{{url_for('static', filename='img/'+account['foto'])}}" alt="perfil">   
+                   <img class="card-img-top" style="max-width: 18rem; max-height: 18rem;" src="{{url_for('static', filename='img/'+account['foto'])}}" alt="perfil">   
                </div>
               
                 <div class=" mr-auto ml-auto border p-4 mt-4 ">
@@ -33,7 +33,7 @@
                     
                     <input name="upload"  id="upload" class="btn btn-block btn-dark" class="btn btn-primary" type="submit" value="Subir" >
                   </div>
-                  <div>{{msg}}</div>
+                  <div>{{msgU}}</div>
                 </form>
               </div>
               
@@ -51,13 +51,13 @@
          </div>
          <div class="col justify-content-center m-4 bg-white">
           <ul class="list-group list-group-flush mt-3 ml-2">
-              <li class="list-group-item "> <span class="font-weight-bold">Nombre: </span>{{account['nombre']}}</li>
-              <li class="list-group-item "> <span class="font-weight-bold">Apellidos: </span>{{account['apellido1']}} {{account['apellido2']}}</li>
-              <li class="list-group-item "> <span class="font-weight-bold">Fecha de nacimiento: </span>{{account['fnac']}}</li>
+              <li class="list-group-item text-capitalize"> <span class="font-weight-bold">Nombre: </span>{{account['nombre']}}</li>
+              <li class="list-group-item text-capitalize"> <span class="font-weight-bold">Apellidos: </span>{{account['apellido1']}} {{account['apellido2']}}</li>
+              <li class="list-group-item text-capitalize"> <span class="font-weight-bold">Fecha de nacimiento: </span>{{account['fnac']}}</li>
               <li class="list-group-item "> <span class="font-weight-bold">Correo: </span>{{account['correo']}}</li>
-              <li class="list-group-item "> <span class="font-weight-bold">Matricula: </span>{{account['matricula']}}</li>
-              <li class="list-group-item "> <span class="font-weight-bold">Plantel: </span>{{account['plantel']}}</li>
-              <li class="list-group-item "> <span class="font-weight-bold">Carrera: </span>{{account['carrera']}}</li>
+              <li class="list-group-item text-capitalize"> <span class="font-weight-bold">Matricula: </span>{{account['matricula']}}</li>
+              <li class="list-group-item text-capitalize"> <span class="font-weight-bold">Plantel: </span>{{account['plantel']}}</li>
+              <li class="list-group-item text-capitalize"> <span class="font-weight-bold">Carrera: </span>{{account['carrera']}}</li>
               {% if msg %}
               <li class="list-group-item "> <span class="text-danger"></span>{{msg}}</li>
               {% endif %}
