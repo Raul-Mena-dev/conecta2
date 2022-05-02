@@ -55,7 +55,7 @@
     <div class="escribe-comentario">
       <textarea  class="crearcomentario" name="texto" placeholder="comentario" autocomplete="off" required></textarea>
     </div>
-    {% if session %}
+    {% if session['id'] %}
       {% if ((session['nivel'] != 1 and post['carrera'] == "Bachillerato") or (session['nivel'] != 2 and post['carrera'] != "Bachillerato")) %}
           <div class="boton-publicar-respuesta">
             <button class="boton-respuestas" type="submit">Publicar</button>
@@ -64,13 +64,13 @@
     {% endif %}
   </div>
 </form>
-{% if not session %}
+{% if not session['id'] %}
   <div class="apartado-comentar">
     <div class="no-registrado">
       <h4>Inica sesion para comentar</h4>
       <div class="botones-no-sesion">
         <div class="ir-login" onclick="location.href= '/login'"> Iniciar sesion </div>
-        <div class="ir-registrar" onclick="location.href= '/'"> Registrarse </div>
+        <div class="ir-registrar" onclick="location.href= '/login'"> Registrarse </div>
       </div>
     </div>
   </div>

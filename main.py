@@ -11,11 +11,17 @@ import os
 app = create_app()
 app.config['SECRET_KEY'] = 'mysecret'
 
-app.config['MYSQL_HOST'] = 'RaulMena.mysql.pythonanywhere-services.com'
-app.config['MYSQL_USER'] = 'RaulMena'
-app.config['MYSQL_PASSWORD'] = 'Smersyc1+'
-app.config['MYSQL_DB'] = 'RaulMena$conecta2'
-app.config['UPLOAD_FOLDER'] ='/home/RaulMena/conecta2/app/static/img'
+#app.config['MYSQL_HOST'] = 'RaulMena.mysql.pythonanywhere-services.com'
+#app.config['MYSQL_USER'] = 'RaulMena'
+#app.config['MYSQL_PASSWORD'] = 'Smersyc1+'
+#app.config['MYSQL_DB'] = 'RaulMena$conecta2'
+#app.config['UPLOAD_FOLDER'] ='/home/RaulMena/conecta2/app/static/img'
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_DB'] = 'conectados'
+app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
 
@@ -24,7 +30,6 @@ mysql = MySQL(app)
 #PRINCIPAL
 @app.route('/')
 def inicio():
-
     universidades = ['Tlajomulco','Rio Nilo','Lazaro Cardenas', 'Campus','Americas', 'Zapopan', 'Pedro Moreno', 'Olimpica']
     carreras = {}
     carreras['Tlajomulco'] = ['Bachillerato','Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
@@ -96,6 +101,8 @@ def upload():
 #login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    session.pop('id_plantel', None)
+    session.pop('id_carrera', None)
     if session:
         return redirect(url_for('inicio'))
     else:
