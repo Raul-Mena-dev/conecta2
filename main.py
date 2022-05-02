@@ -11,17 +11,12 @@ import os
 app = create_app()
 app.config['SECRET_KEY'] = 'mysecret'
 
-#app.config['MYSQL_HOST'] = 'RaulMena.mysql.pythonanywhere-services.com'
-#app.config['MYSQL_USER'] = 'RaulMena'
-#app.config['MYSQL_PASSWORD'] = 'Smersyc1+'
-#app.config['MYSQL_DB'] = 'RaulMena$conecta2'
-#app.config['UPLOAD_FOLDER'] ='/home/RaulMena/conecta2/app/static/img'
+app.config['MYSQL_HOST'] = 'RaulMena.mysql.pythonanywhere-services.com'
+app.config['MYSQL_USER'] = 'RaulMena'
+app.config['MYSQL_PASSWORD'] = 'Smersyc1+'
+app.config['MYSQL_DB'] = 'RaulMena$conecta2'
+app.config['UPLOAD_FOLDER'] ='/home/RaulMena/conecta2/app/static/img'
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'conectados'
-app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
 
