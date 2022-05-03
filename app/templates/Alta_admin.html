@@ -13,24 +13,27 @@
 
 <body>
    
-    <div class="formularios">
-        
-        <form action="/Registro_admin" method="POST" class="formulario-registro">
-            <div class="titulo">
-                <h3>Registro de administrador</h3>
-                <hr>
-                <br>
-            </div>
-
-            <input type="text" name="matricula" placeholder="Matricula">
-            <input type="text" name="nombre" placeholder="Nombre">
-            <input type="text" name="apellidos" placeholder="Apellidos">
-            <input type="password" name="password" placeholder="Contraseña">
-            <input type="password" name="password2" placeholder="Repita la contraseña">
-            <button type="submit" class="boton-registro">
-                Registrar
-            </button>
-        </form>
+    <div class="tabla_usuarios alta_admin">
+        <table>
+            <thead>
+                <tr>
+                    <td>Matricula</td>
+                    <td>Nombre</td>
+                    <td>Apellidos</td>
+                    <td>Otorgar privilegios</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{usuario.0}}</td>
+                        <td>{{usuario.1}}</td>
+                        <td>{{usuario.2}} {{usuario.3}}</td>
+                        <td><abbr title="Otorgar privilegios de admin"><a href="/Dar_admin/{{usuario.0}}"><i class="fa-solid fa-user-shield"></i></a></abbr></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </body>
 </html>

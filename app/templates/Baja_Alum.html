@@ -13,30 +13,29 @@
 
 
 <body>
-    <table>
-        <thead>
-            <tr>
-                <td>Matricula</td>
-                <td>Nombre</td>
-                <td>Apellidos</td>
-                <td>Carrera</td>
-                <td>Eliminar</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for usuario in usuarios %}
+    <div class="tabla_usuarios baja_admin">
+        <table>
+            <thead>
                 <tr>
-                    <td>{{usuario.0}}</td>
-                    <td>{{usuario.1}}</td>
-                    <td>{{usuario.2}}</td>
-                    <td>{{usuario.3}}</td>
-                    <td>
-                        <a id="boton_enviar" href="/deleteUser/{{usuario.0}}">Delete</a>
-                    </td>
+                    <td>Matricula</td>
+                    <td>Nombre</td>
+                    <td>Apellidos</td>
+                    <td>Quitar privilegios</td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{usuario.0}}</td>
+                        <td>{{usuario.1}}</td>
+                        <td>{{usuario.2}} {{usuario.3}}</td>
+                        <td><abbr title="Retirar privilegios de admin"><a href="/Quitar_admin/{{usuario.0}}"><i class="fa-solid fa-user-minus"></i></a></abbr></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
 </body>
 
 {% endblock %}

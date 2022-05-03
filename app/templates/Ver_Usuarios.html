@@ -21,40 +21,43 @@
             </div>
         </form>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Matricula</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Fecha de nacimiento</th>
-                <th scope="col">Correo</th>
-                <th scope="col">Carrera</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if datos %}
+    <div class="tabla_usuarios">
+        <table>
+            <thead>
                 <tr>
-                    <th scope="row">1</th>
-                    <td>{{datos['MATRICULA']}}</td>
-                    <td>{{datos['NOMBRE']}}</td>
-                    <td>{{datos['FNAC']}}</td>
-                    <td>{{datos['CORREO']}}</td>
-                    <td>{{datos['CARRERA']}}</td>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Matricula</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Fecha de nacimiento</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Eliminar</th>
                 </tr>
-            {% else %}
-                {% for usuario in usuarios %}
+            </thead>
+            <tbody>
+                {% if datos %}
                     <tr>
-                        <th scope="row">1</th>
-                        <td>{{usuario.0}}</td>
-                        <td>{{usuario.1}}</td>
-                        <td>{{usuario.4}}</td>
-                        <td>{{usuario.5}}</td>
+                        <td>{{datos['usuario']}}</td>
+                        <td>{{datos['matricula']}}</td>
+                        <td>{{datos['nombre']}}</td>
+                        <td>{{datos['fnac']}}</td>
+                        <td>{{datos['correo']}}</td>
+                        <td><abbr title="Dar de baja a usuario"><a href="/deleteUser/{{datos['matricula']}}"><i class="fa-solid fa-user-xmark"></i></a></abbr></td>
                     </tr>
-                {% endfor %}
-            {% endif %}
-        </tbody>
-    </table>
+                {% else %}
+                    {% for usuario in usuarios %}
+                        <tr>
+                            <td>{{usuario.6}}</td>
+                            <td>{{usuario.0}}</td>
+                            <td>{{usuario.1}} {{usuario.2}} {{usuario.3}}</td>
+                            <td>{{usuario.4}}</td>
+                            <td>{{usuario.5}}</td>
+                            <td><abbr title="Dar de baja a usuario"><a href="/deleteUser/{{usuario.0}}"><i class="fa-solid fa-user-xmark"></i></a></abbr></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
 </body>
 
 

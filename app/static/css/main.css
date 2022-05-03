@@ -1018,6 +1018,62 @@ abbr[title] {
     opacity: 1;
 }
 
+.tabla_usuarios{
+    margin: auto;
+    width: 80%;
+}
+
+.tabla_usuarios th, .tabla_usuarios td{
+    text-align: center;
+}
+
+.tabla_usuarios a{
+    color: #e22323;
+    opacity: 0.9;
+}
+
+.tabla_usuarios a:hover{
+    color: #e22323;
+    opacity: 1;
+}
+
+.tabla_reportes{
+    margin: auto;
+    width: 90%;
+    margin-top: 20px;
+}
+
+.tabla_reportes thead td, .tabla_usuarios thead td{
+    font-weight: bold;
+}
+
+.tabla_reportes th, .tabla_reportes td{
+    text-align: center;
+}
+
+.tabla_reportes a{
+    color: #1abd0b;
+    opacity: 0.9;
+}
+
+.tabla_reportes a:hover{
+    color: #1cdd0a;
+    opacity: 1;
+}
+
+.baja_admin, .alta_admin{
+    margin-top: 20px;
+}
+
+.alta_admin a{
+    color: #1abd0b;
+    opacity: 0.9;
+}
+
+.alta_admin a:hover{
+    color: #1cdd0a;
+    opacity: 1;
+}
 
 /* RESPONSIVE DESIGN */
 

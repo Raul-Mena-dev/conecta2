@@ -10,24 +10,40 @@
 {% block content %}
 
 {% include 'botones-notificaciones.html'%}
+<div class="tabla_reportes">
     <table>
         <thead>
             <tr>
                 <td>Matricula</td>
-                <td>Fecha</td>
+                <td>Fecha/Hora</td>
+                <td>Titulo</td>
                 <td>Comentario</td>
+                <td>Restaurar</td>
             </tr>
         </thead>
         <tbody>
-            {% for mensaje in mensajes %}
+            {% for publicacion in publicaciones %}
                 <tr>
-                    <td>{{mensaje.8}}</td>
-                    <td>{{mensaje.2}}</td>
-                    <td>{{mensaje.4}}</td>
+                    <td>{{publicacion.3}}</td>
+                    <td>{{publicacion.6}}</td>
+                    <td>{{publicacion.1}}</td>
+                    <td>{{publicacion.2 }}</td>
+                    <td><abbr title="Restaurar publicacion"><a href="/Restaurar_publi/{{publicacion.0}}"><i class="fa-solid fa-circle-check"></i></a></abbr></td>
+                </tr>
+            {% endfor %}
+            {% for respuesta in respuestas %}
+                <tr>
+                    <td>{{respuesta.3}}</td>
+                    <td>{{respuesta.2}}</td>
+                    <td>Respuesta</td>
+                    <td>{{respuesta.1}}</td>
+                    <td><abbr title="Restaurar comentario"><a href="/Restaurar_msj/{{respuesta.0}}"><i class="fa-solid fa-circle-check"></i></a></abbr></td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+</div>
+    
     
 {% endblock %}
 {% endblock %}
