@@ -124,7 +124,7 @@ def login():
                 session['nivel'] = usuario['id_nivel_estudio']
                 return redirect(url_for('inicio'))
             except Exception as e:
-                msg = "Error: " + str(e)
+                msg = "Usuario y/o contraseña incorrecto"
                 return render_template('login.html', msg = msg)
         else:
             return render_template('login.html')
