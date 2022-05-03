@@ -9,8 +9,6 @@
 
 {% block content %}
 
-{% include 'botones-notificaciones.html'%}
-
 <body>
    
     <div class="tabla_usuarios alta_admin">
@@ -29,7 +27,7 @@
                         <td>{{usuario.0}}</td>
                         <td>{{usuario.1}}</td>
                         <td>{{usuario.2}} {{usuario.3}}</td>
-                        <td><abbr title="Otorgar privilegios de admin"><a href="/Dar_admin/{{usuario.0}}"><i class="fa-solid fa-user-shield"></i></a></abbr></td>
+                        <td><abbr title="Otorgar privilegios de admin"><a href="/Dar_admin/{{usuario.0}}"><i class="fa-solid fa-user-shield iconos_tabla"></i></a></abbr></td>
                     </tr>
                 {% endfor %}
             </tbody>

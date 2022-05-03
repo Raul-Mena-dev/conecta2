@@ -8,10 +8,6 @@
 
 {% block content %}
 
-{% include 'botones-notificaciones.html'%}
-
-
-
 <body>
     <div class="tabla_usuarios baja_admin">
         <table>
@@ -29,7 +25,7 @@
                         <td>{{usuario.0}}</td>
                         <td>{{usuario.1}}</td>
                         <td>{{usuario.2}} {{usuario.3}}</td>
-                        <td><abbr title="Retirar privilegios de admin"><a href="/Quitar_admin/{{usuario.0}}"><i class="fa-solid fa-user-minus"></i></a></abbr></td>
+                        <td><abbr title="Retirar privilegios de admin"><a href="/Quitar_admin/{{usuario.0}}"><i class="fa-solid fa-user-minus iconos_tabla"></i></a></abbr></td>
                     </tr>
                 {% endfor %}
             </tbody>

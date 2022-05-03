@@ -8,9 +8,6 @@
 
 {% block content %}
 
-{% include 'botones-notificaciones.html'%}
-
-
 <body>
     <div class="busqueda">
         <form action="{{url_for('buscar_usuarios')}}" method="post">
@@ -41,7 +38,7 @@
                         <td>{{datos['nombre']}}</td>
                         <td>{{datos['fnac']}}</td>
                         <td>{{datos['correo']}}</td>
-                        <td><abbr title="Dar de baja a usuario"><a href="/deleteUser/{{datos['matricula']}}"><i class="fa-solid fa-user-xmark"></i></a></abbr></td>
+                        <td><abbr title="Dar de baja a usuario"><a href="/deleteUser/{{datos['matricula']}}"><i class="fa-solid fa-user-xmark iconos_tabla;"></i></a></abbr></td>
                     </tr>
                 {% else %}
                     {% for usuario in usuarios %}
@@ -51,7 +48,7 @@
                             <td>{{usuario.1}} {{usuario.2}} {{usuario.3}}</td>
                             <td>{{usuario.4}}</td>
                             <td>{{usuario.5}}</td>
-                            <td><abbr title="Dar de baja a usuario"><a href="/deleteUser/{{usuario.0}}"><i class="fa-solid fa-user-xmark"></i></a></abbr></td>
+                            <td><abbr title="Dar de baja a usuario"><a href="/deleteUser/{{usuario.0}}"><i class="fa-solid fa-user-xmark iconos_tabla"></i></a></abbr></td>
                         </tr>
                     {% endfor %}
                 {% endif %}

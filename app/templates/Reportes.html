@@ -9,7 +9,6 @@
 
 {% block content %}
 
-{% include 'botones-notificaciones.html'%}
 <div class="tabla_reportes">
     <table>
         <thead>
@@ -28,7 +27,7 @@
                     <td>{{publicacion.6}}</td>
                     <td>{{publicacion.1}}</td>
                     <td>{{publicacion.2 }}</td>
-                    <td><abbr title="Restaurar publicacion"><a href="/Restaurar_publi/{{publicacion.0}}"><i class="fa-solid fa-circle-check"></i></a></abbr></td>
+                    <td><abbr title="Restaurar publicacion"><a href="/Restaurar_publi/{{publicacion.0}}"><i class="fa-solid fa-circle-check iconos_tabla"></i></a></abbr></td>
                 </tr>
             {% endfor %}
             {% for respuesta in respuestas %}
@@ -37,7 +36,7 @@
                     <td>{{respuesta.2}}</td>
                     <td>Respuesta</td>
                     <td>{{respuesta.1}}</td>
-                    <td><abbr title="Restaurar comentario"><a href="/Restaurar_msj/{{respuesta.0}}"><i class="fa-solid fa-circle-check"></i></a></abbr></td>
+                    <td><abbr title="Restaurar comentario"><a href="/Restaurar_msj/{{respuesta.0}}"><i class="fa-solid fa-circle-check iconos_tabla"></i></a></abbr></td>
                 </tr>
             {% endfor %}
         </tbody>
