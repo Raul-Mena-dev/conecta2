@@ -18,6 +18,7 @@
                 <td>Titulo</td>
                 <td>Comentario</td>
                 <td>Restaurar</td>
+                <td>Ocultar</td>
             </tr>
         </thead>
         <tbody>
@@ -25,18 +26,20 @@
                 <tr>
                     <td>{{publicacion.3}}</td>
                     <td>{{publicacion.6}}</td>
-                    <td>{{publicacion.1}}</td>
-                    <td>{{publicacion.2 }}</td>
+                    <td><a href="/mostrarpost/{{ publicacion.0 }}" class="enlace_report">{{publicacion.1}}</a></td>
+                    <td>{{publicacion.2}}</td>
                     <td><abbr title="Restaurar publicacion"><a href="/Restaurar_publi/{{publicacion.0}}"><i class="fa-solid fa-circle-check iconos_tabla"></i></a></abbr></td>
+                    <td><abbr title="Ocultar publicacion"><a href="/reportar_publi_admin/{{publicacion.0}}" class="ocultar_report"><i class="fa-solid fa-ban iconos_tabla"></i></a></abbr></td>
                 </tr>
             {% endfor %}
             {% for respuesta in respuestas %}
                 <tr>
                     <td>{{respuesta.3}}</td>
                     <td>{{respuesta.2}}</td>
-                    <td>Respuesta</td>
+                    <td><a href="/mostrarpost/{{ respuesta.4 }}" class="enlace_report">Respuesta</a></td>
                     <td>{{respuesta.1}}</td>
                     <td><abbr title="Restaurar comentario"><a href="/Restaurar_msj/{{respuesta.0}}"><i class="fa-solid fa-circle-check iconos_tabla"></i></a></abbr></td>
+                    <td><abbr title="Ocultar comentario"><a href="/reportar_msj_admin/{{respuestas.4}}/{{respuesta.0}}" class="ocultar_report"><i class="fa-solid fa-ban iconos_tabla"></i></a></abbr></td>
                 </tr>
             {% endfor %}
         </tbody>

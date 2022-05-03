@@ -27,7 +27,9 @@
       </div>
       <div class="botones-control">
         <div class="reportar">
-          <abbr title="Reportar"><a href="/reportar_publi/{{post['id_post']}}"><i class="fa-solid fa-circle-exclamation"></i></a></abbr>
+          {% if session['id']%}
+            <abbr title="Reportar"><a href="/reportar_publi/{{post['id_post']}}"><i class="fa-solid fa-circle-exclamation"></i></a></abbr>
+          {% endif %}
         </div>
         {% if post['matricula'] == session['id'] %}
           <div class="editar">
@@ -87,21 +89,52 @@
 
 <div class="estilo-comentarios">
   {% for respuesta in respuestas %}
-    {% if respuesta['id_estado'] == 1%}
-      <div class="comentarios">
+    {% if (respuesta['id_estado'] != 2)  %}
+      {% if ((respuesta['id_estado'] != 3 and session['nivel'] >= 4) or (session['nivel'] < 4)) %}
+        <div class="comentarios">
+          <div class="contenido-mensaje">
+            <div class="contenido-respuesta">
+              <p>{{ respuesta['contenido'] }}</p>
+            </div>
+            <div class="botones-control">
+              {% if session['id'] %}
+                <div class="reportar-com">
+                  <abbr title="Reportar"><a href="/reportar_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}"><i class="fa-solid fa-circle-exclamation"></i></a></abbr>
+                </div>
+              {% endif %}
+              {% if respuesta['matricula'] == session['id'] %}
+                <div class="editar-com">
+                  <abbr title="Editar"><a href="/actualiza_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}"><i class="fa-solid fa-pen-to-square"></i></abbr></a>
+                </div>
+              {% endif %} 
+            </div>
+          </div>
+          <div class="datos-publicacion-respuesta">
+            <div class="fecha-publicacion">
+              <p>Publicado: {{ respuesta['fecha']}}</p> 
+            </div>
+            <div class="publicado-por">
+              <p>usuario: {{respuesta['usuario']}}</p> 
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endif %}
+    {% if ((respuesta['id_estado'] == 3) and (session['nivel'] >= 4 )) %}
+      <div class="comentarios remarcar">
         <div class="contenido-mensaje">
           <div class="contenido-respuesta">
             <p>{{ respuesta['contenido'] }}</p>
           </div>
           <div class="botones-control">
             <div class="reportar-com">
-              <abbr title="Reportar"><a href="/reportar_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}"><i class="fa-solid fa-circle-exclamation"></i></a></abbr>
+              
             </div>
             {% if respuesta['matricula'] == session['id'] %}
               <div class="editar-com">
                 <abbr title="Editar"><a href="/actualiza_msj/{{post['id_post']}}/{{respuesta['id_respuesta']}}"><i class="fa-solid fa-pen-to-square"></i></abbr></a>
               </div>
-             {% endif %} 
+            {% endif %} 
           </div>
         </div>
         <div class="datos-publicacion-respuesta">
@@ -112,12 +145,6 @@
             <p>usuario: {{respuesta['usuario']}}</p> 
           </div>
         </div>
-        
-        <!--<div class="botones-post">
-          <div class="estilo-boton"> <a href="/edit/{{ respuesta['id_respuesta']}}">Editar</a> </div>
-          <div class="estilo-boton"> <a href="/borrar/{{ respuesta['id_respuesta'] }}">Borrar</a> </div>
-          <div class="estilo-boton"> <a href="/reportado_msj/{{ respuesta['id_respuesta'] }}">Reportar</a> </div>
-        </div>-->
       </div>
     {% endif %}
   {% endfor %}

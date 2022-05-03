@@ -25,8 +25,6 @@ app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
 
-
-
 #PRINCIPAL
 @app.route('/')
 def inicio():
@@ -103,6 +101,7 @@ def upload():
 def login():
     session.pop('id_plantel', None)
     session.pop('id_carrera', None)
+    session.pop('nivel', None)
     if session:
         return redirect(url_for('inicio'))
     else:
@@ -225,7 +224,7 @@ def publicaciones():
 #ADMINISTRADOR
 @app.route("/Admin")
 def Admin():
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         return render_template('Admin.html')
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
@@ -234,7 +233,7 @@ def Admin():
 #Pagina donde se elige que tipo de usuario se registrara
 @app.route("/Selec_usuario")
 def Selec_usuario():
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         return render_template('Selec_usuario.html')
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
@@ -243,14 +242,14 @@ def Selec_usuario():
 #Pagina donde se hace el registro de un nuevo usuario
 @app.route("/Alta_Alum")
 def Alta_usuario():
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         return render_template('Alta_Alum.html')
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
 @app.route("/Alta_admin")
 def Alta_admin():
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         # We need all the account info for the user so we can display it on the profile page
         cur = mysql.connection.cursor()
         cur.execute('SELECT usuarios.matricula, usuarios.nombre, usuarios.apellido1, usuarios.apellido2, usuarios.fnac, usuarios.correo, login.usuario FROM usuarios INNER JOIN login ON usuarios.matricula = login.matricula where usuarios.id_nivel_estudio = 3')
@@ -263,7 +262,7 @@ def Alta_admin():
 #Dar privilegios de administrador
 @app.route('/Dar_admin/<string:id>') 
 def Dar_admin(id): 
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         nivel = 4
         try:
             cur = mysql.connection.cursor()
@@ -278,7 +277,7 @@ def Dar_admin(id):
 #Aqui se envian los datos de registro de admin a la bd
 @app.route("/Registro_admin", methods=['POST'])
 def Registro_admin():
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         if request.method == 'POST':
             matricula = request.form['matricula']
             nombre = request.form['nombre']
@@ -295,7 +294,7 @@ def Registro_admin():
 #Pagina donde se muestran los usuarios y para hacer la eliminacion de usuario
 @app.route("/Baja_admin")
 def Baja_admin():
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         # We need all the account info for the user so we can display it on the profile page
         cur = mysql.connection.cursor()
         cur.execute('SELECT usuarios.matricula, usuarios.nombre, usuarios.apellido1, usuarios.apellido2, usuarios.fnac, usuarios.correo, login.usuario FROM usuarios INNER JOIN login ON usuarios.matricula = login.matricula where usuarios.id_nivel_estudio = 4')
@@ -308,11 +307,11 @@ def Baja_admin():
 #Quitar privilegios de administrador
 @app.route('/Quitar_admin/<string:id>')
 def Quitar_admin(id):
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         nivel = 3
         try:
             cur = mysql.connection.cursor()
-            cur.execute('UPDATE usuarios SET id_nivel_estudio = %s WHERE matricula = %s',(nivel,id))
+            cur.execute('UPDATE usuarios SET id_nivel_estudio = %s WHERE matricula = %s AND usuarios.id_nivel_estudio = 4',(nivel,id))
             mysql.connection.commit()
             return redirect(url_for('Baja_admin'))
         except Exception as e:
@@ -323,7 +322,7 @@ def Quitar_admin(id):
 #Se manda la instruccion de eliminar al usuario a la bd
 @app.route("/deleteUser/<string:id>")
 def deleteUser(id):
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         cur = mysql.connection.cursor()
         cur.execute('DELETE FROM respuestas where matricula = %s', (id,))
         mysql.connection.commit()
@@ -351,20 +350,20 @@ def deleteUser(id):
 #Vista de los mensajes reportados
 @app.route("/Reportes")
 def Reportes():
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM post WHERE id_estado = 2')
+        cur.execute('SELECT * FROM post WHERE id_estado = 2 or id_estado = 3')
         publicaciones = cur.fetchall()
 
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM respuestas WHERE id_estado = 2')
+        cur.execute('SELECT * FROM respuestas WHERE id_estado = 2 or id_estado = 3')
         respuestas = cur.fetchall()
         return render_template('Reportes.html', publicaciones=publicaciones, respuestas = respuestas)
     return redirect(url_for('login'))
 
 @app.route("/Restaurar_publi/<string:id>")
 def Restaurar_publi(id):
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         estado = 1
         try:
             cur = mysql.connection.cursor()
@@ -378,7 +377,7 @@ def Restaurar_publi(id):
 
 @app.route("/Restaurar_msj/<string:id>")
 def Restaurar_msj(id):
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         estado = 1
         try:
             cur = mysql.connection.cursor()
@@ -394,7 +393,7 @@ def Restaurar_msj(id):
 #Vista para ver los usuarios
 @app.route("/Ver_usuarios")
 def Ver_usuarios():
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         cur = mysql.connection.cursor()
         cur.execute('SELECT usuarios.matricula, usuarios.nombre, usuarios.apellido1, usuarios.apellido2, usuarios.fnac, usuarios.correo, login.usuario FROM usuarios INNER JOIN login ON usuarios.matricula = login.matricula')
         datos = cur.fetchall()
@@ -406,7 +405,7 @@ def Ver_usuarios():
 #Se hace la busqueda de usuarios de a mostrar
 @app.route("/Buscar_usuarios", methods=['POST','GET'])
 def buscar_usuarios():
-    if session['nivel'] == 4:
+    if session['nivel'] == 4 or session['nivel'] == 5:
         if request.method == 'POST':
             dato = request.form['buscar']
             cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -459,6 +458,9 @@ def listar():
 #Se accede a un post para ver el contenido
 @app.route("/mostrarpost/<string:id>")
 def mostrarpost(id):
+
+    if 'nivel' not in session:
+        session['nivel'] = 0
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute('SELECT post.matricula, post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario, carrera.carrera FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula INNER JOIN carrera ON post.id_carrera = carrera.id_carrera WHERE id_post = %s', (id,))
     post = cur.fetchone()
@@ -499,7 +501,7 @@ def add_comentario(id, matricula):
 #Se toman acciones al reportar una publicacion
 @app.route('/reportar_publi/<string:id>')
 def reportar_publi(id):
-    estado = 2
+    estado = 3
     try:
         cur = mysql.connection.cursor()
         cur.execute('SELECT id_carrera FROM post WHERE id_post = %s',(id,))
@@ -518,6 +520,37 @@ def reportar_publi(id):
 #Se toman acciones al reportar una respuesta
 @app.route('/reportar_msj/<string:id_pub>/<string:id_msj>')
 def reportar_msj(id_pub,id_msj):
+    estado = 3
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute('UPDATE respuestas SET id_estado = %s WHERE id_respuesta = %s',(estado,id_msj))
+        mysql.connection.commit()
+        return redirect(url_for('mostrarpost',id=id_pub))
+    except Exception as e:
+        print("Error"+ str(e))
+        return redirect(url_for('mostrarpost',id=id_pub))
+
+@app.route('/reportar_publi_admin/<string:id>')
+def reportar_publi_admin(id):
+    estado = 2
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT id_carrera FROM post WHERE id_post = %s',(id,))
+        id_carrera = cur.fetchone()
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT id_plantel FROM post WHERE id_post = %s',(id,))
+        id_plantel = cur.fetchone()
+        cur = mysql.connection.cursor()
+        cur.execute('UPDATE post SET id_estado = %s WHERE id_post = %s',(estado,id))
+        mysql.connection.commit()
+        return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
+    except Exception as e:
+        print("Error"+ str(e))
+        return redirect(url_for('mostrarpost',id=id))
+
+#Se toman acciones al reportar una respuesta
+@app.route('/reportar_msj_admin/<string:id_pub>/<string:id_msj>')
+def reportar_msj_admin(id_pub,id_msj):
     estado = 2
     try:
         cur = mysql.connection.cursor()

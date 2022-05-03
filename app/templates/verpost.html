@@ -62,7 +62,7 @@
         </div>
         {% if mostrar %}
             {% for post in posts %}
-                {% if post['id_estado'] == 1%}
+                {% if post['id_estado'] != 2%}
                     <div class="postcuadros">
                         <div class="titulo">
                             <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
@@ -95,7 +95,7 @@
         {% else %}
             <div class="noContenido">
                 <hr>
-                <p>Aun no hay nada, se el primero en publicar algo</p>
+                    <p>Aun no hay nada, se el primero en publicar algo</p>
                 <hr>
             </div>
         {% endif %}

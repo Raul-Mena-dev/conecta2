@@ -962,6 +962,10 @@ abbr[title] {
     justify-content: space-between;
 }
 
+.remarcar{
+    border: solid 2px red; 
+}
+
 .datos-publicacion-respuesta{
     display: flex;
     flex-direction: row;
@@ -1079,6 +1083,32 @@ abbr[title] {
 .alta_admin a:hover{
     color: #1cdd0a;
     opacity: 1;
+}
+
+.tabla_reportes .ocultar_report
+{
+    color: red;
+    opacity: 0.9;
+}
+
+.tabla_reportes .ocultar_report:hover
+{
+    color: red;
+    opacity: 1;
+}
+
+.tabla_reportes .ocultar:hover{
+    opacity: 1;
+}
+
+.tabla_reportes .enlace_report{
+    color: #fff;
+    text-decoration: underline;
+}
+
+.tabla_reportes .enlace_report:hover{
+    color: rgb(63, 94, 180);
+    text-decoration: underline;
 }
 
 .iconos_tabla{
