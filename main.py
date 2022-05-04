@@ -11,17 +11,17 @@ import os
 app = create_app()
 app.config['SECRET_KEY'] = 'mysecret'
 
-app.config['MYSQL_HOST'] = 'RaulMena.mysql.pythonanywhere-services.com'
-app.config['MYSQL_USER'] = 'RaulMena'
-app.config['MYSQL_PASSWORD'] = 'Smersyc1+'
-app.config['MYSQL_DB'] = 'RaulMena$conecta2'
-app.config['UPLOAD_FOLDER'] ='/home/RaulMena/conecta2/app/static/img'
+# app.config['MYSQL_HOST'] = 'RaulMena.mysql.pythonanywhere-services.com'
+# app.config['MYSQL_USER'] = 'RaulMena'
+# app.config['MYSQL_PASSWORD'] = 'Smersyc1+'
+# app.config['MYSQL_DB'] = 'RaulMena$conecta2'
+# app.config['UPLOAD_FOLDER'] ='/home/RaulMena/conecta2/app/static/img'
 
-#app.config['MYSQL_HOST'] = 'localhost'
-#app.config['MYSQL_USER'] = 'root'
-#app.config['MYSQL_PASSWORD'] = 'root'
-#app.config['MYSQL_DB'] = 'conectados'
-#app.config['UPLOAD_FOLDER'] ='app\static\img'
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'Smersyc1+'
+app.config['MYSQL_DB'] = 'conecta2'
+app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
 
@@ -96,6 +96,8 @@ def upload():
     return redirect(url_for('profile'))
 
 
+
+
 #login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -122,7 +124,7 @@ def login():
                 nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
                 session['usuario']= nombreUsuario
                 session['nivel'] = usuario['id_nivel_estudio']
-                return redirect(url_for('inicio'))
+                return redirect(url_for('profile'))
             except Exception as e:
                 msg = "Usuario y/o contraseña incorrecto"
                 return render_template('login.html', msg = msg)
@@ -140,7 +142,7 @@ def logout():
     session.pop('usuario', None)
     session.clear()
     # Redirect to login page
-    return redirect(url_for('login'))
+    return redirect(url_for('inicio'))
 
 
 
@@ -185,7 +187,7 @@ def registrar():
                 nombreUsuario = usuario['nombre'] +' '+ usuario['apellido1']
                 session['usuario']= nombreUsuario
                 session['nivel'] = usuario['id_nivel_estudio']
-                return redirect(url_for('inicio'))
+                return redirect(url_for('profile'))
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         msg = 'Porfavor llena el formulario!'
@@ -477,11 +479,14 @@ def add_post():
     id_plantel = session['id_plantel']
     id_carrera = session['id_carrera']
     matricula = session['id']
-
     if request.method == 'POST':
         estado = 1
         titulo = request.form['titulo']
         contenido = request.form['contenido']
+        if 'file' in request.files:
+            f = request.files['file']
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
+            filename = secure_filename(f.filename)
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cur.execute('INSERT INTO post(titulo, contenido, matricula, id_plantel, id_carrera, id_estado) VALUES(%s, %s, %s, %s, %s, %s)', (titulo, contenido, matricula, id_plantel, id_carrera, estado))
         mysql.connection.commit()

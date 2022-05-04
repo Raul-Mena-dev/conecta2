@@ -16,6 +16,7 @@
       {% if session['nivel'] == 4 or session['nivel'] == 5%}
         <a class="nav-item nav-link font-weight-bold text-light" href="{{url_for('Admin')}}">Administrador</a>
       {% endif %}
+      <a class="nav-item nav-link font-weight-bold text-light" href="#">Legal</a>
     </div>
   </div>
   
@@ -32,6 +33,7 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link active font-weight-bold text-light" href="{{url_for('inicio')}}">Inicio <span class="sr-only">(current)</span></a>
         <a class="nav-item nav-link font-weight-bold text-light" href="#">Nosotros</a>
+        <a class="nav-item nav-link font-weight-bold text-light" href="legal.html">Legal</a>
         <a class="nav-item nav-link font-weight-bold text-light" href="{{url_for('login')}}">Login</a>
       </div>
     </div>
