@@ -19,14 +19,19 @@ app.config['SECRET_KEY'] = 'mysecret'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Smersyc1+'
-app.config['MYSQL_DB'] = 'conecta2'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'conectados'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
 
 #PRINCIPAL
 @app.route('/')
+def portada():
+    return render_template('portada.html')
+
+
+@app.route('/inicio')
 def inicio():
     universidades = ['Tlajomulco','Rio Nilo','Lazaro Cardenas', 'Campus','Americas', 'Zapopan', 'Pedro Moreno', 'Olimpica']
     carreras = {}
@@ -472,6 +477,16 @@ def mostrarpost(id):
     respuestas = cur.fetchall()
     return render_template('mostrarpost.html', post = post, respuestas = respuestas)
 
+
+@app.route('/subirPrueba', methods = ['POST'])
+def subirPrueba():
+    files = request.files.getlist('file[]')
+    for file in files:
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
+        filename = secure_filename(file.filename)
+        print(filename)
+    return render_template("home.html")
+
 #Se agrega una nueva publicacion
 @app.route("/add_post",  methods=['POST'])
 def add_post():
@@ -483,10 +498,12 @@ def add_post():
         estado = 1
         titulo = request.form['titulo']
         contenido = request.form['contenido']
-        if 'file' in request.files:
-            f = request.files['file']
-            f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
-            filename = secure_filename(f.filename)
+        if 'file[]' in request.files:
+            files = request.files.getlist('file[]')
+            for file in files:
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
+                filename = secure_filename(file.filename)
+                print(filename)
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cur.execute('INSERT INTO post(titulo, contenido, matricula, id_plantel, id_carrera, id_estado) VALUES(%s, %s, %s, %s, %s, %s)', (titulo, contenido, matricula, id_plantel, id_carrera, estado))
         mysql.connection.commit()

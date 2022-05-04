@@ -1200,6 +1200,13 @@ abbr[title] {
     }
 }
 
+
+
+video{
+    
+}
+
+
 @media (max-width: 900px){
     .ir-login-post, .ir-registrar-post{
         width: 60%;
@@ -1278,3 +1285,8 @@ abbr[title] {
         width: 100%;
     }
 }
+
+
+
+  
+  /* Add some content at the bottom of the video/page */

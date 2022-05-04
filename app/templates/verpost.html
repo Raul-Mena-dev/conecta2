@@ -20,7 +20,7 @@
     <aside>
         <!-- Crear un nuevo post -->
         <div class="crear-post">
-            <form action="/add_post" method="POST">
+            <form action="/add_post" method="POST" enctype="multipart/form-data">
 
                 <p>Crear una nueva publicacion</p>
                 <div class="titulo-new-post">
@@ -30,7 +30,7 @@
                     <textarea name="contenido" placeholder="Contenido del tema" autocomplete="off" required></textarea>
                 </div>
                 <div class="contenido-new-post">
-                    <input type="file"  name="file">
+                    <input type="file"  name="file[]" multiple="">
                 </div>
                 {% if session['id'] %}
                     {% for centro in centroUni %}
