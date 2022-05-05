@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% with mensajes = get_flashed_messages() %}
@@ -22,24 +23,13 @@
                 <label for="plantel"  class="text-white">Plantel</label>
                 <select name="plantel " onchange='mostrarInicio()' id="plantel">
                     <option value="0">Todos</option>
-                    <option value="1">Tlajomulco</option>
-                    <option value="2">Rio Nilo</option>
-                    <option value="3">Lazaro Cardenas</option>
-                    <option value="4">Campus</option>
-                    <option value="5">Americas</option>
-                    <option value="6">Zapopan</option>
-                    <option value="7">Pedro Moreno</option>
-                    <option value="8">Olimpica</option>
+                    <option value="1">Guadalajara</option>
+                    <option value="2">Tlaquepaque</option>
+                    <option value="3">Zapopan</option>
                 </select>
             </form>
         </div>
 
-        <div>
-            <form action="/subirPrueba" method="post" enctype="multipart/form-data">
-                <input type="file"  name="file[]" multiple="">
-                <input type="submit" value="añadir">
-            </form>
-        </div>
         
         <div class="container mt-5 ">
             {% for universidad in universidades %}

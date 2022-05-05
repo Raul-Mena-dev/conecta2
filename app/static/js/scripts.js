@@ -88,87 +88,38 @@ function logSeleccion(valor){
 
 function selCarreras(){
 
-    tlajomulco = ['Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
-    rionilo = ['Derecho', 'Administracion', 'Negocios Internacionales','Mercadotecnia', 'Contaduria publica']
-    lazarocardenas = ['Derecho', 'Carrera de abogado']
-    campus = ['Nutricion', 'Cultura Fisica y deporte', 'Psicologia', 'Enfermeria','Quimico farmaceutico biologo','Cirujano Dentista', 'Negocios Internacionales','Administracion', 'Mercadotecnia', 'Contaduria publica','Gestion de recursos humanos']
-    americas = ['Trabajo Social', 'Carrera de abogado', 'Derecho', 'Gastronimia', 'Diseño de modas', 'Diseño para la comunicacion grafica','Diseño de interiores','Arquitectura', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica' ]
-    zapopan = ['Carrera de abogado', 'Derecho', 'Psicologia', 'Negocios Internacionales','Administracion', 'Mercadotecnia', 'Contaduria publica', 'Gestion recursos humanos']
-    pedromoreno = ['Trabajo social', 'Derecho', 'Gastronomia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
-    olimpica = ['Comunicacion y Electronica', 'Industrial', 'Computacion', 'Civil']
+    Guadalajara = ['Bachillerato','Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
+    Tlaquepaque= ['Bachillerato','Ingenieria en Computacion', 'Ingenieria en Electronica', 'Ingenieria Industrial','Ingenieria Civil']
+    Zapopan = ['Bachillerato','Derecho', 'Gastronimia', 'Ingenieria Industrial','Quimica']
     var i
     universidad = document.getElementById("campus").value;
     selector = document.getElementById("carreras")
     padre = document.querySelector('#carreras')
 
     console.log(universidad)
-    if(universidad == "Tlajomulco"){
+    if(universidad == "Guadalajara"){
         removerHijos(padre);
-        for(i=0;i<tlajomulco.length;i++){
+        for(i=0;i<Guadalajara.length;i++){
             var option = document.createElement("option");
-            option.value = tlajomulco[i];
-            option.innerHTML= tlajomulco[i];
+            option.value = Guadalajara[i];
+            option.innerHTML= Guadalajara[i];
             selector.appendChild(option);
         }
     }
-    else if(universidad == "Rio Nilo"){
+    else if(universidad == "Tlaquepaque"){
         removerHijos(padre);
-        for(i=0;i<rionilo.length;i++){
+        for(i=0;i<Tlaquepaque.length;i++){
             var option = document.createElement("option");
-            option.value = rionilo[i];
-            option.innerHTML= rionilo[i];
+            option.value = Tlaquepaque[i];
+            option.innerHTML= Tlaquepaque[i];
             selector.appendChild(option);
         }
-    }else if(universidad == "Lazaro Cardenas"){
-        removerHijos(padre);
-        for(i=0;i<lazarocardenas.length;i++){
-            var option = document.createElement("option");
-            option.value = lazarocardenas[i];
-            option.innerHTML= lazarocardenas[i];
-            selector.appendChild(option);
-        }
-    }else if(universidad == "Campus"){
-        removerHijos(padre);
-        for(i=0;i<campus.length;i++){
-            var option = document.createElement("option");
-            option.value = campus[i];
-            option.innerHTML= campus[i];
-            selector.appendChild(option);
-        }
-        
-    }else if(universidad == "Americas"){
-        removerHijos(padre);
-        for(i=0;i<americas.length;i++){
-            var option = document.createElement("option");
-            option.value = americas[i];
-            option.innerHTML= americas[i];
-            selector.appendChild(option);
-        }
-        
     }else if(universidad == "Zapopan"){
         removerHijos(padre);
-        for(i=0;i<zapopan.length;i++){
+        for(i=0;i<Zapopan.length;i++){
             var option = document.createElement("option");
-            option.value = zapopan[i];
-            option.innerHTML= zapopan[i];
-            selector.appendChild(option);
-        }
-        
-    }else if(universidad == "Pedro Moreno"){
-        removerHijos(padre);
-        for(i=0;i<pedromoreno.length;i++){
-            var option = document.createElement("option");
-            option.value = pedromoreno[i];
-            option.innerHTML= pedromoreno[i];
-            selector.appendChild(option);
-        }
-        
-    }else if(universidad == "Olimpica"){
-        removerHijos(padre);
-        for(i=0;i<olimpica.length;i++){
-            var option = document.createElement("option");
-            option.value = olimpica[i];
-            option.innerHTML= olimpica[i];
+            option.value = Zapopan[i];
+            option.innerHTML= Zapopan[i];
             selector.appendChild(option);
         }
     }else{

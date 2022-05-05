@@ -3,15 +3,25 @@
 
 {% block body %}
 
-  
+    {% block navbar %}
+        {% include 'navbar.html' %}
+    {% endblock %}
 
         {% block content %}
 
-        <div class="container w-100 m-0 p-0 h-50 " >
-            <video autoplay muted loop >
-                <source src="{{url_for('static', filename='video/portada.mp4')}}" type="video/mp4">
-            </video>
-        </div>
+        
+                <div class="container-fluid w-100 m-0 p-0 ">
+                    <video autoplay muted loop >
+                        <source src="{{url_for('static', filename='video/portada.mp4')}}" type="video/mp4">
+                    </video>
+
+                    <h1 class="over p-3 font-weight-bold">Conecta2<br/> Conectando tu escuela </h1>
+                </div>
+                
+            
+    
+
+        
         
         {% endblock %}
 {% endblock %}

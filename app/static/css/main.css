@@ -1,6 +1,6 @@
 html *{
     height:100%;
-    font-family: 'Roboto', sans-serif ; 
+    font-family: 'Oswald', sans-serif;
     
 }
 
@@ -15,7 +15,7 @@ html *{
 body
 {
     font-size: 16px;
-    font-family: sans-serif;
+    font-family: 'Oswald', sans-serif;
     background: #f7f4f0;
     color: #000;
 }
@@ -144,7 +144,7 @@ th,td
 .formulario-registro select{
     padding: 15px;
     height: 48px;
-    font-family: sans-serif;
+   font-family: 'Oswald', sans-serif;
     font-size: 18px;
     line-height: 18px;
     border: none;
@@ -157,7 +157,7 @@ th,td
 {
     padding: 15px;
     height: 48px;
-    font-family: sans-serif;
+   font-family: 'Oswald', sans-serif;
     font-size: 18px;
     line-height: 18px;
     border: none;
@@ -172,7 +172,7 @@ th,td
 {
     padding: 15px;
     height: 48px;
-    font-family: sans-serif;
+   font-family: 'Oswald', sans-serif;
     font-size: 18px;
     line-height: 18px;
     border: none;
@@ -208,7 +208,7 @@ th,td
 .boton-buscar
 {
     height: 32px;
-    font-family: sans-serif;
+   font-family: 'Oswald', sans-serif;
     font-size: 18px;
     border: none;
     color: #fff;
@@ -1202,9 +1202,21 @@ abbr[title] {
 
 
 
-video{
-    
+video {
+    height: 100vh;
+        width: 100%;
+        object-fit: fill;
+        position: absolute;
 }
+
+.over{
+   position: relative;
+   top: 0px;
+   left:0px;
+   color: #fff;
+   background-color: rgba(0,0,0,0.5);
+}
+
 
 
 @media (max-width: 900px){

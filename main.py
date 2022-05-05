@@ -33,18 +33,16 @@ def portada():
 
 @app.route('/inicio')
 def inicio():
-    universidades = ['Tlajomulco','Rio Nilo','Lazaro Cardenas', 'Campus','Americas', 'Zapopan', 'Pedro Moreno', 'Olimpica']
-    carreras = {}
-    carreras['Tlajomulco'] = ['Bachillerato','Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
-    carreras['Rio Nilo'] = ['Bachillerato','Derecho', 'Administracion', 'Negocios Internacionales','Mercadotecnia', 'Contaduria publica']
-    carreras['Lazaro Cardenas'] = ['Bachillerato','Derecho', 'Carrera de abogado']
-    carreras['Campus'] = ['Bachillerato','Nutricion', 'Cultura Fisica y deporte', 'Psicologia', 'Enfermeria','Quimico farmaceutico biologo','Cirujano Dentista', 'Negocios Internacionales','Administracion', 'Mercadotecnia', 'Contaduria publica','Gestion de recursos humanos']
-    carreras['Americas'] = ['Bachillerato','Trabajo Social', 'Carrera de abogado', 'Derecho', 'Gastronimia', 'Diseño de modas', 'Diseño para la comunicacion grafica','Diseño de interiores','Arquitectura', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica' ]
-    carreras['Zapopan'] = ['Bachillerato','Carrera de abogado', 'Derecho', 'Psicologia', 'Negocios Internacionales','Administracion', 'Mercadotecnia', 'Contaduria publica', 'Gestion recursos humanos']
-    carreras['Pedro Moreno'] = ['Bachillerato','Trabajo social', 'Derecho', 'Gastronomia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
-    carreras['Olimpica'] = ['Bachillerato','Comunicacion y Electronica', 'Industrial', 'Computacion', 'Civil']
 
-    return render_template('home.html', universidades = universidades, carreras = carreras)
+    if 'id' not in session:
+        universidades = ['Guadalajara','Tlaquepaque', 'Zapopan']
+        carreras = {}
+        carreras['Guadalajara'] = ['Bachillerato','Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
+        carreras['Tlaquepaque'] = ['Bachillerato','Ingenieria en Computacion', 'Ingenieria en Electronica', 'Ingenieria Industrial','Ingenieria Civil']
+        carreras['Zapopan'] = ['Bachillerato','Derecho', 'Gastronimia', 'Ingenieria Industrial','Quimica']
+
+        return render_template('home.html', universidades = universidades, carreras = carreras)
+    return render_template('portada.html')
 
 
 #perfil

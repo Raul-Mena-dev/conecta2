@@ -1,8 +1,8 @@
 
 {% if session['id'] %}
-<nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+<nav class="navbar navbar-expand-lg navbar-light  bg-dark">
   <a class="navbar-brand" href="{{url_for('inicio')}}">
-    <img src="/static/img/UTEG_Logo.png"  class="d-inline-block align-top logo" alt="">
+    Conecta2
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -22,9 +22,9 @@
   
 </nav>
 {% else %}
-  <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+  <nav class="navbar navbar-expand-lg navbar-light bg-dark">
     <a class="navbar-brand font-weight-bold text-light " href="{{url_for('inicio')}}">
-      <img src="/static/img/UTEG_Logo.png" class="d-inline-block align-top logo" alt="">
+      Conecta2
       </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
