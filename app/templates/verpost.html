@@ -18,6 +18,7 @@
 
     <!-- Barra lateral -->
     <aside>
+        {% if session['id'] %}
         <!-- Crear un nuevo post -->
         <div class="crear-post">
             <form action="/add_post" method="POST" enctype="multipart/form-data">
@@ -54,6 +55,7 @@
                 </div>
             {% endif %}
         </div>
+        {% endif %}
     </aside>
 
     <!-- Muestra la lista de posts -->

@@ -1,5 +1,5 @@
 html *{
-    height:100%;
+    
     font-family: 'Oswald', sans-serif;
     
 }
@@ -1215,6 +1215,15 @@ video {
    left:0px;
    color: #fff;
    background-color: rgba(0,0,0,0.5);
+}
+
+.bannerbackground{
+    background-color: rgba(0,0,0,0.5);
+}
+
+.imgSlide{
+    width: 100%;
+    height: 75vh
 }
 
 
