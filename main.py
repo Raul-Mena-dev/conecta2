@@ -56,7 +56,10 @@ def buscar():
     
     return redirect(url_for('inicio'))
 
-
+@app.route('/legal')
+def legal():
+    return render_template('legal.html')
+    
 #perfil
 @app.route('/perfil')
 def profile():
