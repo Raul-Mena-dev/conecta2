@@ -18,7 +18,7 @@
       {% endif %}
       <a class="nav-item nav-link font-weight-bold text-light" href="#">Legal</a>
       <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" autocomplete="off">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       </form>
     </div>
@@ -40,7 +40,7 @@
         <a class="nav-item nav-link font-weight-bold text-light" href="legal.html">Legal</a>
         <a class="nav-item nav-link font-weight-bold text-light" href="{{url_for('login')}}">Login</a>
         <form class="form-inline my-2 my-lg-0" action="{{url_for('buscar')}}" method="post">
-          <input class="form-control mr-sm-2" type="search" name="buscar" placeholder="Buscar" aria-label="Search">
+          <input class="form-control mr-sm-2" type="search" name="buscar" placeholder="Buscar" aria-label="Search" autocomplete="off">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
         </form>
       </div>

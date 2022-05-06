@@ -19,8 +19,8 @@ app.config['SECRET_KEY'] = 'mysecret'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'conecta2'
+app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_DB'] = 'conectados'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
@@ -48,11 +48,16 @@ def inicio():
 def buscar():
     if request.method == 'POST' and 'buscar' in request.form:
         buscar = request.form['buscar']
+        mostrar = True
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("SELECT * FROM post WHERE titulo LIKE '%{}%' OR contenido LIKE '%{}%';".format(buscar,buscar))
-        busqueda = cursor.fetchall()
+        cursor.execute("SELECT post.matricula, post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE post.titulo LIKE '%{}%' OR post.contenido LIKE '%{}%';".format(buscar,buscar))
+        posts = cursor.fetchall()
 
-        return render_template('resultadoBusqueda.html', busqueda=busqueda)
+        if posts == ():
+            mostrar = False
+
+        print(posts)
+        return render_template('resultadoBusqueda.html', posts=posts, mostrar = mostrar)
     
     return redirect(url_for('inicio'))
 
