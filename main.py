@@ -20,7 +20,7 @@ app.config['SECRET_KEY'] = 'mysecret'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'conectados'
+app.config['MYSQL_DB'] = 'conecta2'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
@@ -39,10 +39,22 @@ def inicio():
         carreras = {}
         carreras['Guadalajara'] = ['Bachillerato','Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
         carreras['Tlaquepaque'] = ['Bachillerato','Ingenieria en Computacion', 'Ingenieria en Electronica', 'Ingenieria Industrial','Ingenieria Civil']
-        carreras['Zapopan'] = ['Bachillerato','Derecho', 'Gastronimia', 'Ingenieria Industrial','Quimica']
+        carreras['Zapopan'] = ['Bachillerato','Derecho', 'Gastronomia', 'Ingenieria Industrial','Quimica']
 
         return render_template('home.html', universidades = universidades, carreras = carreras)
     return render_template('portada.html')
+
+@app.route('/busqueda', methods=['POST'])
+def buscar():
+    if request.method == 'POST' and 'buscar' in request.form:
+        buscar = request.form['buscar']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT * FROM post WHERE titulo LIKE '%{}%' OR contenido LIKE '%{}%';".format(buscar,buscar))
+        busqueda = cursor.fetchall()
+
+        return render_template('resultadoBusqueda.html', busqueda=busqueda)
+    
+    return redirect(url_for('inicio'))
 
 
 #perfil
