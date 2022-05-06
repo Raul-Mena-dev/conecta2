@@ -1255,6 +1255,25 @@ video {
     .postcuadros .titulo a{
         font-size: 14px;
     }
+
+    .nombre-usuario{
+        font-size: 11px;
+    }
+
+    .contenido-post{
+        flex-direction: column;
+    }
+
+    .contenido-post aside{
+        width: 50%;
+        margin: auto;
+        position: static;
+    }
+
+    .lista-post{
+        width: 80%;
+        margin: auto;
+    }
 }
 
 @media (max-width: 660px){
@@ -1282,6 +1301,8 @@ video {
     .botones-no-sesion-post{
         width: 100%;
     }
+
+
 }
 
 @media (max-width: 534px){
