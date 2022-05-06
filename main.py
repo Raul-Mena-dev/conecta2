@@ -466,18 +466,17 @@ def listar():
     mostrar = True
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT post.id_post, post.titulo, post.fecha, post.id_estado, login.usuario FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY fecha DESC', (id_plantel,id_carrera))
+    cur.execute('SELECT post.id_post, post.titulo, post.fecha, post.id_estado, login.usuario FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY fecha DESC', (id_plantel,id_carrera,))
     posts = cur.fetchall()
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT planteles.plantel, carrera.carrera FROM planteles INNER JOIN carrera ON planteles.id_plantel = carrera.id_plantel WHERE carrera.id_plantel = %s AND carrera.id_carrera = %s', (id_plantel,id_carrera))
+    cur.execute('SELECT planteles.id_plantel, planteles.plantel, carrera.carrera FROM planteles INNER JOIN carrera ON planteles.id_plantel = carrera.id_plantel WHERE carrera.id_plantel = %s AND carrera.id_carrera = %s', (id_plantel,id_carrera,))
     centroUni = cur.fetchall()
 
     if posts == ():
         mostrar = False
 
-
-
+    print(centroUni)
     return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera)
 
 #Se accede a un post para ver el contenido

@@ -15,10 +15,26 @@
 
 
 <div class="contenido-post">
-
+    
+    {% for centro in centroUni %}
+   
+        {% if centro.id_plantel == 1 %}
+            <div class="titulo-lista-post gdl">
+                <h2> Plantel {{centro.plantel}}: {{centro.carrera}}</h2>
+            </div>
+        {% elif centro.id_plantel == 2 %}
+            <div class="titulo-lista-post tlaque">
+                <h2> Plantel {{centro.plantel}}: {{centro.carrera}}</h2>
+            </div>
+        {% else %}
+            <div class="titulo-lista-post zpn">
+                <h2> Plantel {{centro.plantel}}: {{centro.carrera}}</h2>
+            </div>
+        {% endif %}
+    {% endfor %}
     <!-- Barra lateral -->
     <aside>
-        {% if session['id'] %}
+        
         <!-- Crear un nuevo post -->
         <div class="crear-post">
             <form action="/add_post" method="POST" enctype="multipart/form-data">
@@ -55,16 +71,11 @@
                 </div>
             {% endif %}
         </div>
-        {% endif %}
+        
     </aside>
 
     <!-- Muestra la lista de posts -->
     <div class="lista-post">
-        <div class="titulo-lista-post">
-            {% for centro in centroUni %}
-                <h2> Plantel {{centro.plantel}}: {{centro.carrera}}</h2>
-            {% endfor %}
-        </div>
         {% if mostrar %}
             {% for post in posts %}
                 {% if post['id_estado'] != 2%}
