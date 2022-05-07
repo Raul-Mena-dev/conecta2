@@ -507,23 +507,41 @@ def subirPrueba():
 #Se agrega una nueva publicacion
 @app.route("/add_post",  methods=['POST'])
 def add_post():
-
     id_plantel = session['id_plantel']
     id_carrera = session['id_carrera']
-    matricula = session['id']
-    if request.method == 'POST':
-        estado = 1
-        titulo = request.form['titulo']
-        contenido = request.form['contenido']
-        if 'file' in request.files:
-            files = request.files.getlist('file')
-            for file in files:
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
-                filename = secure_filename(file.filename)
-                print(filename)
-        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('INSERT INTO post(titulo, contenido, matricula, id_plantel, id_carrera, id_estado) VALUES(%s, %s, %s, %s, %s, %s)', (titulo, contenido, matricula, id_plantel, id_carrera, estado))
-        mysql.connection.commit()
+    try:
+        
+        matricula = session['id']
+        if request.method == 'POST':
+            estado = 1
+            titulo = request.form['titulo']
+            contenido = request.form['contenido']
+            if 'file' in request.files:
+                files = request.files.getlist('file')
+                files_size = len(files)
+                if files_size > 5:
+                    flash('Maximo 5 archivos')
+                    return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('INSERT INTO post(titulo, contenido, matricula, id_plantel, id_carrera, id_estado) VALUES(%s, %s, %s, %s, %s, %s)', (titulo, contenido, matricula, id_plantel, id_carrera, estado))
+            mysql.connection.commit()
+            id = cur.lastrowid
+            
+            file = request.files['file']
+           
+            if file.filename != '':
+                for file in request.files.getlist('file'):
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
+                    filename = secure_filename(file.filename)
+                    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cur.execute('INSERT INTO archivos(nombre_archivo,id_post) VALUES(%s, %s)', (filename, id,))
+                    mysql.connection.commit()
+
+            flash('Agregado exitosamente')
+            return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
+    except Exception as e:
+        msg = str(e)
+        flash(msg)
         return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
 
 #Se agrega una respuesta a la publicacion
