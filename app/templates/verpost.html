@@ -47,7 +47,7 @@
                     <textarea name="contenido" placeholder="Contenido del tema" autocomplete="off" required></textarea>
                 </div>
                 <div class="contenido-new-post">
-                    <input type="file"  name="file[]" multiple="">
+                    <input type="file"  name="file" multiple>
                 </div>
                 {% if session['id'] %}
                     {% for centro in centroUni %}
@@ -76,6 +76,17 @@
 
     <!-- Muestra la lista de posts -->
     <div class="lista-post">
+        <p>
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+        </p>
         {% if mostrar %}
             {% for post in posts %}
                 {% if post['id_estado'] != 2%}
@@ -85,12 +96,18 @@
                         </div>
                         <div class="caja">
                             {% if session %}
-                            <div class="botones-post">
+                            
+                                <div class="botones-post mt-4">
+                                    {{post['nivel_estudio']}}
+                                </div>
 
-                            </div>
-                            <div class="nombre-usuario">
-                                usuario: {{ post.usuario }}
-                            </div>
+                            <div class="media mr-2">
+                                <img class="mr-3 img_avatar" src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
+                                <div class="media-body">
+                                  <h5 class="mt-0">Usuario:</h5>
+                                 {{ post.usuario }}
+                                </div>
+                              </div>
                             {% endif %}
                             {% if not session %}
                             <div class="datos-publicacion-respuesta">

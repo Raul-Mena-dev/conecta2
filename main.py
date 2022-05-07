@@ -19,8 +19,8 @@ app.config['SECRET_KEY'] = 'mysecret'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'conectados'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'conecta2'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
@@ -34,7 +34,7 @@ def portada():
 @app.route('/inicio')
 def inicio():
 
-    if 'id' not in session:
+    if 'id' in session:
         universidades = ['Guadalajara','Tlaquepaque', 'Zapopan']
         carreras = {}
         carreras['Guadalajara'] = ['Bachillerato','Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
@@ -207,7 +207,7 @@ def registrar():
                 mysql.connection.commit()
                 flash('Te has registrado satisfactoriamente')
                 session['id'] = usuario['matricula']
-                nombreUsuario = usuario['nombre'] +' '+ usuario['apellido1']
+                nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
                 session['usuario']= nombreUsuario
                 session['nivel'] = usuario['id_nivel_estudio']
                 return redirect(url_for('profile'))
@@ -466,7 +466,7 @@ def listar():
     mostrar = True
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT post.id_post, post.titulo, post.fecha, post.id_estado, login.usuario FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY fecha DESC', (id_plantel,id_carrera,))
+    cur.execute('SELECT post.id_post, post.titulo, post.fecha, post.id_estado, login.usuario, nivel.nivel_estudio  FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY fecha DESC', (id_plantel,id_carrera,))
     posts = cur.fetchall()
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -515,8 +515,8 @@ def add_post():
         estado = 1
         titulo = request.form['titulo']
         contenido = request.form['contenido']
-        if 'file[]' in request.files:
-            files = request.files.getlist('file[]')
+        if 'file' in request.files:
+            files = request.files.getlist('file')
             for file in files:
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
                 filename = secure_filename(file.filename)

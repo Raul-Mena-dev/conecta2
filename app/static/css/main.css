@@ -1144,6 +1144,10 @@ abbr[title] {
     font-size: 26px;
 }
 
+.img_avatar{
+    width:64px;
+    height:64px;
+}
 /* RESPONSIVE DESIGN */
 
 @media (max-width: 1770px){
