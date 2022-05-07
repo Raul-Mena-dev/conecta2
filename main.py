@@ -472,7 +472,7 @@ def listar():
     posts = cur.fetchall()
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute("SELECT post.id_post, post.titulo, SUBSTRING_INDEX(SUBSTRING_INDEX(`fecha`, ' ', 1), ' ', -1) as fecha, post.id_estado, login.usuario, nivel.nivel_estudio  FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio WHERE post.id_plantel  = %s AND post.id_carrera = %s AND nivel.id_nivel_estudio >= 3 AND date(post.fecha) = %s ORDER BY fecha DESC", (id_plantel,id_carrera,today,))
+    cur.execute("SELECT post.id_post, post.titulo, post.fecha, post.id_estado, login.usuario, nivel.nivel_estudio  FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio WHERE post.id_plantel  = %s AND post.id_carrera = %s AND nivel.id_nivel_estudio >= 3 AND date(post.fecha) = %s ORDER BY fecha DESC", (id_plantel,id_carrera,today,))
     posts_dia = cur.fetchall()
 
     print(posts_dia)
