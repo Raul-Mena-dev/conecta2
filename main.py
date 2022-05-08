@@ -448,14 +448,37 @@ def buscar_usuarios():
     return redirect(url_for('login'))
 
 
-@app.route('/actu_banner', methods = ['POST', 'GET'])
+@app.route('/actu_banner')
 def actu_banner():
 
     try:
-        return render_template('actubanner.html')
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('Select * FROM banner')
+        banners = cur.fetchall()
+        return render_template('actubanner.html', banners=banners)
     except Exception as e:
+        flash('Error al cargar banner')
         return render_template('actubanner.html')
 
+@app.route('/add_banner', methods = ['POST', 'GET'])
+def add_banner():
+
+    try:
+        if request.method == 'POST':
+            titulo = request.form['titulo']
+            mensaje = request.form['mensaje']
+            if 'imagen' not in request.files:
+                flash('sin archivo')
+                return redirect(url_for('actubanner.html'))
+            f = request.files['imagen']
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
+            filename = secure_filename(f.filename)
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('INSER INTO banner(imagen, titulo, texto) VALUES (%s, %s, %s)', (filename,titulo,mensaje))
+
+    except Exception as e:
+        flash('Error al añadir al banner')
+        return render_template('actubanner.html')
     
 
 #Seccion de post
