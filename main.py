@@ -34,24 +34,18 @@ def portada():
 @app.route('/inicio')
 def inicio():
 
-    #if 'id' in session:
+    if 'id' in session:
         universidades = ['Guadalajara','Tlaquepaque', 'Zapopan']
         carreras = {}
         carreras['Guadalajara'] = ['Bachillerato','Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
         carreras['Tlaquepaque'] = ['Bachillerato','Ingenieria en Computacion', 'Ingenieria en Electronica', 'Ingenieria Industrial','Ingenieria Civil']
         carreras['Zapopan'] = ['Bachillerato','Derecho', 'Gastronomia', 'Ingenieria Industrial','Quimica']
-
-<<<<<<< HEAD
-        return render_template('home.html', universidades = universidades, carreras = carreras)
-    #return render_template('portada.html')
-=======
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("SELECT * FROM banner")
         banners = cursor.fetchall()
 
         return render_template('home.html', universidades = universidades, carreras = carreras, banners = banners)
     return render_template('portada.html')
->>>>>>> ef74b7bbff12252a35b695b2106587eb236acda5
 
 @app.route('/busqueda', methods=['POST'])
 def buscar():
