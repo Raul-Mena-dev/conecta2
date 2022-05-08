@@ -19,8 +19,8 @@ app.config['SECRET_KEY'] = 'mysecret'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'conectados'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'conecta2'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
@@ -41,8 +41,17 @@ def inicio():
         carreras['Tlaquepaque'] = ['Bachillerato','Ingenieria en Computacion', 'Ingenieria en Electronica', 'Ingenieria Industrial','Ingenieria Civil']
         carreras['Zapopan'] = ['Bachillerato','Derecho', 'Gastronomia', 'Ingenieria Industrial','Quimica']
 
+<<<<<<< HEAD
         return render_template('home.html', universidades = universidades, carreras = carreras)
     #return render_template('portada.html')
+=======
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT * FROM banner")
+        banners = cursor.fetchall()
+
+        return render_template('home.html', universidades = universidades, carreras = carreras, banners = banners)
+    return render_template('portada.html')
+>>>>>>> ef74b7bbff12252a35b695b2106587eb236acda5
 
 @app.route('/busqueda', methods=['POST'])
 def buscar():
@@ -64,6 +73,10 @@ def buscar():
 @app.route('/legal')
 def legal():
     return render_template('legal.html')
+
+@app.route('/reglas')
+def reglas():
+    return render_template('reglas.html')
     
 #perfil
 @app.route('/perfil')
@@ -439,6 +452,17 @@ def buscar_usuarios():
         return render_template('Ver_usuarios.html',datos = datos)
     return redirect(url_for('login'))
 
+
+@app.route('/actu_banner', methods = ['POST', 'GET'])
+def actu_banner():
+
+    try:
+        return render_template('actubanner.html')
+    except Exception as e:
+        return render_template('actubanner.html')
+
+    
+
 #Seccion de post
 
 #****** NUEVO ******
@@ -514,6 +538,7 @@ def subirPrueba():
 #Se agrega una nueva publicacion
 @app.route("/add_post",  methods=['POST'])
 def add_post():
+    msg=''
     id_plantel = session['id_plantel']
     id_carrera = session['id_carrera']
     try:
@@ -543,9 +568,9 @@ def add_post():
                     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                     cur.execute('INSERT INTO archivos(nombre_archivo,id_post) VALUES(%s, %s)', (filename, id,))
                     mysql.connection.commit()
-
             flash('Agregado exitosamente')
             return redirect(url_for('listar'))
+
     except Exception as e:
         msg = str(e)
         flash(msg)
