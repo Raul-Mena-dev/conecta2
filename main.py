@@ -14,7 +14,7 @@ app.config['SECRET_KEY'] = 'mysecret'
 # app.config['MYSQL_HOST'] = 'RaulMena.mysql.pythonanywhere-services.com'
 # app.config['MYSQL_USER'] = 'RaulMena'
 # app.config['MYSQL_PASSWORD'] = 'Smersyc1+'
-# app.config['MYSQL_DB'] = 'RaulMena$conecta2'
+# app.config['MYSQL_DB'] = 'RaulMena$conectados'
 # app.config['UPLOAD_FOLDER'] ='/home/RaulMena/conecta2/app/static/img'
 
 app.config['MYSQL_HOST'] = 'localhost'
@@ -534,13 +534,17 @@ def mostrarpost(id):
     if 'nivel' not in session:
         session['nivel'] = 0
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT post.matricula, post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario, carrera.carrera FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula INNER JOIN carrera ON post.id_carrera = carrera.id_carrera WHERE id_post = %s', (id,))
+    cur.execute('SELECT post.matricula, post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario, carrera.carrera FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula INNER JOIN carrera ON post.id_carrera = carrera.id_carrera  WHERE post.id_post = %s', (id,))
     post = cur.fetchone()
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT * FROM archivos WHERE id_post = %s', (id,))
+    archivos = cur.fetchall()
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute('SELECT respuestas.matricula, respuestas.id_respuesta, respuestas.contenido, respuestas.fecha, respuestas.id_estado, login.usuario FROM respuestas INNER JOIN usuarios ON respuestas.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s ORDER BY fecha DESC', (id,))
     respuestas = cur.fetchall()
-    return render_template('mostrarpost.html', post = post, respuestas = respuestas)
+    return render_template('mostrarpost.html', post = post, respuestas = respuestas, archivos = archivos)
 
 
 @app.route('/subirPrueba', methods = ['POST'])
