@@ -109,7 +109,7 @@
                             </div>
                             <div class="datos-publicacion-respuesta">
                                 <div class="img-perfil dia">
-                                    <img src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
+                                    <img src="{{url_for('static', filename='img/'+post['foto'])}}" alt="{{url_for('static', filename='img/default.png')}}">
                                 </div>
                                 <div class="publicado-por">
                                     <div class="nombre-usuario">
@@ -134,8 +134,8 @@
                                 </div>
                             </div>
                             <div class="datos-publicacion-respuesta">
-                                <div class="img-perfil dia">
-                                    <img src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
+                                <div class="img-perfil">
+                                    <img src="{{url_for('static', filename='img/'+post['foto'])}}" alt="{{url_for('static', filename='img/default.png')}}">
                                 </div>
                                 <div class="publicado-por">
                                     <div class="nombre-usuario">
