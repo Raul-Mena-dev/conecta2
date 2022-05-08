@@ -991,6 +991,18 @@ abbr[title] {
     justify-content: space-between;
 }
 
+.azul{
+    border: solid 3px #0389ff; 
+}
+
+.dorado{
+    border: solid 3px #efb810; 
+}
+
+.verde{
+    border: solid 2px #05bb14; 
+}
+
 .remarcar{
     border: solid 2px red; 
 }
@@ -1010,6 +1022,14 @@ abbr[title] {
     border-radius: 50%;
     border: solid 1px rgb(233, 230, 230);
 }
+
+/*.img-perfil-contenido{
+    display: inline-block;
+    height: 4%;
+    width: 4%;
+    border-radius: 50%;
+    border: solid 1px rgb(233, 230, 230);
+}*/
 
 .datos-publicacion-respuesta{
     display: flex;
