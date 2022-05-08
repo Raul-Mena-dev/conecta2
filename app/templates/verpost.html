@@ -76,10 +76,10 @@
 
     <!-- Muestra la lista de posts -->
     <div class="lista-post">
-        <p>
+        <p >
             {% with messages = get_flashed_messages() %}
               {% if messages %}
-                <ul class="alert alert-info" role="alert">
+                <ul class="alert alert-info" role="alert" >
                 {% for message in messages %}
                   <li>{{ message }}</li>
                 {% endfor %}
@@ -87,6 +87,11 @@
               {% endif %}
             {% endwith %}
         </p>
+        {% if msg %}
+            <p class="alert alert-success" role="alert">
+                {{msg}}
+            </p>
+        {% endif %}
         {% if mostrar %}
             {% for post in posts %}
                 {% if post['id_estado'] != 2%}

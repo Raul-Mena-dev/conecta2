@@ -41,7 +41,11 @@ def inicio():
         carreras['Tlaquepaque'] = ['Bachillerato','Ingenieria en Computacion', 'Ingenieria en Electronica', 'Ingenieria Industrial','Ingenieria Civil']
         carreras['Zapopan'] = ['Bachillerato','Derecho', 'Gastronomia', 'Ingenieria Industrial','Quimica']
 
-        return render_template('home.html', universidades = universidades, carreras = carreras)
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT * FROM banner")
+        banners = cursor.fetchall()
+
+        return render_template('home.html', universidades = universidades, carreras = carreras, banners = banners)
     return render_template('portada.html')
 
 @app.route('/busqueda', methods=['POST'])
@@ -64,6 +68,10 @@ def buscar():
 @app.route('/legal')
 def legal():
     return render_template('legal.html')
+
+@app.route('/reglas')
+def reglas():
+    return render_template('reglas.html')
     
 #perfil
 @app.route('/perfil')
@@ -507,6 +515,7 @@ def subirPrueba():
 #Se agrega una nueva publicacion
 @app.route("/add_post",  methods=['POST'])
 def add_post():
+    msg=''
     id_plantel = session['id_plantel']
     id_carrera = session['id_carrera']
     try:
@@ -537,8 +546,8 @@ def add_post():
                     cur.execute('INSERT INTO archivos(nombre_archivo,id_post) VALUES(%s, %s)', (filename, id,))
                     mysql.connection.commit()
 
-            flash('Agregado exitosamente')
-            return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
+            msg='Publicado satisfactoriamente'
+            return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera, msg=msg))
     except Exception as e:
         msg = str(e)
         flash(msg)
