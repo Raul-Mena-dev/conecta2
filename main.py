@@ -34,7 +34,7 @@ def portada():
 @app.route('/inicio')
 def inicio():
 
-    if 'id' in session:
+    #if 'id' in session:
         universidades = ['Guadalajara','Tlaquepaque', 'Zapopan']
         carreras = {}
         carreras['Guadalajara'] = ['Bachillerato','Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
@@ -42,7 +42,7 @@ def inicio():
         carreras['Zapopan'] = ['Bachillerato','Derecho', 'Gastronomia', 'Ingenieria Industrial','Quimica']
 
         return render_template('home.html', universidades = universidades, carreras = carreras)
-    return render_template('portada.html')
+    #return render_template('portada.html')
 
 @app.route('/busqueda', methods=['POST'])
 def buscar():
@@ -464,28 +464,27 @@ def listar():
     id_plantel = session['id_plantel']
     id_carrera = session['id_carrera']
     mostrar = True
+    print("plantel", id_plantel)
+    print("carrera ", id_carrera)
 
     today = date.today()
 
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute("SELECT post.id_post, post.titulo, SUBSTRING_INDEX(SUBSTRING_INDEX(`fecha`, ' ', 1), ' ', -1) as fecha, post.id_estado, login.usuario, nivel.nivel_estudio  FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio WHERE post.id_plantel  = %s AND post.id_carrera = %s AND date(post.fecha) != %s ORDER BY fecha DESC", (id_plantel,id_carrera,today,))
-    posts = cur.fetchall()
+    try:
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute("SELECT post.id_post, post.titulo, date(post.fecha) as fecha, post.fecha as tiempo, post.id_estado, login.usuario, nivel.id_nivel_estudio as nivel, nivel.nivel_estudio  FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY post.fecha DESC", (id_plantel,id_carrera,))
+        posts = cur.fetchall()
 
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute("SELECT post.id_post, post.titulo, post.fecha, post.id_estado, login.usuario, nivel.nivel_estudio  FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio WHERE post.id_plantel  = %s AND post.id_carrera = %s AND nivel.id_nivel_estudio >= 3 AND date(post.fecha) = %s ORDER BY fecha DESC", (id_plantel,id_carrera,today,))
-    posts_dia = cur.fetchall()
-
-    print(posts_dia)
-
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT planteles.id_plantel, planteles.plantel, carrera.carrera FROM planteles INNER JOIN carrera ON planteles.id_plantel = carrera.id_plantel WHERE carrera.id_plantel = %s AND carrera.id_carrera = %s', (id_plantel,id_carrera,))
-    centroUni = cur.fetchall()
-
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT planteles.id_plantel, planteles.plantel, carrera.carrera FROM planteles INNER JOIN carrera ON planteles.id_plantel = carrera.id_plantel WHERE carrera.id_plantel = %s AND carrera.id_carrera = %s', (id_plantel,id_carrera,))
+        centroUni = cur.fetchall()
+    except Exception as e:
+        msg=str(e)
+        print(msg)
+        return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera, today = today)
     if posts == ():
         mostrar = False
 
-    print(centroUni)
-    return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera, posts_dia = posts_dia)
+    return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera, today = today)
 
 #Se accede a un post para ver el contenido
 @app.route("/mostrarpost/<string:id>")
@@ -529,7 +528,7 @@ def add_post():
                 files_size = len(files)
                 if files_size > 5:
                     flash('Maximo 5 archivos')
-                    return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
+                    return redirect(url_for('listar'))
             cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cur.execute('INSERT INTO post(titulo, contenido, matricula, id_plantel, id_carrera, id_estado) VALUES(%s, %s, %s, %s, %s, %s)', (titulo, contenido, matricula, id_plantel, id_carrera, estado))
             mysql.connection.commit()
@@ -546,11 +545,11 @@ def add_post():
                     mysql.connection.commit()
 
             flash('Agregado exitosamente')
-            return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
+            return redirect(url_for('listar'))
     except Exception as e:
         msg = str(e)
         flash(msg)
-        return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
+        return redirect(url_for('listar'))
 
 #Se agrega una respuesta a la publicacion
 @app.route("/add_comentario/<string:id>/<string:matricula>",  methods=['POST'])

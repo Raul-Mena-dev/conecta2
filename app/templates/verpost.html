@@ -89,8 +89,8 @@
         </p>
         {% if mostrar %}
         <h4 style="color: #fff;">Mensajes del día</h4>
-        {% for post in posts_dia %}
-                {% if post['id_estado'] != 2%}
+        {% for post in posts %}
+                {% if post['id_estado'] != 2 and post['fecha'] == today and post['nivel'] >= 3 %}
                     <div class="postcuadros">
                         <div class="titulo">
                             <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
@@ -98,7 +98,7 @@
                         <div class="caja">
                             <div class="datos-publicacion-respuesta">
                                 <div class="fecha-publicacion">
-                                    <p>Publicado: {{ post['fecha']}}</p>
+                                    <p>Publicado: {{ post['tiempo']}}</p>
                                 </div>
                             </div>
                             <div class="datos-publicacion-respuesta">
@@ -120,7 +120,7 @@
             {% endfor %}
             <h4 style="color: #fff;">Publicaciones</h4>
             {% for post in posts %}
-                {% if post['id_estado'] != 2%}
+                {% if post['id_estado'] != 2 and (post['fecha'] != today or (post['fecha'] == today and post['nivel'] < 3)) %} 
                     <div class="postcuadros">
                         <div class="titulo">
                             <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
@@ -137,7 +137,7 @@
                                 </div>
                                 <div class="publicado-por">
                                     <div class="nombre-usuario">
-                                       Usuario: {{post['usuario']}}
+                                    Usuario: {{post['usuario']}}
                                     </div>
                                     <div class="identifica_nivel">
                                         {{post['nivel_estudio']}}
