@@ -506,7 +506,7 @@ tr,td,thead,tbody{
     display: flex;
     align-self: flex-end;
     justify-content: space-between;
-    height:20%;
+    height:30px;
     width: 100%;
 }
 
@@ -995,6 +995,22 @@ abbr[title] {
     border: solid 2px red; 
 }
 
+.img-perfil{
+    height: 100%;
+    width: 20%;
+}
+
+.dia{
+    width: 22%;
+}
+
+.img-perfil img{
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    border: solid 1px rgb(233, 230, 230);
+}
+
 .datos-publicacion-respuesta{
     display: flex;
     flex-direction: row;
@@ -1003,11 +1019,24 @@ abbr[title] {
     align-items: flex-end;
     align-content: flex-end;
     min-height:20px;
-    height: 80%;
+    height: 100%;
+}
+
+.nombre-usuario, .identifica_nivel{
+    width: 100%;
+    height: 45%;
+    font-size: 12px;
 }
 
 .publicado-por, .fecha-publicacion{
-   height: 100%;
+    height: 80%;
+ }
+
+.publicado-por{
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    height: 100%;
 }
 
 .datos-publicacion-respuesta p{

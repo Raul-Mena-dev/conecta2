@@ -73,7 +73,7 @@
         </div>
         
     </aside>
-
+    
     <!-- Muestra la lista de posts -->
     <div class="lista-post">
         <p >
@@ -93,6 +93,37 @@
             </p>
         {% endif %}
         {% if mostrar %}
+        <h4 style="color: #fff;">Mensajes del día</h4>
+        {% for post in posts_dia %}
+                {% if post['id_estado'] != 2%}
+                    <div class="postcuadros">
+                        <div class="titulo">
+                            <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
+                        </div>
+                        <div class="caja">
+                            <div class="datos-publicacion-respuesta">
+                                <div class="fecha-publicacion">
+                                    <p>Publicado: {{ post['fecha']}}</p>
+                                </div>
+                            </div>
+                            <div class="datos-publicacion-respuesta">
+                                <div class="img-perfil dia">
+                                    <img src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
+                                </div>
+                                <div class="publicado-por">
+                                    <div class="nombre-usuario">
+                                       Usuario: {{post['usuario']}}
+                                    </div>
+                                    <div class="identifica_nivel">
+                                        {{post['nivel_estudio']}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <h4 style="color: #fff;">Publicaciones</h4>
             {% for post in posts %}
                 {% if post['id_estado'] != 2%}
                     <div class="postcuadros">
@@ -100,33 +131,25 @@
                             <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
                         </div>
                         <div class="caja">
-                            {% if session %}
-                            
-                                <div class="botones-post mt-4">
-                                    {{post['nivel_estudio']}}
-                                </div>
-
-                            <div class="media mr-2">
-                                <img class="mr-3 img_avatar" src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
-                                <div class="media-body">
-                                  <h5 class="mt-0">Usuario:</h5>
-                                 {{ post.usuario }}
-                                </div>
-                              </div>
-                            {% endif %}
-                            {% if not session %}
                             <div class="datos-publicacion-respuesta">
                                 <div class="fecha-publicacion">
                                     <p>Publicado: {{ post['fecha']}}</p>
                                 </div>
                             </div>
                             <div class="datos-publicacion-respuesta">
+                                <div class="img-perfil">
+                                    <img src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
+                                </div>
                                 <div class="publicado-por">
-                                <p>usuario: {{post['usuario']}}</p>
+                                    <div class="nombre-usuario">
+                                       Usuario: {{post['usuario']}}
+                                    </div>
+                                    <div class="identifica_nivel">
+                                        {{post['nivel_estudio']}}
+                                    </div>
                                 </div>
                             </div>
-                            {% endif %}
-                        </div>
+                        </div> 
                     </div>
                 {% endif %}
             {% endfor %}

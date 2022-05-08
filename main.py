@@ -1,4 +1,4 @@
-
+from datetime import date
 from flask import render_template,request,session,redirect, url_for,flash
 from app import create_app
 from flask_mysqldb import MySQL
@@ -19,8 +19,8 @@ app.config['SECRET_KEY'] = 'mysecret'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'conecta2'
+app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_DB'] = 'conectados'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
@@ -473,9 +473,17 @@ def listar():
     id_carrera = session['id_carrera']
     mostrar = True
 
+    today = date.today()
+
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT post.id_post, post.titulo, post.fecha, post.id_estado, login.usuario, nivel.nivel_estudio  FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY fecha DESC', (id_plantel,id_carrera,))
+    cur.execute("SELECT post.id_post, post.titulo, SUBSTRING_INDEX(SUBSTRING_INDEX(`fecha`, ' ', 1), ' ', -1) as fecha, post.id_estado, login.usuario, nivel.nivel_estudio  FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio WHERE post.id_plantel  = %s AND post.id_carrera = %s AND date(post.fecha) != %s ORDER BY fecha DESC", (id_plantel,id_carrera,today,))
     posts = cur.fetchall()
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("SELECT post.id_post, post.titulo, post.fecha, post.id_estado, login.usuario, nivel.nivel_estudio  FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio WHERE post.id_plantel  = %s AND post.id_carrera = %s AND nivel.id_nivel_estudio >= 3 AND date(post.fecha) = %s ORDER BY fecha DESC", (id_plantel,id_carrera,today,))
+    posts_dia = cur.fetchall()
+
+    print(posts_dia)
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute('SELECT planteles.id_plantel, planteles.plantel, carrera.carrera FROM planteles INNER JOIN carrera ON planteles.id_plantel = carrera.id_plantel WHERE carrera.id_plantel = %s AND carrera.id_carrera = %s', (id_plantel,id_carrera,))
@@ -485,7 +493,7 @@ def listar():
         mostrar = False
 
     print(centroUni)
-    return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera)
+    return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera, posts_dia = posts_dia)
 
 #Se accede a un post para ver el contenido
 @app.route("/mostrarpost/<string:id>")
