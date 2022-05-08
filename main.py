@@ -19,8 +19,8 @@ app.config['SECRET_KEY'] = 'mysecret'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'conectados'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'conecta2'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
@@ -446,6 +446,17 @@ def buscar_usuarios():
             datos = cur.fetchone()
         return render_template('Ver_usuarios.html',datos = datos)
     return redirect(url_for('login'))
+
+
+@app.route('/actu_banner', methods = ['POST', 'GET'])
+def actu_banner():
+
+    try:
+        return render_template('actubanner.html')
+    except Exception as e:
+        return render_template('actubanner.html')
+
+    
 
 #Seccion de post
 
