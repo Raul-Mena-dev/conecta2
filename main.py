@@ -198,7 +198,7 @@ def registrar():
             if not usuario:
                 msg = 'usuario no esta en la base de datos'
                 return render_template('login.html', msg=msg)
-            elif not re.match('[^@]+[@alumnos.uteg.edu.mx]', str(email)):
+            elif not re.match('[^@]+[@conectados.edu.mx]', str(email)):
                 msg = 'Correo invalido!'
                 return render_template('login.html', msg=msg)
             elif not re.match('[0-9]{9,11}', str(matriculaR)):
@@ -430,7 +430,7 @@ def Ver_usuarios():
         cur.execute('SELECT usuarios.matricula, usuarios.nombre, usuarios.apellido1, usuarios.apellido2, usuarios.fnac, usuarios.correo, login.usuario FROM usuarios INNER JOIN login ON usuarios.matricula = login.matricula')
         datos = cur.fetchall()
         print(datos)
-        return render_template('Ver_usuarios.html',usuarios = datos)
+        return render_template('Ver_Usuarios.html',usuarios = datos)
     return redirect(url_for('login'))
 
 
@@ -467,17 +467,20 @@ def add_banner():
             titulo = request.form['titulo']
             mensaje = request.form['mensaje']
             if 'imagen' not in request.files:
-                flash('sin archivo')
-                return redirect(url_for('actubanner.html'))
+                flash('sin Imagen')
+                return redirect(url_for('actu_banner'))
             f = request.files['imagen']
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
             filename = secure_filename(f.filename)
             cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cur.execute('INSER INTO banner(imagen, titulo, texto) VALUES (%s, %s, %s)', (filename,titulo,mensaje))
-
+            cur.execute('INSERT INTO banner(imagen, titulo, texto) VALUES (%s, %s, %s)', (filename,titulo,mensaje))
+            mysql.connection.commit()
+            flash('Agregado satisafactoriamente')
+            return redirect(url_for('actu_banner'))
     except Exception as e:
-        flash('Error al añadir al banner')
-        return render_template('actubanner.html')
+        msg = str(e)
+        flash('Error al añadir al banner ' + msg)
+        return redirect(url_for('actu_banner'))
     
 
 #Seccion de post

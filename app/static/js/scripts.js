@@ -212,7 +212,7 @@ function validacionRegistro(){
     vNom = /^([A-Za-z]*([\s][A-Za-z]+)*)$/
     vPass = /^[a-zA-Z0-9]+$/
     vUser = /^[a-zA-Z]+$/
-    vEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@alumnos.uteg.edu.mx/
+    vEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@conectados.edu.mx/
     vNum =  /^[0-9]{10}$/
     vMatricula = /^[0-9]{9,11}$/
     //elementos a revisar
