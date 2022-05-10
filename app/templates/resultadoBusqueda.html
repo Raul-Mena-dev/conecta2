@@ -16,80 +16,164 @@
 
 <div class="contenido-post">
 
-    <!-- Barra lateral -->
-    <aside>
-        {% if session['id'] %}
-        <!-- Crear un nuevo post -->
-        <div class="crear-post">
-            <form action="/add_post" method="POST" enctype="multipart/form-data">
-
-                <p>Crear una nueva publicacion</p>
-                <div class="titulo-new-post">
-                    <input type="text" placeholder="Titulo" name="titulo" autocomplete="off" required>
-                </div>
-                <div class="contenido-new-post">
-                    <textarea name="contenido" placeholder="Contenido del tema" autocomplete="off" required></textarea>
-                </div>
-                <div class="contenido-new-post">
-                    <input type="file"  name="file[]" multiple="">
-                </div>
-                {% if session['id'] %}
-                    {% for centro in centroUni %}
-                        {% if ((session['nivel'] != 1 and centro['carrera'] == "Bachillerato") or (session['nivel'] != 2 and centro['carrera'] != "Bachillerato")) %}
-                            <div class="boton-publicar-post">
-                                <button class="boton-post" type="submit">Publicar</button>
-                            </div>
-                        {% endif %}
-                    {% endfor %} 
-                {% endif %}
-            </form>
-            {% if not session['id'] %}
-                <div class="apartado-crear-post">
-                    <div class="no-registrado-post">
-                        <h4>Inica sesion para publicar</h4>
-                        <div class="botones-no-sesion-post">
-                            <div class="ir-login-post" onclick="location.href= '/login'"> Iniciar sesion </div>
-                            <div class="ir-registrar-post" onclick="location.href= '/login'"> Registrarse </div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-        {% endif %}
-    </aside>
-
-    <!-- Muestra la lista de posts -->
     <div class="lista-post">
+        <p >
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <ul class="alert alert-info" role="alert" >
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+        </p>
+        {% if msg %}
+            <p class="alert alert-success" role="alert">
+                {{msg}}
+            </p>
+        {% endif %}
         {% if mostrar %}
-            {% for post in posts %}
-                {% if post['id_estado'] != 2%}
-                    <div class="postcuadros">
+        <h4 style="color: #fff;">Mensajes del día</h4>
+        {% for post in posts %}
+                {% if post['id_estado'] != 2 and post['fecha'] == today and post['nivel'] >= 3 %}
+                    {% if post['nivel'] == 3%}
+                    <div class="postcuadros azul">
                         <div class="titulo">
                             <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
                         </div>
                         <div class="caja">
-                            {% if session %}
-                            <div class="botones-post">
-
-                            </div>
-                            <div class="nombre-usuario">
-                                usuario: {{ post.usuario }}
-                            </div>
-                            {% endif %}
-                            {% if not session %}
                             <div class="datos-publicacion-respuesta">
                                 <div class="fecha-publicacion">
-                                    <p>Publicado: {{ post['fecha']}}</p>
+                                    <p>Publicado: {{ post['tiempo']}}</p>
                                 </div>
                             </div>
                             <div class="datos-publicacion-respuesta">
+                                <div class="img-perfil dia">
+                                    <img src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
+                                </div>
                                 <div class="publicado-por">
-                                <p>usuario: {{post['usuario']}}</p>
+                                    <div class="nombre-usuario">
+                                       Usuario: {{post['usuario']}}
+                                    </div>
+                                    <div class="identifica_nivel">
+                                        {{post['nivel_estudio']}}
+                                    </div>
                                 </div>
                             </div>
-                            {% endif %}
-                        </div>
+                        </div> 
                     </div>
+                    {% else %}
+                    <div class="postcuadros dorado">
+                        <div class="titulo">
+                            <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
+                        </div>
+                        <div class="caja">
+                            <div class="datos-publicacion-respuesta">
+                                <div class="fecha-publicacion">
+                                    <p>Publicado: {{ post['tiempo']}}</p>
+                                </div>
+                            </div>
+                            <div class="datos-publicacion-respuesta">
+                                <div class="img-perfil dia">
+                                    <img src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
+                                </div>
+                                <div class="publicado-por">
+                                    <div class="nombre-usuario">
+                                       Usuario: {{post['usuario']}}
+                                    </div>
+                                    <div class="identifica_nivel">
+                                        {{post['nivel_estudio']}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            <h4 style="color: #fff;">Publicaciones</h4>
+            {% for post in posts %}
+                {% if post['id_estado'] != 2 and (post['fecha'] != today or (post['fecha'] == today and post['nivel'] < 3)) %} 
+                    {% if post['nivel'] == 3%}
+                        <div class="postcuadros azul">
+                            <div class="titulo">
+                                <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
+                            </div>
+                            <div class="caja">
+                                <div class="datos-publicacion-respuesta">
+                                    <div class="fecha-publicacion">
+                                        <p>Publicado: {{ post['fecha']}}</p>
+                                    </div>
+                                </div>
+                                <div class="datos-publicacion-respuesta">
+                                    <div class="img-perfil">
+                                        <img src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
+                                    </div>
+                                    <div class="publicado-por">
+                                        <div class="nombre-usuario">
+                                        Usuario: {{post['usuario']}}
+                                        </div>
+                                        <div class="identifica_nivel">
+                                            {{post['nivel_estudio']}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    {% elif post['nivel'] > 3%}
+                        <div class="postcuadros dorado">
+                            <div class="titulo">
+                                <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
+                            </div>
+                            <div class="caja">
+                                <div class="datos-publicacion-respuesta">
+                                    <div class="fecha-publicacion">
+                                        <p>Publicado: {{ post['fecha']}}</p>
+                                    </div>
+                                </div>
+                                <div class="datos-publicacion-respuesta">
+                                    <div class="img-perfil">
+                                        <img src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
+                                    </div>
+                                    <div class="publicado-por">
+                                        <div class="nombre-usuario">
+                                        Usuario: {{post['usuario']}}
+                                        </div>
+                                        <div class="identifica_nivel">
+                                            {{post['nivel_estudio']}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    {% else %}
+                        <div class="postcuadros">
+                            <div class="titulo">
+                                <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
+                            </div>
+                            <div class="caja">
+                                <div class="datos-publicacion-respuesta">
+                                    <div class="fecha-publicacion">
+                                        <p>Publicado: {{ post['fecha']}}</p>
+                                    </div>
+                                </div>
+                                <div class="datos-publicacion-respuesta">
+                                    <div class="img-perfil">
+                                        <img src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
+                                    </div>
+                                    <div class="publicado-por">
+                                        <div class="nombre-usuario">
+                                        Usuario: {{post['usuario']}}
+                                        </div>
+                                        <div class="identifica_nivel">
+                                            {{post['nivel_estudio']}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    {% endif %}
                 {% endif %}
             {% endfor %}
         {% else %}
