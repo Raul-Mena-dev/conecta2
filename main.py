@@ -22,8 +22,8 @@ app.config['SECRET_KEY'] = 'mysecret'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'conecta2'
+app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_DB'] = 'conectados'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
