@@ -9,11 +9,6 @@
 
 {% block content %}
 
-
-
-
-
-
      
 <div class="contenido-post">
     
@@ -42,13 +37,27 @@
 
                 <p>Crear una nueva publicacion</p>
                 <div class="titulo-new-post">
-                    <input type="text" placeholder="Titulo" name="titulo" autocomplete="off" required>
+                    <label for="titulo">Titulo</label>
+                    <input type="text" placeholder="Titulo" name="titulo" autocomplete="off" id="titulo" required>
                 </div>
                 <div class="contenido-new-post">
-                    <textarea name="contenido" placeholder="Contenido del tema" autocomplete="off" required></textarea>
+                    <label for="contenido">Contenido</label>
+                    <textarea name="contenido" placeholder="Contenido del tema" autocomplete="off" id="contenido" required></textarea>
                 </div>
                 <div class="contenido-new-post">
-                    <input type="file"  name="file" multiple>
+                    <label for="archivo">Archivos (maximo 5)</label>
+                    <input type="file"  name="file" multiple id="archivo">
+                </div>
+                <div class="checkboxs">
+                <h4 style="width: 100%;">Etiquetas</h4> 
+                <select name="tags" required>
+                    <option value="0">Seleccione una etiqueta</option>
+                    {% for tag in tags %}
+                        {% if (tag['id_tag'] == 1 and session['nivel'] > 3) or tag['id_tag'] > 1%}
+                            <option value="{{tag['id_tag']}}">{{tag['tag']}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
                 </div>
                 {% if session['id'] %}
                     {% for centro in centroUni %}
@@ -111,7 +120,7 @@
         {% for post in posts %}
                 {% if post['id_estado'] != 2 and post['fecha'] == today and post['nivel'] >= 3 %}
                     {% if post['nivel'] == 3%}
-                    <div class="postcuadros azul">
+                    <div class="postcuadros azul" id="{{post['id_tag']}}">
                         <div class="titulo">
                             <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
                         </div>
@@ -137,7 +146,7 @@
                         </div> 
                     </div>
                     {% else %}
-                    <div class="postcuadros dorado">
+                    <div class="postcuadros dorado" id="{{post['id_tag']}}">
                         <div class="titulo">
                             <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
                         </div>
@@ -169,7 +178,7 @@
             {% for post in posts %}
                 {% if post['id_estado'] != 2 and (post['fecha'] != today or (post['fecha'] == today and post['nivel'] < 3)) %} 
                     {% if post['nivel'] == 3%}
-                        <div class="postcuadros azul">
+                        <div class="postcuadros azul" id="{{post['id_tag']}}">
                             <div class="titulo">
                                 <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
                             </div>
@@ -195,7 +204,7 @@
                             </div> 
                         </div>
                     {% elif post['nivel'] > 3%}
-                        <div class="postcuadros dorado">
+                        <div class="postcuadros dorado" id="{{post['id_tag']}}">
                             <div class="titulo">
                                 <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
                             </div>
@@ -221,7 +230,7 @@
                             </div> 
                         </div>
                     {% else %}
-                        <div class="postcuadros">
+                        <div class="postcuadros" id="{{post['id_tag']}}">
                             <div class="titulo">
                                 <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
                             </div>

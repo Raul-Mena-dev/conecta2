@@ -21,8 +21,8 @@ app.config['SECRET_KEY'] = 'mysecret'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'conecta2'
+app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_DB'] = 'conectados'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
@@ -389,6 +389,14 @@ def deleteUser(id):
         for publicacion in publicaciones:
             print(publicacion)
             cur = mysql.connection.cursor()
+            cur.execute('DELETE FROM archivos where id_post = %s', (publicacion[0],))
+            mysql.connection.commit()
+
+            cur = mysql.connection.cursor()
+            cur.execute('DELETE FROM tageados where id_post = %s', (publicacion[0],))
+            mysql.connection.commit()
+
+            cur = mysql.connection.cursor()
             cur.execute('DELETE FROM respuestas where id_post = %s', (publicacion[0],))
             mysql.connection.commit()
 
@@ -531,27 +539,29 @@ def listar():
     id_plantel = session['id_plantel']
     id_carrera = session['id_carrera']
     mostrar = True
-    print("plantel", id_plantel)
-    print("carrera ", id_carrera)
 
     today = date.today()
 
     try:
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute("SELECT post.id_post, post.titulo, date(post.fecha) as fecha, post.fecha as tiempo, post.id_estado, login.usuario, nivel.id_nivel_estudio as nivel, nivel.nivel_estudio, usuarios.foto  FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY post.fecha DESC", (id_plantel,id_carrera,))
+        cur.execute("SELECT post.id_post, post.titulo, date(post.fecha) as fecha, post.fecha as tiempo, post.id_estado, login.usuario, nivel.id_nivel_estudio as nivel, nivel.nivel_estudio, usuarios.foto, tageados.id_tag FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio LEFT JOIN tageados ON post.id_post = tageados.id_post WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY post.fecha DESC", (id_plantel,id_carrera,))
         posts = cur.fetchall()
-
+        
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cur.execute('SELECT planteles.id_plantel, planteles.plantel, carrera.carrera FROM planteles INNER JOIN carrera ON planteles.id_plantel = carrera.id_plantel WHERE carrera.id_plantel = %s AND carrera.id_carrera = %s', (id_plantel,id_carrera,))
         centroUni = cur.fetchall()
+
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute("SELECT * FROM tags")
+        tags = cur.fetchall()
     except Exception as e:
         msg=str(e)
         print(msg)
-        return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera, today = today)
+        return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera, today = today, tags=tags)
     if posts == ():
         mostrar = False
 
-    return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera, today = today)
+    return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera, today = today, tags=tags)
 
 #Se accede a un post para ver el contenido
 @app.route("/mostrarpost/<string:id>")
@@ -602,8 +612,9 @@ def add_post():
         matricula = session['id']
         if request.method == 'POST':
             estado = 1
+            tag = request.form['tags']
             titulo = request.form['titulo']
-
+            print(tag)
             if modelo.prediccion([titulo]):
                 flash('Tu titulo contiene lenguaje inapropiado')
                 print(titulo)
@@ -612,7 +623,6 @@ def add_post():
                 print(modelo.prediccion_prob([titulo]))
                 flash('Tu titulo contiene lenguaje inapropiado')
                 return redirect(url_for('listar'))
-
             
             contenido = request.form['contenido']
             
@@ -631,11 +641,18 @@ def add_post():
                 if files_size > 5:
                     flash('Maximo 5 archivos')
                     return redirect(url_for('listar'))
-            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cur.execute('INSERT INTO post(titulo, contenido, matricula, id_plantel, id_carrera, id_estado) VALUES(%s, %s, %s, %s, %s, %s)', (titulo, contenido, matricula, id_plantel, id_carrera, estado))
-            mysql.connection.commit()
-            id = cur.lastrowid
-            
+            if int(tag) > 0:
+                cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cur.execute('INSERT INTO post(titulo, contenido, matricula, id_plantel, id_carrera, id_estado) VALUES(%s, %s, %s, %s, %s, %s)', (titulo, contenido, matricula, id_plantel, id_carrera, estado))
+                mysql.connection.commit()
+                id = cur.lastrowid
+        
+                cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cur.execute('INSERT INTO tageados(id_tag,id_post) VALUES(%s, %s)', (tag, id,))
+                mysql.connection.commit()
+            else:
+                flash('Seleccione una etiqueta valida')
+                return redirect(url_for('listar'))
             file = request.files['file']
 
             if file.filename != '':
@@ -731,16 +748,9 @@ def reportar_msj(id_pub,id_msj):
 def reportar_publi_admin(id):
     estado = 2
     try:
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT id_carrera FROM post WHERE id_post = %s',(id,))
-        id_carrera = cur.fetchone()
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT id_plantel FROM post WHERE id_post = %s',(id,))
-        id_plantel = cur.fetchone()
-        cur = mysql.connection.cursor()
         cur.execute('UPDATE post SET id_estado = %s WHERE id_post = %s',(estado,id))
         mysql.connection.commit()
-        return redirect(url_for('listar',id_plantel=id_plantel,id_carrera=id_carrera))
+        return redirect(url_for('listar'))
     except Exception as e:
         print("Error"+ str(e))
         return redirect(url_for('mostrarpost',id=id))
