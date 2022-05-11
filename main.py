@@ -8,6 +8,7 @@ import MySQLdb.cursors
 import re
 from werkzeug.utils import secure_filename
 import os
+import pandas as pd
 
 #CONFIGURACIONES
 app = create_app()
@@ -78,7 +79,12 @@ def legal():
 @app.route('/reglas')
 def reglas():
     return render_template('reglas.html')
-    
+
+@app.route('/tutorial')
+def tutorial():
+    return render_template('tuto.html')
+
+
 #perfil
 @app.route('/perfil')
 def profile():
@@ -531,8 +537,6 @@ def listar():
     id_plantel = session['id_plantel']
     id_carrera = session['id_carrera']
     mostrar = True
-    print("plantel", id_plantel)
-    print("carrera ", id_carrera)
 
     today = date.today()
 
@@ -546,7 +550,6 @@ def listar():
         centroUni = cur.fetchall()
     except Exception as e:
         msg=str(e)
-        print(msg)
         return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera, today = today)
     if posts == ():
         mostrar = False
@@ -604,27 +607,43 @@ def add_post():
             estado = 1
             titulo = request.form['titulo']
 
+            # Titulo de los post
             if modelo.prediccion([titulo]):
                 flash('Tu titulo contiene lenguaje inapropiado')
                 print(titulo)
                 return redirect(url_for('listar'))
-            if float(modelo.prediccion_prob([titulo])) > 0.40:
-                print(modelo.prediccion_prob([titulo]))
-                flash('Tu titulo contiene lenguaje inapropiado')
-                return redirect(url_for('listar'))
-
             
+
+            #comprobaccion por diccionario
+            df = pd.read_csv('app/model/malas_palabras.csv')
+            liTitulo = list(titulo.split(" "))
+            for palabra in liTitulo:
+                for mala in df["MALA_PALABRA"]:
+                    if palabra == mala:
+                        print(modelo.prediccion_prob([contenido]))
+                        flash('El contenido contiene lenguaje inapropiado')
+                        return redirect(url_for('listar'))
+            
+            # Contenido de los post
             contenido = request.form['contenido']
             
             if modelo.prediccion([contenido]):
                 print(modelo.prediccion_prob([contenido]))
                 flash('El contenido contiene lenguaje inapropiado')
                 return redirect(url_for('listar'))
-            if float(modelo.prediccion_prob([contenido])) > 0.40:
-                print(modelo.prediccion_prob([contenido]))
-                flash('El contenido contiene lenguaje inapropiado')
-                return redirect(url_for('listar'))
-
+            
+            #comprobaccion por diccionario
+            df = pd.read_csv('app/model/malas_palabras.csv')
+            liContenido = list(contenido.split(" "))
+            for palabra in liContenido:
+                for mala in df["MALA_PALABRA"]:
+                    if palabra == mala:
+                        print(modelo.prediccion_prob([contenido]))
+                        print("Funcino")
+                        flash('El contenido contiene lenguaje inapropiado')
+                        return redirect(url_for('listar'))
+            
+            #carga de archivos e insercion en la base de datos
             if 'file' in request.files:
                 files = request.files.getlist('file')
                 files_size = len(files)
@@ -664,10 +683,15 @@ def add_comentario(id, matricula):
                 print(modelo.prediccion_prob([contenido]))
                 flash('El contenido contiene lenguaje inapropiado')
                 return redirect(url_for('mostrarpost',id = id))
-        if float(modelo.prediccion_prob([contenido])) > 0.40:
-            print(modelo.prediccion_prob([contenido]))
-            flash('El contenido contiene lenguaje inapropiado')
-            return redirect(url_for('mostrarpost',id = id))
+        #Contenido de la respuesta
+        df = pd.read_csv('app/model/malas_palabras.csv')
+        liContenido = list(contenido.split(" "))
+        for palabra in liContenido:
+            for mala in df["MALA_PALABRA"]:
+                if palabra == mala:
+                    print(modelo.prediccion_prob([contenido]))
+                    flash('El contenido contiene lenguaje inapropiado')
+                    return redirect(url_for('mostrarpost',id = id))
         if 'file' in request.files:
                 files = request.files.getlist('file')
                 files_size = len(files)

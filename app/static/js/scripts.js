@@ -24,39 +24,6 @@ function mostrarInicio(){
         }
     }
     
-    
-
-    // if(seleccion == "9"){
-
-    //     document.getElementById("Tlajomulco").classList.remove("ocultar")
-    //     document.getElementById("Rio Nilo").classList.remove("ocultar")
-    //     document.getElementById("Lazaro Cardenas").classList.remove("ocultar")
-    //     document.getElementById("Campus").classList.remove("ocultar")
-    //     document.getElementById("Americas").classList.remove("ocultar")
-    //     document.getElementById("Zapopan").classList.remove("ocultar")
-    //     document.getElementById("Pedro Moreno").classList.remove("ocultar")
-    //     document.getElementById("Olimpica").classList.remove("ocultar")
-    // }else if(seleccion == "1"){
-
-    //     document.getElementById("Tlajomulco").classList.remove("ocultar")
-    //     document.getElementById("Rio Nilo").classList.add("ocultar")
-    //     document.getElementById("Lazaro Cardenas").classList.add("ocultar")
-    //     document.getElementById("Campus").classList.add("ocultar")
-    //     document.getElementById("Americas").classList.add("ocultar")
-    //     document.getElementById("Zapopan").classList.add("ocultar")
-    //     document.getElementById("Pedro Moreno").classList.add("ocultar")
-    //     document.getElementById("Olimpica").classList.add("ocultar")
-    // }else if(seleccion == "2"){
-
-    //     document.getElementById("Tlajomulco").classList.add("ocultar")
-    //     document.getElementById("Rio Nilo").classList.remove("ocultar")
-    //     document.getElementById("Lazaro Cardenas").classList.add("ocultar")
-    //     document.getElementById("Campus").classList.add("ocultar")
-    //     document.getElementById("Americas").classList.add("ocultar")
-    //     document.getElementById("Zapopan").classList.add("ocultar")
-    //     document.getElementById("Pedro Moreno").classList.add("ocultar")
-    //     document.getElementById("Olimpica").classList.add("ocultar")
-    // }else 
 }
 
 function logSeleccion(valor){

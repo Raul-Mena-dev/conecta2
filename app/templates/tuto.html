@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+  {% include 'navbar.html' %}
+{% endblock %}
+
+
+{% block content %}
+<div class="container bg-light p-3 mt-5  border rounded border-bottom">
+    <h1 style="width: 30rem; border-bottom: 2px solid ;">Tutorial</h1>
+    
+
+    <div style="width: 30rem; border-bottom: 2px solid ;">
+        <h3 style="width: 30rem; border-bottom: 2px solid ;">Post</h3>
+        <img src="{{url_for('static', filename='resources/1.png')}}" alt="">
+    <ul class="list-group mb-2 mt-2">
+        <li class="list-group-item"><span class="font-weight-bold">Titulo: </span>El titulo corresponde a el titulo que llevara su mensaje y lo que aparecera al entrar a alguna pestaña de alguna carrera </li>
+        <li class="list-group-item"><span class="font-weight-bold">Mensaje: </span> El contenido de su mensaje sera visible cuando alguien entre en su post</li>
+        <li class="list-group-item"><span class="font-weight-bold">Boton subir archivos: </span> Esto le permitira subir archivos de 1 a 5 como maximo, tenga cuidado con el material que sube ya que podria presentar problemas con la institucion o incluso legales</li>
+        <li class="list-group-item"><span class="font-weight-bold">Etiquetas: </span> Esto permitira que se pueda filtar mejor su post</li>
+        <li class="list-group-item"><span class="font-weight-bold">Boton publicar: </span> Esto subira su post a la pagina</li>
+        <li class="list-group-item"><span class="font-weight-bold">Advertencia: </span> Estos campos estan ligados a un estricto filtro de lenguaje, tenga cuidado con las palabras que usa</li>
+    </ul>
+    </div>
+    <div style="width: 30rem; border-bottom: 2px solid ;">
+        <h3 style="width: 30rem; border-bottom: 2px solid ;">Comentarios</h3>
+        <img src="{{url_for('static', filename='resources/2.png')}}" alt="">
+    <ul class="list-group mb-2 mt-2">
+        <li class="list-group-item"><span class="font-weight-bold">Mensaje: </span> El contenido de su mensaje sera visible cuando alguien entre en su post</li>
+        <li class="list-group-item"><span class="font-weight-bold">Boton subir archivos: </span> Esto le permitira subir archivos de 1 a 5 como maximo, tenga cuidado con el material que sube ya que podria presentar problemas con la institucion o incluso legales</li>
+        <li class="list-group-item"><span class="font-weight-bold">Boton publicar: </span> Esto subira su post a la pagina</li>
+        <li class="list-group-item"><span class="font-weight-bold">Advertencia: </span> Estos campos estan ligados a un estricto filtro de lenguaje, tenga cuidado con las palabras que usa</li>
+    </ul>
+    </div>
+    <div style="width: 30rem; border-bottom: 2px solid ;">
+        <h3 style="width: 30rem; border-bottom: 2px solid ;">Editar y reportar comentarios</h3>
+        <img src="{{url_for('static', filename='resources/3.png')}}" alt="">
+    <ul class="list-group mb-2 mt-2">
+        <li class="list-group-item"><span class="font-weight-bold">Boton rojo: </span> El boton rojo le permitira reportar el comentario si cree que es inapropiado</li>
+        <li class="list-group-item"><span class="font-weight-bold">Boton del lapiz: </span> Esto le permitira editar el texto de su comentario o el titulo y comentario de su post</li>
+       
+    </ul>
+    </div>
+    <div style="width: 30rem; border-bottom: 2px solid ;">
+        <h3 style="width: 30rem; border-bottom: 2px solid ;">Cambiar contraseña</h3>
+        <img src="{{url_for('static', filename='resources/4.png')}}" alt="">
+    <ul class="list-group mb-2 mt-2">
+        <li class="list-group-item"><span class="font-weight-bold">Cambiar contraseña: </span> En su perfil de click en la opcion cambiar contraseña y lo llevara a la pagina para cambiar la contraseña</li> 
+    </ul>
+    <img src="{{url_for('static', filename='resources/5.png')}}" alt="">
+    <ul class="list-group mb-2 mt-2">
+        <li class="list-group-item"><span class="font-weight-bold">Contraseña actual: </span> Se le pedira la contraseña actual de su cuenta</li>
+        <li class="list-group-item"><span class="font-weight-bold">Contraseña nueva: </span> Se le pedira la contraseña nueva que desea dejar </li>
+        <li class="list-group-item"><span class="font-weight-bold">Confirmacion de contraseña nueva: </span> Le pedira confirmar la contraseña nueva</li>
+        <li class="list-group-item"><span class="font-weight-bold">Boton cambiar: </span> Esto cambiara su contraseña</li>
+        <li class="list-group-item"><span class="font-weight-bold">Advertencia: </span> Este cambio no puede ser cambiado</li>
+    </ul>
+    </div>
+</div>
+    
+{% endblock %}
+{% endblock %}
