@@ -25,12 +25,16 @@
       <div class="texto-post">
         {{post['contenido']}}
         {% if archivos %}
-        <ul style="list-style-type: none; padding: 0;" class="mt-3">
-        <li class="font-weight-bold">Archivos: </li>
-        {% for archivo in archivos %}
-          <li><a href="{{url_for('static', filename='img/'+archivo['nombre_archivo'])}}"target=”_blank”>{{archivo['nombre_archivo']}}</a></li>
-        {% endfor %}
-      </ul>
+            {% if mostrar %}
+              <ul style="list-style-type: none; padding: 0;" class="mt-3">
+              <li class="font-weight-bold">Archivos: </li>
+            {% endif %}
+            {% for archivo in archivos %}
+              {% if archivo['id_respuestas'] is none %}
+                <li><a href="{{url_for('static', filename='img/'+archivo['nombre_archivo'])}}"target=”_blank”>{{archivo['nombre_archivo']}}</a></li>
+              {% endif %}
+            {% endfor %}
+            </ul>
       {% endif %}
       </div>
       <div class="botones-control">
@@ -50,8 +54,13 @@
       <div class="fecha-publicacion">
         <p>Publicado: {{ post['fecha']}}</p> 
       </div>
-      <div class="publicado-por">
-        <p>Usuario: {{post['usuario']}}</p> 
+      <div class="publicado-por-inf">
+        <div class="img-perfil-inf">
+          <img src="{{url_for('static', filename='img/'+post['foto'])}}" alt="{{url_for('static', filename='img/default.png')}}">
+        </div>
+        <div class="inf-usuario">
+          <p>Usuario: {{post['usuario']}}</p> 
+        </div>
       </div>
     </div>
     <hr class="finaliza-post">
@@ -60,10 +69,13 @@
 </div>
 
 <!-- Crear comentario -->
-<form action="/add_comentario/{{post['id_post']}}/{{session['id']}} " method="POST">
+<form action="/add_comentario/{{post['id_post']}}/{{session['id']}} " method="POST" enctype = "multipart/form-data">
   <div class="apartado-comentar">  
     <div class="escribe-comentario">
       <textarea  class="crearcomentario" name="texto" placeholder="comentario" autocomplete="off" required></textarea>
+    </div>
+    <div class="archivos-respuesta">
+      <input type="file"  name="file" multiple>
     </div>
     {% if session['id'] %}
       {% if ((session['nivel'] != 1 and post['carrera'] == "Bachillerato") or (session['nivel'] != 2 and post['carrera'] != "Bachillerato")) %}
@@ -117,12 +129,27 @@
               {% endif %} 
             </div>
           </div>
+          {% if archivos %}
+              <ul style="list-style-type: none; padding: 0;" class="archivo-coment">
+                <li class="font-weight-bold">Archivos: </li>
+                {% for archivo in archivos %}
+                  {% if archivo['id_respuestas'] == respuesta['id_respuesta']%}
+                    <li><a href="{{url_for('static', filename='img/'+archivo['nombre_archivo'])}}"target=”_blank”>{{archivo['nombre_archivo']}}</a></li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            {% endif %}
           <div class="datos-publicacion-respuesta">
             <div class="fecha-publicacion">
               <p>Publicado: {{ respuesta['fecha']}}</p> 
             </div>
-            <div class="publicado-por">
-              <p>usuario: {{respuesta['usuario']}}</p> 
+            <div class="publicado-por-inf">
+              <div class="img-perfil-inf img2">
+                <img src="{{url_for('static', filename='img/'+respuesta['foto'])}}" alt="{{url_for('static', filename='img/default.png')}}">
+              </div>
+              <div class="inf-usuario">
+                <p>Usuario: {{respuesta['usuario']}}</p> 
+              </div>
             </div>
           </div>
         </div>
@@ -149,8 +176,13 @@
           <div class="fecha-publicacion">
             <p>Publicado: {{ respuesta['fecha']}}</p> 
           </div>
-          <div class="publicado-por">
-            <p>usuario: {{respuesta['usuario']}}</p> 
+          <div class="publicado-por-inf">
+            <div class="img-perfil-inf">
+              <img src="{{url_for('static', filename='img/'+respuesta['foto'])}}" alt="{{url_for('static', filename='img/default.png')}}">
+            </div>
+            <div class="inf-usuario img2">
+              <p>Usuario: {{respuesta['usuario']}}</p> 
+            </div>
           </div>
         </div>
       </div>
