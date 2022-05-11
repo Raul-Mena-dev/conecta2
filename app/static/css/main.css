@@ -235,7 +235,7 @@ body{
     height:4rem !important;
 }
 
-.img-perfil{
+.img-perfil, .img-perfil-inf{
     width: 18rem;
     height: 18rem;
     object-fit: cover;
@@ -1007,7 +1007,7 @@ abbr[title] {
     border: solid 2px red; 
 }
 
-.img-perfil{
+.img-perfil,.img-perfil-inf{
     height: 100%;
     width: 20%;
 }
@@ -1017,6 +1017,23 @@ abbr[title] {
 }
 
 .img-perfil img{
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    border: solid 1px rgb(233, 230, 230);
+}
+
+.img-perfil-inf{
+    height: 10%;
+    width: 6%;
+}
+
+.img2{
+    height: 20%;
+    width: 10%;
+}
+
+.img-perfil-inf img{
     height: 100%;
     width: 100%;
     border-radius: 50%;
@@ -1057,6 +1074,20 @@ abbr[title] {
     flex-direction: column;
     justify-content:space-between;
     height: 100%;
+}
+
+.publicado-por-inf{
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-end;
+    align-items: center;
+    height: 100%;
+    width: 40%;
+}
+
+.inf-usuario{
+    margin-left: 5px;
+    height: 20px;
 }
 
 .datos-publicacion-respuesta p{
@@ -1197,6 +1228,17 @@ abbr[title] {
     width:64px;
     height:64px;
 }
+
+.archivos-respuesta{
+    margin: auto;
+    margin-top: 5px;
+    color: #fff;
+}
+
+.archivo-coment{
+    width: 100%;
+}
+
 /* RESPONSIVE DESIGN */
 
 @media (max-width: 1770px){
@@ -1392,7 +1434,6 @@ video {
     .botones-no-sesion-post{
         width: 100%;
     }
-
 
 }
 

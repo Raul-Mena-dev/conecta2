@@ -2,7 +2,11 @@ from datetime import date
 from flask import render_template,request,session,redirect, url_for,flash
 from app import create_app
 from flask_mysqldb import MySQL
+<<<<<<< HEAD
 import modelo
+=======
+from flask_bcrypt import Bcrypt
+>>>>>>> babe9aafd4b7aa1428286dd25c3bb2fe08c4f82f
 import MySQLdb.cursors
 import re
 from werkzeug.utils import secure_filename
@@ -25,6 +29,7 @@ app.config['MYSQL_DB'] = 'conecta2'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
+bcrypt = Bcrypt(app)
 
 
 
@@ -100,12 +105,20 @@ def contra():
 
         actual = request.form['actual']
         nueva = request.form['nueva']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM login WHERE matricula = %s;', (session['id'],))
+        datos = cursor.fetchone()
         try:
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('UPDATE usuarios SET pass = %s WHERE usuarios.matricula = %s AND usuarios.pass = %s' ,(nueva, session['id'], actual,))
-            mysql.connection.commit()
-            msg = 'Cambio exitoso'
-            return redirect(url_for('profile', msg = msg))
+            if bcrypt.check_password_hash(datos['pass'], actual):
+                pw_hash = bcrypt.generate_password_hash(nueva, 10)
+                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor.execute('UPDATE login SET pass = %s WHERE login.matricula = %s' ,(pw_hash, session['id'],))
+                mysql.connection.commit()
+                msg = 'Cambio exitoso'
+                return redirect(url_for('profile', msg = msg))
+            else:
+                msg = "Error: " + str(e)
+                return redirect(url_for('profile', msg = msg))
         except Exception as e:
             msg = "Error: " + str(e)
             return redirect(url_for('profile', msg = msg))
@@ -149,24 +162,29 @@ def login():
             # Create variables for easy access
             matricula = request.form['matricula']
             password = request.form['passwordA']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM login WHERE matricula = %s;', (matricula,))
+            datos = cursor.fetchone()
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             try:
-                cursor.execute('SELECT a.nombre, a.apellido1, a.matricula, a.id_nivel_estudio FROM usuarios as a INNER JOIN login as b ON a.matricula = b.matricula WHERE b.matricula = %s AND b.pass = %s;', (matricula, password,))
-                # Fetch one record and return result
-                usuario = cursor.fetchone()
-                session['id'] = usuario['matricula']
-                nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
-                session['usuario']= nombreUsuario
-                session['nivel'] = usuario['id_nivel_estudio']
-                return redirect(url_for('profile'))
+                if(bcrypt.check_password_hash(datos['pass'], password)):
+                    cursor.execute('SELECT a.nombre, a.apellido1, a.matricula, a.id_nivel_estudio FROM usuarios as a INNER JOIN login as b ON a.matricula = b.matricula WHERE b.matricula = %s;', (matricula,))
+                    # Fetch one record and return result
+                    usuario = cursor.fetchone()
+                    session['id'] = usuario['matricula']
+                    nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
+                    session['usuario']= nombreUsuario
+                    session['nivel'] = usuario['id_nivel_estudio']
+                    return redirect(url_for('profile'))
+                else:
+                    msg = "Usuario y/o contraseña incorrecto"
+                    return render_template('login.html', msg = msg)
             except Exception as e:
                 msg = "Usuario y/o contraseña incorrecto"
                 return render_template('login.html', msg = msg)
         else:
             return render_template('login.html')
-
-
 
 
 #logout
@@ -178,7 +196,6 @@ def logout():
     session.clear()
     # Redirect to login page
     return redirect(url_for('inicio'))
-
 
 
 @app.route('/login/registrar', methods=['POST'])
@@ -198,31 +215,35 @@ def registrar():
             msg = 'Cuenta ya existe!'
             return render_template('login.html', msg=msg)
         else:
-            cursor.execute('SELECT * FROM usuarios WHERE matricula = %s AND pass = %s', (matriculaR,passwordR,))
+            cursor.execute('SELECT * FROM usuarios WHERE matricula = %s', (matriculaR,))
             usuario = cursor.fetchone()
-            if not usuario:
-                msg = 'usuario no esta en la base de datos'
-                return render_template('login.html', msg=msg)
-            elif not re.match('[^@]+[@conectados.edu.mx]', str(email)):
-                msg = 'Correo invalido!'
-                return render_template('login.html', msg=msg)
-            elif not re.match('[0-9]{9,11}', str(matriculaR)):
-                msg = 'La matricula incorrecta!'
-                return render_template('login.html', msg=msg)
-            elif not passwordR or not email or not matriculaR:
+            if bcrypt.check_password_hash(usuario['pass'], passwordR):
+                if not usuario:
+                    msg = 'usuario no esta en la base de datos'
+                    return render_template('login.html', msg=msg)
+                elif not re.match('[^@]+[@conectados.edu.mx]', str(email)):
+                    msg = 'Correo invalido!'
+                    return render_template('login.html', msg=msg)
+                elif not re.match('[0-9]{9,11}', str(matriculaR)):
+                    msg = 'La matricula incorrecta!'
+                    return render_template('login.html', msg=msg)
+                elif not passwordR or not email or not matriculaR:
+                    msg = 'Porfavor llena el formulario!'
+                    return render_template('login.html', msg=msg)
+                else:
+                    # Account doesnt exists and the form data is valid, now insert new account into accounts table
+                    nombreUsuario = usuario['nombre'] +' '+ usuario['apellido1']
+                    cursor.execute('INSERT INTO login(matricula,pass,usuario) VALUES (%s, %s, %s)', (matriculaR, usuario['pass'] ,nombreUsuario))
+                    mysql.connection.commit()
+                    flash('Te has registrado satisfactoriamente')
+                    session['id'] = usuario['matricula']
+                    nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
+                    session['usuario']= nombreUsuario
+                    session['nivel'] = usuario['id_nivel_estudio']
+                    return redirect(url_for('profile'))
+            else:
                 msg = 'Porfavor llena el formulario!'
                 return render_template('login.html', msg=msg)
-            else:
-                # Account doesnt exists and the form data is valid, now insert new account into accounts table
-                nombreUsuario = usuario['nombre'] +' '+ usuario['apellido1']
-                cursor.execute('INSERT INTO login(matricula,pass,usuario) VALUES (%s, %s, %s)', (matriculaR, usuario['pass'],nombreUsuario))
-                mysql.connection.commit()
-                flash('Te has registrado satisfactoriamente')
-                session['id'] = usuario['matricula']
-                nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
-                session['usuario']= nombreUsuario
-                session['nivel'] = usuario['id_nivel_estudio']
-                return redirect(url_for('profile'))
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         msg = 'Porfavor llena el formulario!'
@@ -539,20 +560,29 @@ def listar():
 @app.route("/mostrarpost/<string:id>")
 def mostrarpost(id):
 
+    mostrar = False
+
     if 'nivel' not in session:
         session['nivel'] = 0
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT post.matricula, post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario, carrera.carrera FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula INNER JOIN carrera ON post.id_carrera = carrera.id_carrera  WHERE post.id_post = %s', (id,))
+    cur.execute('SELECT post.matricula, post.id_post, post.titulo, post.contenido, post.fecha ,login.usuario, carrera.carrera, usuarios.foto FROM post INNER JOIN usuarios ON post.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula INNER JOIN carrera ON post.id_carrera = carrera.id_carrera  WHERE post.id_post = %s', (id,))
     post = cur.fetchone()
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute('SELECT * FROM archivos WHERE id_post = %s', (id,))
     archivos = cur.fetchall()
 
+    print(archivos)
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT respuestas.matricula, respuestas.id_respuesta, respuestas.contenido, respuestas.fecha, respuestas.id_estado, login.usuario FROM respuestas INNER JOIN usuarios ON respuestas.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s ORDER BY fecha DESC', (id,))
+    cur.execute('SELECT respuestas.matricula, respuestas.id_respuesta, respuestas.contenido, respuestas.fecha, respuestas.id_estado, usuarios.foto, login.usuario FROM respuestas INNER JOIN usuarios ON respuestas.matricula = usuarios.matricula INNER JOIN login ON usuarios.matricula = login.matricula WHERE id_post = %s ORDER BY fecha DESC', (id,))
     respuestas = cur.fetchall()
-    return render_template('mostrarpost.html', post = post, respuestas = respuestas, archivos = archivos)
+
+    for archivo in archivos:
+        if not archivo['id_respuestas']:
+            mostrar = True
+            break
+    
+    return render_template('mostrarpost.html', post = post, respuestas = respuestas, archivos = archivos, mostrar = mostrar)
 
 
 @app.route('/subirPrueba', methods = ['POST'])
@@ -629,9 +659,11 @@ def add_post():
 #Se agrega una respuesta a la publicacion
 @app.route("/add_comentario/<string:id>/<string:matricula>",  methods=['POST'])
 def add_comentario(id, matricula):
+   #try:
     if request.method == 'POST':
         estado = 1
         contenido = request.form['texto']
+<<<<<<< HEAD
 
         if modelo.prediccion([contenido]):
                 print(modelo.prediccion_prob([contenido]))
@@ -642,10 +674,34 @@ def add_comentario(id, matricula):
             flash('El contenido contiene lenguaje inapropiado')
             return redirect(url_for('mostrarpost',id = id))
 
+=======
+        if 'file' in request.files:
+                files = request.files.getlist('file')
+                files_size = len(files)
+                if files_size > 5:
+                    flash('Maximo 5 archivos')
+                    return redirect(url_for('mostrarpost',id = id))
+>>>>>>> babe9aafd4b7aa1428286dd25c3bb2fe08c4f82f
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cur.execute('INSERT INTO respuestas(contenido, matricula, id_post, id_estado) VALUES(%s, %s, %s, %s)', (contenido, matricula, id, estado,))
         mysql.connection.commit()
+        id_last = cur.lastrowid
+            
+        file = request.files['file']
+        
+        if file.filename != '':
+            for file in request.files.getlist('file'):
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
+                filename = secure_filename(file.filename)
+                cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cur.execute('INSERT INTO archivos(nombre_archivo,id_post,id_respuestas) VALUES(%s, %s, %s)', (filename, id, id_last,))
+                mysql.connection.commit()
+        flash('Agregado exitosamente')
         return redirect(url_for('mostrarpost',id = id))
+    # except Exception as e:
+    #     msg = str(e)
+    #     flash(msg)
+    #     return redirect(url_for('mostrarpost',id = id))
 
 #Se toman acciones al reportar una publicacion
 @app.route('/reportar_publi/<string:id>')
