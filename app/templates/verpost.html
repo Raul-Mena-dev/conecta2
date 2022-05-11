@@ -38,19 +38,11 @@
                 <p>Crear una nueva publicacion</p>
                 <div class="titulo-new-post">
                     <label for="titulo">Titulo</label>
-<<<<<<< HEAD
-                    <input type="text" placeholder="Titulo" name="titulo" autocomplete="off" required>
-                </div>
-                <div class="contenido-new-post">
-                    <label for="contenido">Mensaje</label>
-                    <textarea name="contenido" placeholder="Contenido del tema" autocomplete="off" required></textarea>
-=======
                     <input type="text" placeholder="Titulo" name="titulo" autocomplete="off" id="titulo" required>
                 </div>
                 <div class="contenido-new-post">
                     <label for="contenido">Contenido</label>
                     <textarea name="contenido" placeholder="Contenido del tema" autocomplete="off" id="contenido" required></textarea>
->>>>>>> 66a12d6cca4cd11399ea52d3ba7d9e016f9c92db
                 </div>
                 <div class="contenido-new-post">
                     <label for="archivo">Archivos (maximo 5)</label>
@@ -135,7 +127,9 @@
                         <div class="caja">
                             <div class="datos-publicacion-respuesta">
                                 <div class="fecha-publicacion">
+                                    <p>Etiqueta: {{ post['tag']}}</p>
                                     <p>Publicado: {{ post['tiempo']}}</p>
+                                    
                                 </div>
                             </div>
                             <div class="datos-publicacion-respuesta">
@@ -161,7 +155,9 @@
                         <div class="caja">
                             <div class="datos-publicacion-respuesta">
                                 <div class="fecha-publicacion">
+                                    <p>Etiqueta: {{ post['tag']}}</p>
                                     <p>Publicado: {{ post['tiempo']}}</p>
+                                    
                                 </div>
                             </div>
                             <div class="datos-publicacion-respuesta">
@@ -193,7 +189,9 @@
                             <div class="caja">
                                 <div class="datos-publicacion-respuesta">
                                     <div class="fecha-publicacion">
+                                        <p>Etiqueta: {{ post['tag']}}</p>
                                         <p>Publicado: {{ post['fecha']}}</p>
+                                        
                                     </div>
                                 </div>
                                 <div class="datos-publicacion-respuesta">
@@ -219,7 +217,9 @@
                             <div class="caja">
                                 <div class="datos-publicacion-respuesta">
                                     <div class="fecha-publicacion">
+                                        <p>Etiqueta: {{ post['tag']}}</p>
                                         <p>Publicado: {{ post['fecha']}}</p>
+                                        
                                     </div>
                                 </div>
                                 <div class="datos-publicacion-respuesta">
@@ -246,6 +246,7 @@
                                 <div class="datos-publicacion-respuesta">
                                     <div class="fecha-publicacion">
                                         <p>Publicado: {{ post['fecha']}}</p>
+                                        <p>Etiqueta: {{ post['tag']}}</p>
                                     </div>
                                 </div>
                                 <div class="datos-publicacion-respuesta">
