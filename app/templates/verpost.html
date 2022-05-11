@@ -14,6 +14,7 @@
 
 
 
+     
 <div class="contenido-post">
     
     {% for centro in centroUni %}
@@ -93,6 +94,19 @@
             </p>
         {% endif %}
         {% if mostrar %}
+        <div class="container mt-5">
+            <form >
+                <label for="plantel"  class="text-white">Plantel</label>
+                <select name="plantel " onchange='mostrarInicio()' id="plantel">
+                    <option value="0">Todos</option>
+                    <option value="1">Importante</option>
+                    <option value="2">Tareas</option>
+                    <option value="3">Proyectos</option>
+                    <option value="4">Ocio</option>
+                    <option value="5">Discusiones</option>
+                </select>
+            </form>
+        </div>
         <h4 style="color: #fff;">Mensajes del día</h4>
         {% for post in posts %}
                 {% if post['id_estado'] != 2 and post['fecha'] == today and post['nivel'] >= 3 %}
@@ -244,7 +258,7 @@
         {% endif %}
     </div>
 
-</div>
 
+</div>
  {% endblock %}
  {% endblock %}

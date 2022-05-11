@@ -2,6 +2,7 @@ from datetime import date
 from flask import render_template,request,session,redirect, url_for,flash
 from app import create_app
 from flask_mysqldb import MySQL
+import modelo
 import MySQLdb.cursors
 import re
 from werkzeug.utils import secure_filename
@@ -19,11 +20,13 @@ app.config['SECRET_KEY'] = 'mysecret'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'conectados'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'conecta2'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
+
+
 
 #PRINCIPAL
 @app.route('/')
@@ -573,7 +576,28 @@ def add_post():
         if request.method == 'POST':
             estado = 1
             titulo = request.form['titulo']
+
+            if modelo.prediccion([titulo]):
+                flash('Tu titulo contiene lenguaje inapropiado')
+                print(titulo)
+                return redirect(url_for('listar'))
+            if float(modelo.prediccion_prob([titulo])) > 0.40:
+                print(modelo.prediccion_prob([titulo]))
+                flash('Tu titulo contiene lenguaje inapropiado')
+                return redirect(url_for('listar'))
+
+            
             contenido = request.form['contenido']
+            
+            if modelo.prediccion([contenido]):
+                print(modelo.prediccion_prob([contenido]))
+                flash('El contenido contiene lenguaje inapropiado')
+                return redirect(url_for('listar'))
+            if float(modelo.prediccion_prob([contenido])) > 0.40:
+                print(modelo.prediccion_prob([contenido]))
+                flash('El contenido contiene lenguaje inapropiado')
+                return redirect(url_for('listar'))
+
             if 'file' in request.files:
                 files = request.files.getlist('file')
                 files_size = len(files)
@@ -586,7 +610,7 @@ def add_post():
             id = cur.lastrowid
             
             file = request.files['file']
-           
+
             if file.filename != '':
                 for file in request.files.getlist('file'):
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
@@ -608,6 +632,16 @@ def add_comentario(id, matricula):
     if request.method == 'POST':
         estado = 1
         contenido = request.form['texto']
+
+        if modelo.prediccion([contenido]):
+                print(modelo.prediccion_prob([contenido]))
+                flash('El contenido contiene lenguaje inapropiado')
+                return redirect(url_for('mostrarpost',id = id))
+        if float(modelo.prediccion_prob([contenido])) > 0.40:
+            print(modelo.prediccion_prob([contenido]))
+            flash('El contenido contiene lenguaje inapropiado')
+            return redirect(url_for('mostrarpost',id = id))
+
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cur.execute('INSERT INTO respuestas(contenido, matricula, id_post, id_estado) VALUES(%s, %s, %s, %s)', (contenido, matricula, id, estado,))
         mysql.connection.commit()

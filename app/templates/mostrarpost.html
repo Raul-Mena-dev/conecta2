@@ -62,6 +62,17 @@
 <!-- Crear comentario -->
 <form action="/add_comentario/{{post['id_post']}}/{{session['id']}} " method="POST">
   <div class="apartado-comentar">  
+    <p >
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class="alert alert-info" role="alert" >
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+  </p>
     <div class="escribe-comentario">
       <textarea  class="crearcomentario" name="texto" placeholder="comentario" autocomplete="off" required></textarea>
     </div>
@@ -91,6 +102,7 @@
 
 <!-- Mostrar comentarios -->
 <div class="encabezado-comentarios">
+  
   <h2>Comentarios</h2>
 </div>
 <br>
