@@ -562,12 +562,8 @@ def listar():
         tags = cur.fetchall()
     except Exception as e:
         msg=str(e)
-<<<<<<< HEAD
-        return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera, today = today)
-=======
         print(msg)
         return render_template('verpost.html',posts = posts, centroUni = centroUni, mostrar = mostrar, id_plantel = id_plantel, id_carrera = id_carrera, today = today, tags=tags)
->>>>>>> 66a12d6cca4cd11399ea52d3ba7d9e016f9c92db
     if posts == ():
         mostrar = False
 
@@ -624,17 +620,12 @@ def add_post():
             estado = 1
             tag = request.form['tags']
             titulo = request.form['titulo']
-<<<<<<< HEAD
 
             # Titulo de los post
-=======
-            print(tag)
->>>>>>> 66a12d6cca4cd11399ea52d3ba7d9e016f9c92db
             if modelo.prediccion([titulo]):
                 flash('Tu titulo contiene lenguaje inapropiado')
                 print(titulo)
                 return redirect(url_for('listar'))
-<<<<<<< HEAD
             
 
             #comprobaccion por diccionario
@@ -646,12 +637,6 @@ def add_post():
                         print(modelo.prediccion_prob([contenido]))
                         flash('El contenido contiene lenguaje inapropiado')
                         return redirect(url_for('listar'))
-=======
-            if float(modelo.prediccion_prob([titulo])) > 0.40:
-                print(modelo.prediccion_prob([titulo]))
-                flash('Tu titulo contiene lenguaje inapropiado')
-                return redirect(url_for('listar'))
->>>>>>> 66a12d6cca4cd11399ea52d3ba7d9e016f9c92db
             
             # Contenido de los post
             contenido = request.form['contenido']
@@ -791,6 +776,7 @@ def reportar_msj(id_pub,id_msj):
 def reportar_publi_admin(id):
     estado = 2
     try:
+        cur = mysql.connection.cursor()
         cur.execute('UPDATE post SET id_estado = %s WHERE id_post = %s',(estado,id))
         mysql.connection.commit()
         return redirect(url_for('listar'))
