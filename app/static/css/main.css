@@ -1239,6 +1239,26 @@ abbr[title] {
     width: 100%;
 }
 
+.checkboxs{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.checkboxs select{
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: auto;
+}
+
+.checkboxs select option{
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: auto;
+}
+
+
 /* RESPONSIVE DESIGN */
 
 @media (max-width: 1770px){
