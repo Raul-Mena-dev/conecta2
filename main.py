@@ -2,11 +2,8 @@ from datetime import date
 from flask import render_template,request,session,redirect, url_for,flash
 from app import create_app
 from flask_mysqldb import MySQL
-<<<<<<< HEAD
 import modelo
-=======
 from flask_bcrypt import Bcrypt
->>>>>>> babe9aafd4b7aa1428286dd25c3bb2fe08c4f82f
 import MySQLdb.cursors
 import re
 from werkzeug.utils import secure_filename
@@ -663,8 +660,6 @@ def add_comentario(id, matricula):
     if request.method == 'POST':
         estado = 1
         contenido = request.form['texto']
-<<<<<<< HEAD
-
         if modelo.prediccion([contenido]):
                 print(modelo.prediccion_prob([contenido]))
                 flash('El contenido contiene lenguaje inapropiado')
@@ -673,15 +668,12 @@ def add_comentario(id, matricula):
             print(modelo.prediccion_prob([contenido]))
             flash('El contenido contiene lenguaje inapropiado')
             return redirect(url_for('mostrarpost',id = id))
-
-=======
         if 'file' in request.files:
                 files = request.files.getlist('file')
                 files_size = len(files)
                 if files_size > 5:
                     flash('Maximo 5 archivos')
                     return redirect(url_for('mostrarpost',id = id))
->>>>>>> babe9aafd4b7aa1428286dd25c3bb2fe08c4f82f
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cur.execute('INSERT INTO respuestas(contenido, matricula, id_post, id_estado) VALUES(%s, %s, %s, %s)', (contenido, matricula, id, estado,))
         mysql.connection.commit()
