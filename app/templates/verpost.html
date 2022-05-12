@@ -117,6 +117,7 @@
             </form>
         </div>
         <h4 style="color: #fff;">Mensajes del día</h4>
+        <div class="bloque-post">
         {% for post in posts %}
                 {% if post['id_estado'] != 2 and post['fecha'] == today and post['nivel'] >= 3 %}
                     {% if post['nivel'] == 3%}
@@ -267,6 +268,7 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
+            </div>
         {% else %}
             <div class="noContenido">
                 <hr>

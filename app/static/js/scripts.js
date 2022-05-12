@@ -6,8 +6,6 @@ function mostrarInicio(){
     escuelas = document.querySelectorAll('.bloqueCampus');
     var i
 
-    console.log(parseInt(seleccion));
-    console.log(escuelas);
     if(parseInt(seleccion) == 0){
         for (i = 0; i < escuelas.length; i++){
                 escuelas[i].classList.remove("ocultar");
@@ -23,6 +21,68 @@ function mostrarInicio(){
             }
         }
     }
+    
+}
+
+function seleccionarTag(){
+
+
+    var seleccion = document.getElementById("etiqueta").value;	
+    posts = document.querySelectorAll('.bloque-post');
+    var i
+
+    if(parseInt(seleccion)== 0){
+        posts = document.querySelectorAll('#1,#2,#3,#4,#5');
+        for (i = 0; i < posts.length; i++){
+            posts[i].classList.remove("ocultar");
+        }
+    }
+    if(parseInt(seleccion)== 1){
+        posts = document.querySelectorAll('#2,#3,#4,#5');
+        for (i = 0; i < posts.length; i++){
+            posts[i].classList.add("ocultar");
+        }
+    }
+    if(parseInt(seleccion)== 2){
+        posts = document.querySelectorAll('#1,#3,#4,#5');
+        for (i = 0; i < posts.length; i++){
+            posts[i].classList.add("ocultar");
+        }
+    }
+    if(parseInt(seleccion)== 3){
+        posts = document.querySelectorAll('#1,#2,#4,#5');
+        for (i = 0; i < posts.length; i++){
+            posts[i].classList.add("ocultar");
+        }
+    }
+    if(parseInt(seleccion)== 4){
+        posts = document.querySelectorAll('#1,#2,#3,#5');
+        for (i = 0; i < posts.length; i++){
+            posts[i].classList.add("ocultar");
+        }
+    }
+    if(parseInt(seleccion)== 5){
+        posts = document.querySelectorAll('#1,#2,#3,#4');
+        for (i = 0; i < posts.length; i++){
+            posts[i].classList.add("ocultar");
+        }
+    }
+
+    // if(parseInt(seleccion) == 0){
+    //     for (i = 0; i < post.length; i++){
+    //             post[i].classList.remove("ocultar");
+    //     }
+    // }else{
+    //     for (i = 0; i < post.length; i++){
+    //         parseInt(elemento) = getElementById(post[i])
+    //         if(elemento == parseInt(seleccion)  ){
+    //             elemento.classList.remove("ocultar");
+    //         }
+    //         else{
+    //             elemento.classList.add("ocultar");
+    //         }
+    //     }
+    // }
     
 }
 
