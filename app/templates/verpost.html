@@ -105,8 +105,8 @@
         {% if mostrar %}
         <div class="container mt-5">
             <form >
-                <label for="plantel"  class="text-white">Plantel</label>
-                <select name="plantel " onchange='mostrarInicio()' id="plantel">
+                <label for="etiqueta"  class="text-white">Etiquetas</label>
+                <select name="etiqueta " onchange='seleccionarTag()' id="etiqueta">
                     <option value="0">Todos</option>
                     <option value="1">Importante</option>
                     <option value="2">Tareas</option>
@@ -127,10 +127,13 @@
                         </div>
                         <div class="caja">
                             <div class="datos-publicacion-respuesta">
-                                <div class="fecha-publicacion">
-                                    <p>Etiqueta: {{ post['tag']}}</p>
-                                    <p>Publicado: {{ post['tiempo']}}</p>
-                                    
+                                <div class="tags">
+                                    <div class="fecha-publicacion tag-fecha">
+                                        <p>Publicado: {{ post['tiempo']}}</p> 
+                                    </div>
+                                    <div class="tag-publi">
+                                        <p>Etiqueta: {{ post['tag']}}</p>
+                                    </div>   
                                 </div>
                             </div>
                             <div class="datos-publicacion-respuesta">
@@ -155,10 +158,13 @@
                         </div>
                         <div class="caja">
                             <div class="datos-publicacion-respuesta">
-                                <div class="fecha-publicacion">
-                                    <p>Etiqueta: {{ post['tag']}}</p>
-                                    <p>Publicado: {{ post['tiempo']}}</p>
-                                    
+                                <div class="tags">
+                                    <div class="fecha-publicacion tag-fecha">
+                                        <p>Publicado: {{ post['tiempo']}}</p> 
+                                    </div>
+                                    <div class="tag-publi">
+                                        <p>Etiqueta: {{ post['tag']}}</p>
+                                    </div>   
                                 </div>
                             </div>
                             <div class="datos-publicacion-respuesta">
@@ -189,10 +195,13 @@
                             </div>
                             <div class="caja">
                                 <div class="datos-publicacion-respuesta">
-                                    <div class="fecha-publicacion">
-                                        <p>Etiqueta: {{ post['tag']}}</p>
-                                        <p>Publicado: {{ post['fecha']}}</p>
-                                        
+                                    <div class="tags">
+                                        <div class="fecha-publicacion tag-fecha">
+                                            <p>Publicado: {{ post['tiempo']}}</p> 
+                                        </div>
+                                        <div class="tag-publi">
+                                            <p>Etiqueta: {{ post['tag']}}</p>
+                                        </div>   
                                     </div>
                                 </div>
                                 <div class="datos-publicacion-respuesta">
@@ -217,7 +226,7 @@
                             </div>
                             <div class="caja">
                                 <div class="datos-publicacion-respuesta">
-                                    <div class="fecha-publicacion">
+                                    <div class="fecha-publicacion tag-fecha">
                                         <p>Etiqueta: {{ post['tag']}}</p>
                                         <p>Publicado: {{ post['fecha']}}</p>
                                         
@@ -245,9 +254,13 @@
                             </div>
                             <div class="caja">
                                 <div class="datos-publicacion-respuesta">
-                                    <div class="fecha-publicacion">
-                                        <p>Publicado: {{ post['fecha']}}</p>
-                                        <p>Etiqueta: {{ post['tag']}}</p>
+                                    <div class="tags">
+                                        <div class="fecha-publicacion tag-fecha">
+                                            <p>Publicado: {{ post['tiempo']}}</p> 
+                                        </div>
+                                        <div class="tag-publi">
+                                            <p>Etiqueta: {{ post['tag']}}</p>
+                                        </div>   
                                     </div>
                                 </div>
                                 <div class="datos-publicacion-respuesta">

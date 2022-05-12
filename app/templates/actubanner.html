@@ -52,7 +52,7 @@
               <h1 class="border-top border-dark">Mensajes en el banner</h1>
 
               {% for banner in banners %}
-                <ul class="list-group">
+                <ul class="list-group ">
                     <li class="list-group-item"> <img class="card-img-top" style="max-width: 18rem; max-height: 18rem;" src="{{url_for('static', filename='img/'+banner['imagen'])}}" alt="{{url_for('static', filename='img/default.png')}}"></li>
                     <li class="list-group-item">{{banner['titulo']}}</li>
                     <li class="list-group-item">{{banner['texto']}}</li>
