@@ -22,8 +22,8 @@ app.config['SECRET_KEY'] = 'mysecret'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'conectados'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'conecta2'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
@@ -83,6 +83,10 @@ def reglas():
 @app.route('/tutorial')
 def tutorial():
     return render_template('tuto.html')
+
+@app.route('/nosotros')
+def nosotros():
+    return render_template('nosotros.html')
 
 
 #perfil
@@ -550,7 +554,7 @@ def listar():
 
     try:
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute("SELECT post.id_post, post.titulo, date(post.fecha) as fecha, post.fecha as tiempo, post.id_estado, login.usuario, nivel.id_nivel_estudio as nivel, nivel.nivel_estudio, usuarios.foto, tageados.id_tag, tags.tag FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio LEFT JOIN tageados ON post.id_post = tageados.id_post INNER JOIN tags on tageados.id_tag = tags.id_tag WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY post.fecha DESC", (id_plantel,id_carrera,))
+        cur.execute("SELECT post.id_post, post.titulo, date(post.fecha) as fecha, post.fecha as tiempo, post.id_estado, login.usuario, nivel.id_nivel_estudio as nivel, nivel.nivel_estudio, usuarios.foto, tageados.id_tag, tags.tag, tags.id_tags, tags.id_tag as tg FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio LEFT JOIN tageados ON post.id_post = tageados.id_post INNER JOIN tags on tageados.id_tag = tags.id_tags WHERE post.id_plantel  = %s AND post.id_carrera = %s ORDER BY post.fecha DESC", (id_plantel,id_carrera,))
         posts = cur.fetchall()
         
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)

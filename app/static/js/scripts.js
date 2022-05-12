@@ -6,8 +6,6 @@ function mostrarInicio(){
     escuelas = document.querySelectorAll('.bloqueCampus');
     var i
 
-    console.log(parseInt(seleccion));
-    console.log(escuelas);
     if(parseInt(seleccion) == 0){
         for (i = 0; i < escuelas.length; i++){
                 escuelas[i].classList.remove("ocultar");
@@ -23,6 +21,96 @@ function mostrarInicio(){
             }
         }
     }
+    
+}
+
+function seleccionarTag(){
+
+
+    var seleccion = document.getElementById("etiqueta").value;	
+    var i
+
+    const ids = ['a1', 'b2', 'c3','d4', 'e5'];
+
+    const mensajes = document.querySelectorAll(
+    ids.map(id => `#${id}`).join(', ')
+    );
+
+    console.log(mensajes);
+    if(parseInt(seleccion) == 0){
+        for (i = 0; i < mensajes.length; i++){
+                mensajes[i].classList.remove("ocultar");
+                mensajes[i].classList.add("postcuadros");
+        }
+    
+    }else{
+        for (i = 0; i < mensajes.length; i++){
+
+            if(mensajes[i].id != seleccion){
+                mensajes[i].classList.add("ocultar");
+                mensajes[i].classList.remove("postcuadros");
+            }
+            else{
+                mensajes[i].classList.remove("ocultar");
+                mensajes[i].classList.add("postcuadros");
+            }
+        }
+    }
+    
+    
+
+    // if(parseInt(seleccion)== 0){
+    //     mensajes = document.querySelectorAll('#1,#2,#3,#4,#5');
+    //     for (i = 0; i < mensajes.length; i++){
+    //         mensajes[i].classList.remove("ocultar");
+    //     }
+    // }
+    // if(parseInt(seleccion)== 1){
+    //     mensajes = document.querySelectorAll('#2,#3,#4,#5');
+    //     for (i = 0; i < mensajes.length; i++){
+    //         mensajes[i].classList.add("ocultar");
+    //     }
+    // }
+    // if(parseInt(seleccion)== 2){
+    //     mensajes = document.querySelectorAll('#1,#3,#4,#5');
+    //     for (i = 0; i < mensajes.length; i++){
+    //         mensajes[i].classList.add("ocultar");
+    //     }
+    // }
+    // if(parseInt(seleccion)== 3){
+    //     mensajes = document.querySelectorAll('#1,#2,#4,#5');
+    //     for (i = 0; i < mensajes.length; i++){
+    //         mensajes[i].classList.add("ocultar");
+    //     }
+    // }
+    // if(parseInt(seleccion)== 4){
+    //     mensajes = document.querySelectorAll('#1,#2,#3,#5');
+    //     for (i = 0; i < mensajes.length; i++){
+    //         mensajes[i].classList.add("ocultar");
+    //     }
+    // }
+    // if(parseInt(seleccion)== 5){
+    //     posts = document.querySelectorAll('#1,#2,#3,#4');
+    //     for (i = 0; i < posts.length; i++){
+    //         posts[i].classList.add("ocultar");
+    //     }
+    // }
+
+    // if(parseInt(seleccion) == 0){
+    //     for (i = 0; i < post.length; i++){
+    //             post[i].classList.remove("ocultar");
+    //     }
+    // }else{
+    //     for (i = 0; i < post.length; i++){
+    //         parseInt(elemento) = getElementById(post[i])
+    //         if(elemento == parseInt(seleccion)  ){
+    //             elemento.classList.remove("ocultar");
+    //         }
+    //         else{
+    //             elemento.classList.add("ocultar");
+    //         }
+    //     }
+    // }
     
 }
 

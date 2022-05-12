@@ -53,8 +53,8 @@
                 <select name="tags" required>
                     <option value="0">Seleccione una etiqueta</option>
                     {% for tag in tags %}
-                        {% if (tag['id_tag'] == 1 and session['nivel'] > 3) or tag['id_tag'] > 1%}
-                            <option value="{{tag['id_tag']}}">{{tag['tag']}}</option>
+                        {% if (tag['id_tags'] == 1 and session['nivel'] > 3) or tag['id_tags'] > 1%}
+                            <option value="{{tag['id_tags']}}">{{tag['tag']}}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
@@ -108,19 +108,20 @@
                 <label for="etiqueta"  class="text-white">Etiquetas</label>
                 <select name="etiqueta " onchange='seleccionarTag()' id="etiqueta">
                     <option value="0">Todos</option>
-                    <option value="1">Importante</option>
-                    <option value="2">Tareas</option>
-                    <option value="3">Proyectos</option>
-                    <option value="4">Ocio</option>
-                    <option value="5">Discusiones</option>
+                    <option value="a1">Importante</option>
+                    <option value="d4">Tareas</option>
+                    <option value="c3">Proyectos</option>
+                    <option value="b2">Ocio</option>
+                    <option value="e5">Discusiones</option>
                 </select>
             </form>
         </div>
         <h4 style="color: #fff;">Mensajes del día</h4>
+        <div class="bloque-post">
         {% for post in posts %}
                 {% if post['id_estado'] != 2 and post['fecha'] == today and post['nivel'] >= 3 %}
                     {% if post['nivel'] == 3%}
-                    <div class="postcuadros azul" id="{{post['id_tag']}}">
+                    <div class="postcuadros azul" id="{{post['tg']}}">
                         <div class="titulo">
                             <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
                         </div>
@@ -151,7 +152,7 @@
                         </div> 
                     </div>
                     {% else %}
-                    <div class="postcuadros dorado" id="{{post['id_tag']}}">
+                    <div class="postcuadros dorado" id="{{post['tg']}}">
                         <div class="titulo">
                             <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
                         </div>
@@ -188,7 +189,7 @@
             {% for post in posts %}
                 {% if post['id_estado'] != 2 and (post['fecha'] != today or (post['fecha'] == today and post['nivel'] < 3)) %} 
                     {% if post['nivel'] == 3%}
-                        <div class="postcuadros azul" id="{{post['id_tag']}}">
+                        <div class="postcuadros azul" id="{{post['tg']}}">
                             <div class="titulo">
                                 <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
                             </div>
@@ -219,7 +220,7 @@
                             </div> 
                         </div>
                     {% elif post['nivel'] > 3%}
-                        <div class="postcuadros dorado" id="{{post['id_tag']}}">
+                        <div class="postcuadros dorado" id="{{post['tg']}}">
                             <div class="titulo">
                                 <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
                             </div>
@@ -247,7 +248,7 @@
                             </div> 
                         </div>
                     {% else %}
-                        <div class="postcuadros" id="{{post['id_tag']}}">
+                        <div class="postcuadros" id="{{post['tg']}}">
                             <div class="titulo">
                                 <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
                             </div>
@@ -280,6 +281,7 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
+            </div>
         {% else %}
             <div class="noContenido">
                 <hr>
