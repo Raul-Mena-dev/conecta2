@@ -39,7 +39,7 @@ def portada():
 @app.route('/inicio')
 def inicio():
 
-    #if 'id' in session:
+    if 'id' in session:
         universidades = ['Guadalajara','Tlaquepaque', 'Zapopan']
         carreras = {}
         carreras['Guadalajara'] = ['Bachillerato','Derecho', 'Psicologia', 'Negocios Internacionales', 'Administracion', 'Mercadotecnia', 'Contaduria publica']
@@ -50,7 +50,7 @@ def inicio():
         banners = cursor.fetchall()
 
         return render_template('home.html', universidades = universidades, carreras = carreras, banners = banners)
-    #return render_template('portada.html')
+    return render_template('portada.html')
 
 @app.route('/busqueda', methods=['POST'])
 def buscar():
@@ -58,6 +58,8 @@ def buscar():
         buscar = request.form['buscar']
         mostrar = True
 
+        if buscar == "":
+            return redirect(url_for('inicio'))
         today = date.today()
 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -107,7 +109,6 @@ def profile():
 
 @app.route('/cambioContraseña', methods=['GET', 'POST'])
 def contra():
-    msg = ''
     if request.method == 'POST' and 'actual' in request.form and 'nueva' in request.form and 'repetir' in request.form:
 
         actual = request.form['actual']
@@ -121,14 +122,14 @@ def contra():
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                 cursor.execute('UPDATE login SET pass = %s WHERE login.matricula = %s' ,(pw_hash, session['id'],))
                 mysql.connection.commit()
-                msg = 'Cambio exitoso'
-                return redirect(url_for('profile', msg = msg))
+                flash('Cambio exitoso')
+                return redirect(url_for('profile'))
             else:
-                msg = "Error: " + str(e)
-                return redirect(url_for('profile', msg = msg))
+                flash('error al cambiar su contraseña')
+                return render_template('contra.html')
         except Exception as e:
-            msg = "Error: " + str(e)
-            return redirect(url_for('profile', msg = msg))
+            flash("Error: " + str(e))
+            return render_template('contra.html')
 
     return render_template('contra.html')
 
@@ -211,55 +212,61 @@ def logout():
 
 @app.route('/login/registrar', methods=['POST'])
 def registrar():
-    # Output message if something goes wrong...
-    msg = None
-    # Check if "username", "password" and "email" POST requests exist (user submitted form)
-    if request.method == 'POST' and 'matriculaR' in request.form and 'email' in request.form and 'passwordR' in request.form:
-        # Create variables for easy access
-        passwordR = request.form['passwordR']
-        email = request.form['email']
-        matriculaR = request.form['matriculaR']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM login WHERE matricula = %s', (matriculaR,))
-        cuenta = cursor.fetchone()
-        if cuenta:
-            msg = 'Cuenta ya existe!'
-            return render_template('login.html', msg=msg)
-        else:
-            cursor.execute('SELECT * FROM usuarios WHERE matricula = %s', (matriculaR,))
-            usuario = cursor.fetchone()
-            if bcrypt.check_password_hash(usuario['pass'], passwordR):
-                if not usuario:
-                    msg = 'usuario no esta en la base de datos'
-                    return render_template('login.html', msg=msg)
-                elif not re.match('[^@]+[@conectados.edu.mx]', str(email)):
-                    msg = 'Correo invalido!'
-                    return render_template('login.html', msg=msg)
-                elif not re.match('[0-9]{9,11}', str(matriculaR)):
-                    msg = 'La matricula incorrecta!'
-                    return render_template('login.html', msg=msg)
-                elif not passwordR or not email or not matriculaR:
-                    msg = 'Porfavor llena el formulario!'
-                    return render_template('login.html', msg=msg)
-                else:
-                    # Account doesnt exists and the form data is valid, now insert new account into accounts table
-                    nombreUsuario = usuario['nombre'] +' '+ usuario['apellido1']
-                    cursor.execute('INSERT INTO login(matricula,pass,usuario) VALUES (%s, %s, %s)', (matriculaR, usuario['pass'] ,nombreUsuario))
-                    mysql.connection.commit()
-                    flash('Te has registrado satisfactoriamente')
-                    session['id'] = usuario['matricula']
-                    nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
-                    session['usuario']= nombreUsuario
-                    session['nivel'] = usuario['id_nivel_estudio']
-                    return redirect(url_for('profile'))
-            else:
-                msg = 'Porfavor llena el formulario!'
+
+    try:
+        if request.method == 'POST' and 'matriculaR' in request.form and 'email' in request.form and 'passwordR' in request.form:
+            
+            passwordR = request.form['passwordR']
+            email = request.form['email']
+            matriculaR = request.form['matriculaR']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM login WHERE matricula = %s', (matriculaR,))
+            cuenta = cursor.fetchone()
+            if cuenta:
+                msg = 'Cuenta ya existe!'
                 return render_template('login.html', msg=msg)
-    elif request.method == 'POST':
-        # Form is empty... (no POST data)
-        msg = 'Porfavor llena el formulario!'
-        return render_template('login.html', msg=msg)
-    # Show registration form with message (if any)
+            else:
+                cursor.execute('SELECT * FROM usuarios WHERE matricula = %s', (matriculaR,))
+                usuario = cursor.fetchone()
+                if not usuario:
+                    flash('usuario no esta en la base de datos')
+                    return render_template('login.html')
+
+                if bcrypt.check_password_hash(usuario['pass'], passwordR):
+                    if not usuario:
+                        flash('usuario no esta en la base de datos')
+                        return render_template('login.html')
+                    elif not re.match('[^@]+[@conectados.edu.mx]', str(email)):
+                        flash('Correo invalido!')
+                        return render_template('login.html')
+                    elif not re.match('[0-9]{9,11}', str(matriculaR)):
+                        flash('La matricula incorrecta!')
+                        return render_template('login.html')
+                    elif not passwordR or not email or not matriculaR:
+                        flash('Porfavor llena el formulario!')
+                        return render_template('login.html')
+                    else:
+                        
+                        nombreUsuario = usuario['nombre'] +' '+ usuario['apellido1']
+                        cursor.execute('INSERT INTO login(matricula,pass,usuario) VALUES (%s, %s, %s)', (matriculaR, usuario['pass'] ,nombreUsuario))
+                        mysql.connection.commit()
+                        flash('Te has registrado satisfactoriamente')
+                        session['id'] = usuario['matricula']
+                        nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
+                        session['usuario']= nombreUsuario
+                        session['nivel'] = usuario['id_nivel_estudio']
+                        return redirect(url_for('profile'))
+                else:
+                    flash('Porfavor llena el formulario!')
+                    return render_template('login.html')
+        elif request.method == 'POST':
+            flash('Porfavor llena el formulario!')
+            return render_template('login.html')
+        else :
+            return render_template('login.html')
+    except Exception as e:
+        flash(str(e))
+        return render_template('login.html')
 
 
 
@@ -277,16 +284,6 @@ def publicaciones():
 
     return render_template('publicaciones.html', **context)
 
-
-# @app.route('/mensajes')
-# def mensajes():
-#     print('hola')
-#     # cur = mysql.connection.cursor()
-#     # cur.execute(''' SELECT * FROM chat WHERE ID_RECEPTOR = 25  ''')
-#     # enviado=cur.fetchall()
-#     # cur.execute(''' SELECT * FROM chat WHERE ID_EMISOR = 25  ''')
-#     # recibido=cur.fetchall()
-#     # return render_template("mensajes.html", enviado=enviado, recibido=recibido )
 
 
 

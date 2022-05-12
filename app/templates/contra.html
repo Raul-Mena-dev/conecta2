@@ -12,6 +12,17 @@
 
     <div class="container w-50 bg-light p-3 mt-5  border rounded ">
         <h1>Cambiar contraseña</h1>
+        <p >
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <ul class="alert alert-info" role="alert" >
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+        </p>
         <form action="{{url_for('contra')}}" method="POST" onchange="contraValidacion()" >
             <div class="form-group row">
                 <label for="actual" class="col-sm-2 col-form-label">Contraseña actual</label>

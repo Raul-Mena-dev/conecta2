@@ -34,6 +34,17 @@
           <div class="col-sm-10">
             <button type="submit" id="acceder" class="btn btn-primary" disabled>Acceder</button>
           </div>
+          <p >
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <ul class="alert alert-info" role="alert" >
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+        </p>
           {% if msg %}
             <p class=error><strong>Error:</strong> {{ msg }}
           {% endif %}
@@ -63,6 +74,17 @@
             </div>
         </div>
           <input type="submit" class="btn btn-primary " id="registrar" disabled value="Registrar">
+          <p >
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <ul class="alert alert-info" role="alert" >
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+        </p>
           {% if msg %}
             <p class=error><strong>Error:</strong> {{ msg }}
           {% endif %}

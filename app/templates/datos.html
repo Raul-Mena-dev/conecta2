@@ -50,6 +50,17 @@
            
          </div>
          <div class="col justify-content-center m-4 bg-white">
+          <p >
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <ul class="alert alert-info" role="alert" >
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+        </p>
           <ul class="list-group list-group-flush mt-3 ml-2">
               <li class="list-group-item text-capitalize"> <span class="font-weight-bold">Nombre: </span>{{account['nombre']}}</li>
               <li class="list-group-item text-capitalize"> <span class="font-weight-bold">Apellidos: </span>{{account['apellido1']}} {{account['apellido2']}}</li>
