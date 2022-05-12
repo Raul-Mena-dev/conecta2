@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+  {% include 'navbar.html' %}
+{% endblock %}
+
+
+{% block content %}
+<div class="container bg-light p-3 mt-5  border rounded border-bottom">
+    <h1>Nosotros</h1>
+    <p>Esta pagina es una practica escolar para presentar el proyecto modular modulo 3 de UTEG en la carrera de ingenieria en computacion,
+    este proyecto esta pensado en un foro para los estudiantes de una institucion educativa y conectar a sus estudiantes a la hora de realizar proyectos como este o proyectos multidiciplinarios, ayudarse con tareas, que los maestros dejen mensajes a sus alumnos o se puedan
+    dar mensajes por parte de la institucion educativa</p>
+
+    <h2>Integrantes</h2>
+    <ul class="list-group ">
+        <li class="list-group-item" style="width: 30rem; border-bottom: 2px solid ;">Raul Eduardo Mena Chavez</li>
+        <li class="list-group-item" style="width: 30rem; border-bottom: 2px solid ;">Gilberto Gama de la Rosa</li>
+        <li class="list-group-item" style="width: 30rem; border-bottom: 2px solid ;">Miguel Rafael Rosales Ramirez</li>
+        <li class="list-group-item" style="width: 30rem; border-bottom: 2px solid ;"><span class="font-weight-bold">Asesor: </span> Rosa Maria Sanchez Galindo</li>
+    </ul>
+</div>
+{% endblock %}
+{% endblock %}
