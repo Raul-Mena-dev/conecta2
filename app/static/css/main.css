@@ -1269,6 +1269,65 @@ abbr[title] {
     height: 18px;
 }
 
+.tamaño{
+    width:20%;
+}
+
+.datos_banner{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 40%;
+    margin: auto;
+}
+
+.datos_banner form{
+    margin:auto;
+    width: 100%;
+    text-align: center;
+}
+
+.datos_banner form img{
+    margin:auto;
+}
+
+.actu_datos_banner{
+    margin: auto;
+    width: 80%;
+    text-align: center;
+}
+
+.actu_datos_banner input{
+    margin: 5px;
+    width: 100%;
+    border-radius: 7px;
+}
+
+.actu_datos_banner .actu_img_banner{
+    width: 70%;
+}
+
+.acciones_banner{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.accion_banner{
+    margin: 10px;
+}
+
+.accion_eliminar a{
+    color: #d3150e;
+    opacity: 0.8;
+}
+
+.accion_eliminar a:hover{
+    color: #e7130c;
+    opacity: 1;
+}
+
+
 /* RESPONSIVE DESIGN */
 
 @media (max-width: 1770px){

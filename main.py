@@ -843,3 +843,41 @@ def actualziacion_msj(id_post,id_msj):
         mysql.connection.commit()
         return redirect(url_for('mostrarpost',id=id_post))
 
+@app.route('/actualiza_banner/<string:id_banner>', methods = ['POST'])
+def actualiza_banner(id_banner):
+    if request.method == 'POST':
+        f = request.files['file']
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
+        filename = secure_filename(f.filename)
+        titulo = request.form['titulo']
+        contenido = request.form['texto']
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE banner SET imagen = %s WHERE id_banner = %s', (filename, id_banner))
+        mysql.connection.commit()
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE banner SET titulo = %s WHERE id_banner = %s', (titulo, id_banner))
+        mysql.connection.commit()
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE banner SET texto = %s WHERE id_banner = %s', (contenido, id_banner))
+        mysql.connection.commit()
+
+        return redirect(url_for('actu_banner'))
+
+@app.route('/eliminar_banner/<string:id_banner>')
+def eliminar_banner(id_banner):
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM banner where id_banner = %s', (id_banner))
+        mysql.connection.commit()
+
+        return redirect(url_for('actu_banner'))
+
+@app.route('/editar_banner/<string:id_banner>')
+def editar_banner(id_banner):   
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('Select * FROM banner where id_banner = %s', (id_banner,))
+    banners = cur.fetchone() 
+    return render_template('editar_banner.html', banners=banners)
+
