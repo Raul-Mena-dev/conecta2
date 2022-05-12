@@ -269,7 +269,7 @@ function validacionRegistro(){
     vUser = /^[a-zA-Z]+$/
     vEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@conectados.edu.mx/
     vNum =  /^[0-9]{10}$/
-    vMatricula = /^[0-9]{9,11}$/
+    vMatricula = /^[0-9]+$/
     //elementos a revisar
     email = document.getElementById("email").value;
     password = document.getElementById("passwordR").value;
