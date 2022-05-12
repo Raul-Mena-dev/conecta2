@@ -109,7 +109,6 @@ def profile():
 
 @app.route('/cambioContraseña', methods=['GET', 'POST'])
 def contra():
-    msg = ''
     if request.method == 'POST' and 'actual' in request.form and 'nueva' in request.form and 'repetir' in request.form:
 
         actual = request.form['actual']
@@ -123,14 +122,14 @@ def contra():
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                 cursor.execute('UPDATE login SET pass = %s WHERE login.matricula = %s' ,(pw_hash, session['id'],))
                 mysql.connection.commit()
-                msg = 'Cambio exitoso'
-                return redirect(url_for('profile', msg = msg))
+                flash('Cambio exitoso')
+                return redirect(url_for('profile'))
             else:
-                msg = "Error: " + str(e)
-                return redirect(url_for('profile', msg = msg))
+                flash('error al cambiar su contraseña')
+                return render_template('contra.html')
         except Exception as e:
-            msg = "Error: " + str(e)
-            return redirect(url_for('profile', msg = msg))
+            flash("Error: " + str(e))
+            return render_template('contra.html')
 
     return render_template('contra.html')
 
