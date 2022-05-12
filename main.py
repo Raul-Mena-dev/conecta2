@@ -22,8 +22,8 @@ app.config['SECRET_KEY'] = 'mysecret'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'conecta2'
+app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_DB'] = 'conectados'
 app.config['UPLOAD_FOLDER'] ='app\static\img'
 
 mysql = MySQL(app)
@@ -174,20 +174,24 @@ def login():
             datos = cursor.fetchone()
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            try:
-                if(bcrypt.check_password_hash(datos['pass'], password)):
-                    cursor.execute('SELECT a.nombre, a.apellido1, a.matricula, a.id_nivel_estudio FROM usuarios as a INNER JOIN login as b ON a.matricula = b.matricula WHERE b.matricula = %s;', (matricula,))
-                    # Fetch one record and return result
-                    usuario = cursor.fetchone()
-                    session['id'] = usuario['matricula']
-                    nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
-                    session['usuario']= nombreUsuario
-                    session['nivel'] = usuario['id_nivel_estudio']
-                    return redirect(url_for('profile'))
-                else:
+            if(datos):
+                try:
+                    if(bcrypt.check_password_hash(datos['pass'], password)):
+                        cursor.execute('SELECT a.nombre, a.apellido1, a.matricula, a.id_nivel_estudio FROM usuarios as a INNER JOIN login as b ON a.matricula = b.matricula WHERE b.matricula = %s;', (matricula,))
+                        # Fetch one record and return result
+                        usuario = cursor.fetchone()
+                        session['id'] = usuario['matricula']
+                        nombreUsuario = usuario['nombre'].capitalize() +' '+ usuario['apellido1'].capitalize()
+                        session['usuario']= nombreUsuario
+                        session['nivel'] = usuario['id_nivel_estudio']
+                        return redirect(url_for('profile'))
+                    else:
+                        msg = "Usuario y/o contraseña incorrecto"
+                        return render_template('login.html', msg = msg)
+                except Exception as e:
                     msg = "Usuario y/o contraseña incorrecto"
                     return render_template('login.html', msg = msg)
-            except Exception as e:
+            else:
                 msg = "Usuario y/o contraseña incorrecto"
                 return render_template('login.html', msg = msg)
         else:
@@ -883,3 +887,26 @@ def editar_banner(id_banner):
     banners = cur.fetchone() 
     return render_template('editar_banner.html', banners=banners)
 
+@app.route('/post_usuario')
+def post_usuario(): 
+    mostrar = False  
+    mostrar2 = False
+    try:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT post.id_post, post.titulo, date(post.fecha) as fecha, post.fecha as tiempo, post.id_estado, login.usuario, nivel.id_nivel_estudio as nivel, nivel.nivel_estudio  FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio WHERE post.matricula = %s;",(session['id'],))
+        posts = cursor.fetchall()
+
+        if posts:
+            mostrar = True
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT post.id_post, post.titulo, date(post.fecha) as fecha, post.fecha as tiempo, post.id_estado, login.usuario, nivel.id_nivel_estudio as nivel, nivel.nivel_estudio  FROM post  INNER JOIN usuarios on post.matricula = usuarios.matricula INNER JOIN login on usuarios.matricula = login.matricula INNER JOIN nivel on usuarios.id_nivel_estudio = nivel.id_nivel_estudio INNER JOIN respuestas ON post.id_post = respuestas.id_post WHERE respuestas.matricula = %s;",(session['id'],))
+        respuestas = cursor.fetchall() 
+
+        if respuestas:
+            mostrar2 = True
+        return render_template('publicaiones_usuario.html', posts = posts, respuestas = respuestas, mostrar = mostrar, mostrar2 = mostrar2)
+    except Exception as e:
+        flash(str(e))
+        print(str(e))
+        return redirect(url_for('profile'))

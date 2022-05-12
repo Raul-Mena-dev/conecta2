@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+<div class="contenido-post">
+
+    <div class="lista-post">
+        <p >
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <ul class="alert alert-info" role="alert" >
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+        </p>
+        {% if msg %}
+            <p class="alert alert-success" role="alert">
+                {{msg}}
+            </p>
+        {% endif %}
+        {% if mostrar %}
+        <h5 style="color: #fff;">Tus publicaciones</h5>
+            {% for post in posts %}
+                <div class="postcuadros">
+                    <div class="titulo">
+                        <a href="/mostrarpost/{{ post['id_post'] }}">{{ post['titulo'] }}</a>
+                    </div>
+                    <div class="caja">
+                        <div class="datos-publicacion-respuesta">
+                            <div class="fecha-publicacion">
+                                <p>Publicado: {{ post['fecha']}}</p>
+                            </div>
+                        </div>
+                        <div class="datos-publicacion-respuesta">
+                            <div class="img-perfil">
+                                <img src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
+                            </div>
+                            <div class="publicado-por">
+                                <div class="nombre-usuario">
+                                Usuario: {{post['usuario']}}
+                                </div>
+                                <div class="identifica_nivel">
+                                    {{post['nivel_estudio']}}
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            {% endfor %}
+        {% endif %} 
+        {% if mostrar2 %}
+            <h5 style="color: #fff;">Publicacion donde comentaste</h5>
+            {% for respuesta in respuestas %}
+                <div class="postcuadros">
+                    <div class="titulo">
+                        <a href="/mostrarpost/{{ respuesta['id_post'] }}">{{ respuesta['titulo'] }}</a>
+                    </div>
+                    <div class="caja">
+                        <div class="datos-publicacion-respuesta">
+                            <div class="fecha-publicacion">
+                                <p>Publicado: {{ respuesta['fecha']}}</p>
+                            </div>
+                        </div>
+                        <div class="datos-publicacion-respuesta">
+                            <div class="img-perfil">
+                                <img src="{{url_for('static', filename='img/default.png')}}" alt="Generic placeholder image">
+                            </div>
+                            <div class="publicado-por">
+                                <div class="nombre-usuario">
+                                Usuario: {{respuesta['usuario']}}
+                                </div>
+                                <div class="identifica_nivel">
+                                    {{respuesta['nivel_estudio']}}
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if not mostrar and not mostrar2 %}
+            <div class="noContenido">
+                <hr>
+                    <p>No has comentado aun</p>
+                <hr>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
+
+    
+{% endblock %}
