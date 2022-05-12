@@ -53,9 +53,21 @@
 
               {% for banner in banners %}
                 <ul class="list-group ">
-                    <li class="list-group-item"> <img class="card-img-top" style="max-width: 18rem; max-height: 18rem;" src="{{url_for('static', filename='img/'+banner['imagen'])}}" alt="{{url_for('static', filename='img/default.png')}}"></li>
-                    <li class="list-group-item">{{banner['titulo']}}</li>
-                    <li class="list-group-item">{{banner['texto']}}</li>
+                    <li class="list-group-item"> 
+                      <img class="card-img-top" style="max-width: 18rem; max-height: 18rem;" src="{{url_for('static', filename='img/'+banner['imagen'])}}" alt="{{url_for('static', filename='img/default.png')}}">
+                        <div class="acciones_banner">
+                          <div class="accion_editar accion_banner">
+                            <abbr title="Editar"><a href="/editar_banner/{{banner['id_banner']}}"><i class="fa-solid fa-pen-to-square"></i></abbr></a>
+                          </div>
+                          <div class="accion_eliminar accion_banner">
+                            <abbr title="Borrar"><a onclick="return confirmarEliminar()" href="/eliminar_banner/{{banner['id_banner']}}"><i class="fa-solid fa-trash-can"></i></abbr></a>
+                          </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">{{banner['titulo']}}      
+                    </li>
+                    <li class="list-group-item">{{banner['texto']}}
+                    </li>
                 </ul>
             {% endfor %}
         </div>

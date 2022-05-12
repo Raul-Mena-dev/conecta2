@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% block navbar %}
+            {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+<body>
+    <div class="datos_banner">
+        <form action="/actualiza_banner/{{banners['id_banner']}}" method="post" enctype = "multipart/form-data">
+            <img style="max-width: 18rem; max-height: 18rem;" src="{{url_for('static', filename='img/'+banners['imagen'])}}" alt="{{url_for('static', filename='img/default.png')}}">
+            <br>
+                <div class="actu_datos_banner">
+                    <label style="color: #fff;"><strong>Cambiar foto</strong></label>
+                    <br>
+                    <input value="{{banners['imagen']}}" class="actu_img_banner" style="color: #fff;" type="file" name="file" id="customFile" required>
+                    <label class="custom-file-label" for="customFile">Selecciona foto</label>
+                </div>
+    
+                <div class="actu_datos_banner">
+                    <label style="color: #fff;"><strong>Cambiar titulo</strong></label>
+                    <input value="{{banners['titulo']}}" type="text" name="titulo" required>
+                </div>
+    
+                <div class="actu_datos_banner">
+                    <label style="color: #fff;"><strong>Cambiar texto</strong></label>
+                    <input type="text" name="texto" value="{{banners['texto']}}">
+                </div>
+            
+            <div class="actu_datos_banner">
+                <input name="upload"  id="upload" class="btn btn-block btn-dark" class="btn btn-primary" type="submit" value="Subir" >
+            </div> 
+        </form>
+    </div>
+</body>
+
+{% endblock %}
+
+    
+{% endblock %}
